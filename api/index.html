@@ -587,6 +587,48 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#response-structure-for-show-endpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      Response structure for show endpoints
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Response structure for show endpoints">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#get-apicontrolsid-security-measure" class="md-nav__link">
+    <span class="md-ellipsis">
+      GET /api/controls/{id} — security measure
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-apimeasuresid-audit-instance" class="md-nav__link">
+    <span class="md-ellipsis">
+      GET /api/measures/{id} — audit instance
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#postput-apimeasures-optional-related-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      POST/PUT /api/measures — optional related fields
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#examples" class="md-nav__link">
     <span class="md-ellipsis">
       Examples
@@ -606,27 +648,36 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#liste-des-domaines" class="md-nav__link">
+  <a href="#list-domains" class="md-nav__link">
     <span class="md-ellipsis">
-      Liste des domaines
+      List domains
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#get-a-control" class="md-nav__link">
+  <a href="#get-a-security-measure" class="md-nav__link">
     <span class="md-ellipsis">
-      Get a control
+      Get a security measure
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#update-a-control" class="md-nav__link">
+  <a href="#update-a-security-measure" class="md-nav__link">
     <span class="md-ellipsis">
-      Update a control
+      Update a security measure
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-an-audit-instance" class="md-nav__link">
+    <span class="md-ellipsis">
+      Get an audit instance
     </span>
   </a>
   
@@ -765,31 +816,50 @@ architecture and enables interaction with RESTful web services.</p>
 </code></pre></div>
 <p>The Docker environment supports this functionality natively, via the <a href="https://github.com/dbarzin/deming/blob/main/docker/entrypoint.sh">entrypoint</a>.</p>
 <h2 id="the-apis">The APIs<a class="headerlink" href="#the-apis" title="Permanent link">&para;</a></h2>
-<ul>
-<li>
-<p>/api/attributes</p>
-</li>
-<li>
-<p>/api/domains</p>
-</li>
-<li>
-<p>/api/measures</p>
-</li>
-<li>
-<p>/api/controls</p>
-</li>
-<li>
-<p>/api/users</p>
-</li>
-<li>
-<p>/api/documents</p>
-</li>
-<li>
-<p>/api/logs</p>
-</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/api/attributes</code></td>
+<td>Attribute taxonomies</td>
+</tr>
+<tr>
+<td><code>/api/domains</code></td>
+<td>Domains / frameworks</td>
+</tr>
+<tr>
+<td><code>/api/controls</code></td>
+<td><strong>Security measures</strong> (requirements to implement, linked to a domain)</td>
+</tr>
+<tr>
+<td><code>/api/measures</code></td>
+<td><strong>Audit instances</strong> (periodic verifications of security measures)</td>
+</tr>
+<tr>
+<td><code>/api/users</code></td>
+<td>Users</td>
+</tr>
+<tr>
+<td><code>/api/documents</code></td>
+<td>Documents attached to audit instances</td>
+</tr>
+<tr>
+<td><code>/api/logs</code></td>
+<td>Audit logs</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Role reminder:</strong> <code>controls</code> = security measures (<code>domain_id</code>, <code>clause</code>, <code>objective</code>…).<br />
+<code>measures</code> = audit instances (<code>plan_date</code>, <code>realisation_date</code>, <code>status</code>, <code>score</code>…).</p>
+</blockquote>
 <h2 id="actions-managed-by-the-resource-controller">Actions managed by the resource controller<a class="headerlink" href="#actions-managed-by-the-resource-controller" title="Permanent link">&para;</a></h2>
-<p>Requests and URIs for each api are shown in the table below.</p>
+<p>Requests and URIs for each API are shown in the table below.</p>
 <table>
 <thead>
 <tr>
@@ -802,27 +872,27 @@ architecture and enables interaction with RESTful web services.</p>
 <tr>
 <td>GET</td>
 <td>/api/objects</td>
-<td>returns the list of objects</td>
+<td>Returns the list of objects</td>
 </tr>
 <tr>
-<td>GET /api/objets/{id}</td>
-<td id="id">returns object</td>
-<td></td>
+<td>GET</td>
+<td>/api/objects/{id}</td>
+<td id="id">Returns object</td>
 </tr>
 <tr>
 <td>POST</td>
 <td>/api/objects</td>
-<td>save new object</td>
+<td>Creates a new object</td>
 </tr>
 <tr>
 <td>PUT/PATCH</td>
-<td>/api/objets/{id}</td>
-<td id="id">update object</td>
+<td>/api/objects/{id}</td>
+<td id="id">Updates object</td>
 </tr>
 <tr>
-<td>/api/objets/{id}</td>
-<td id="id">delete object</td>
-<td></td>
+<td>DELETE</td>
+<td>/api/objects/{id}</td>
+<td id="id">Deletes object</td>
 </tr>
 </tbody>
 </table>
@@ -830,6 +900,65 @@ architecture and enables interaction with RESTful web services.</p>
 <p>To access the APIs, you need to identify yourself as a Deming application user.
 This user must have the "API" role.</p>
 <p>When authentication is successful, the API sends a "token" which must be passed in the "Authorization" header of the API request.</p>
+<h2 id="response-structure-for-show-endpoints">Response structure for show endpoints<a class="headerlink" href="#response-structure-for-show-endpoints" title="Permanent link">&para;</a></h2>
+<h3 id="get-apicontrolsid-security-measure">GET /api/controls/{id} — security measure<a class="headerlink" href="#get-apicontrolsid-security-measure" title="Permanent link">&para;</a></h3>
+<p>Returns the security measure fields plus a <code>controls</code> key containing the IDs of the
+audit instances that verify this measure:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;domain_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;clause&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;NIS2-Art.21.2.a&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Risk Analysis&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;objective&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;controls&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="get-apimeasuresid-audit-instance">GET /api/measures/{id} — audit instance<a class="headerlink" href="#get-apimeasuresid-audit-instance" title="Permanent link">&para;</a></h3>
+<p>Returns the audit instance fields plus a <code>measures</code> key containing the IDs of the
+security measures covered by this audit instance:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Formal review of the risk analysis&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;plan_date&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-07-31&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;realisation_date&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;periodicity&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;measures&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="postput-apimeasures-optional-related-fields">POST/PUT /api/measures — optional related fields<a class="headerlink" href="#postput-apimeasures-optional-related-fields" title="Permanent link">&para;</a></h3>
+<p>When creating or updating an audit instance, the following keys are accepted to
+update related records:</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>measures</code></td>
+<td>Sync the list of security measure IDs linked to this audit instance</td>
+</tr>
+<tr>
+<td><code>actions</code></td>
+<td>Assign action IDs to this audit instance</td>
+</tr>
+<tr>
+<td><code>documents</code></td>
+<td>Assign document IDs to this audit instance</td>
+</tr>
+<tr>
+<td><code>users</code></td>
+<td>Sync the list of assigned user IDs</td>
+</tr>
+<tr>
+<td><code>groups</code></td>
+<td>Sync the list of assigned user group IDs</td>
+</tr>
+</tbody>
+</table>
 <h2 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h2>
 <p>Here are a few examples of how to use the API with PHP:</p>
 <h3 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">&para;</a></h3>
@@ -863,16 +992,13 @@ This user must have the "API" role.</p>
     <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
         <span class="k">if</span> <span class="p">(</span><span class="nv">$info</span><span class="p">[</span><span class="s1">&#39;http_code&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">200</span><span class="p">)</span> <span class="p">{</span>
             <span class="nv">$token</span> <span class="o">=</span> <span class="nb">json_decode</span><span class="p">(</span><span class="nv">$response</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">token</span><span class="p">;</span>
-
         <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
             <span class="nb">error_log</span><span class="p">(</span><span class="nv">$response</span><span class="p">);</span>
             <span class="nb">error_log</span><span class="p">(</span><span class="s2">&quot;No login api status 403&quot;</span><span class="p">);</span>
         <span class="p">}</span>
     <span class="p">}</span>
-
-    <span class="nb">var_dump</span><span class="p">(</span><span class="nv">$response</span><span class="p">);</span>
 </code></pre></div>
-<h3 id="liste-des-domaines">Liste des domaines<a class="headerlink" href="#liste-des-domaines" title="Permanent link">&para;</a></h3>
+<h3 id="list-domains">List domains<a class="headerlink" href="#list-domains" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="cp">&lt;?php</span>
     <span class="nv">$curl</span> <span class="o">=</span> <span class="nb">curl_init</span><span class="p">();</span>
 
@@ -883,7 +1009,7 @@ This user must have the "API" role.</p>
         <span class="nx">CURLOPT_TIMEOUT</span> <span class="o">=&gt;</span> <span class="mi">30</span><span class="p">,</span>
         <span class="nx">CURLOPT_HTTP_VERSION</span> <span class="o">=&gt;</span> <span class="nx">CURL_HTTP_VERSION_1_1</span><span class="p">,</span>
         <span class="nx">CURLOPT_CUSTOMREQUEST</span> <span class="o">=&gt;</span> <span class="s2">&quot;GET&quot;</span><span class="p">,</span>
-        <span class="nx">CURLOPT_POSTFIELDS</span> <span class="o">=&gt;</span> <span class="k">null</span><span class="p">,</span> <span class="c1">// here you can send parameters</span>
+        <span class="nx">CURLOPT_POSTFIELDS</span> <span class="o">=&gt;</span> <span class="k">null</span><span class="p">,</span>
         <span class="nx">CURLOPT_HTTPHEADER</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
             <span class="s2">&quot;accept: application/json&quot;</span><span class="p">,</span>
             <span class="s2">&quot;Authorization: &quot;</span> <span class="o">.</span> <span class="s2">&quot;Bearer&quot;</span> <span class="o">.</span> <span class="s2">&quot; &quot;</span> <span class="o">.</span> <span class="nv">$token</span> <span class="o">.</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
@@ -892,14 +1018,13 @@ This user must have the "API" role.</p>
         <span class="p">),</span>
     <span class="p">));</span>
 
-
     <span class="nv">$response</span> <span class="o">=</span> <span class="nb">curl_exec</span><span class="p">(</span><span class="nv">$curl</span><span class="p">);</span>
     <span class="nv">$err</span> <span class="o">=</span> <span class="nb">curl_error</span><span class="p">(</span><span class="nv">$curl</span><span class="p">);</span>
     <span class="nb">curl_close</span><span class="p">(</span><span class="nv">$curl</span><span class="p">);</span>
 
     <span class="nb">var_dump</span><span class="p">(</span><span class="nv">$response</span><span class="p">);</span>
 </code></pre></div>
-<h3 id="get-a-control">Get a control<a class="headerlink" href="#get-a-control" title="Permanent link">&para;</a></h3>
+<h3 id="get-a-security-measure">Get a security measure<a class="headerlink" href="#get-a-security-measure" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="cp">&lt;?php</span>
     <span class="nv">$curl</span> <span class="o">=</span> <span class="nb">curl_init</span><span class="p">();</span>
 
@@ -910,7 +1035,7 @@ This user must have the "API" role.</p>
         <span class="nx">CURLOPT_TIMEOUT</span> <span class="o">=&gt;</span> <span class="mi">30</span><span class="p">,</span>
         <span class="nx">CURLOPT_HTTP_VERSION</span> <span class="o">=&gt;</span> <span class="nx">CURL_HTTP_VERSION_1_1</span><span class="p">,</span>
         <span class="nx">CURLOPT_CUSTOMREQUEST</span> <span class="o">=&gt;</span> <span class="s2">&quot;GET&quot;</span><span class="p">,</span>
-        <span class="nx">CURLOPT_POSTFIELDS</span> <span class="o">=&gt;</span> <span class="k">null</span><span class="p">,</span> <span class="c1">// here you can send parameters</span>
+        <span class="nx">CURLOPT_POSTFIELDS</span> <span class="o">=&gt;</span> <span class="k">null</span><span class="p">,</span>
         <span class="nx">CURLOPT_HTTPHEADER</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
             <span class="s2">&quot;accept: application/json&quot;</span><span class="p">,</span>
             <span class="s2">&quot;Authorization: &quot;</span> <span class="o">.</span> <span class="s2">&quot;Bearer&quot;</span> <span class="o">.</span> <span class="s2">&quot; &quot;</span> <span class="o">.</span> <span class="nv">$token</span> <span class="o">.</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
@@ -925,9 +1050,9 @@ This user must have the "API" role.</p>
 
     <span class="nb">var_dump</span><span class="p">(</span><span class="nv">$response</span><span class="p">);</span>
 </code></pre></div>
-<h3 id="update-a-control">Update a control<a class="headerlink" href="#update-a-control" title="Permanent link">&para;</a></h3>
+<h3 id="update-a-security-measure">Update a security measure<a class="headerlink" href="#update-a-security-measure" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="cp">&lt;?php</span>
-   <span class="nv">$curl</span> <span class="o">=</span> <span class="nb">curl_init</span><span class="p">();</span>
+    <span class="nv">$curl</span> <span class="o">=</span> <span class="nb">curl_init</span><span class="p">();</span>
 
     <span class="nb">curl_setopt_array</span><span class="p">(</span><span class="nv">$curl</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span>
         <span class="nx">CURLOPT_URL</span> <span class="o">=&gt;</span> <span class="s2">&quot;http://127.0.0.1:8000/api/controls/1&quot;</span><span class="p">,</span>
@@ -939,8 +1064,10 @@ This user must have the "API" role.</p>
         <span class="nx">CURLOPT_CUSTOMREQUEST</span> <span class="o">=&gt;</span> <span class="s2">&quot;PUT&quot;</span><span class="p">,</span>
         <span class="nx">CURLOPT_POSTFIELDS</span> <span class="o">=&gt;</span> <span class="nb">http_build_query</span><span class="p">(</span>
             <span class="k">array</span><span class="p">(</span>
-<span class="o">...</span>
-            <span class="p">),</span>
+                <span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Updated name&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;objective&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Updated objective&#39;</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">),</span>
         <span class="nx">CURLOPT_HTTPHEADER</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
             <span class="s2">&quot;accept: application/json&quot;</span><span class="p">,</span>
             <span class="s2">&quot;Authorization: &quot;</span> <span class="o">.</span> <span class="s2">&quot;Bearer&quot;</span> <span class="o">.</span> <span class="s2">&quot; &quot;</span> <span class="o">.</span> <span class="nv">$token</span> <span class="o">.</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
@@ -954,8 +1081,34 @@ This user must have the "API" role.</p>
 
     <span class="nb">var_dump</span><span class="p">(</span><span class="nv">$response</span><span class="p">);</span>
 </code></pre></div>
+<h3 id="get-an-audit-instance">Get an audit instance<a class="headerlink" href="#get-an-audit-instance" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="cp">&lt;?php</span>
+    <span class="nv">$curl</span> <span class="o">=</span> <span class="nb">curl_init</span><span class="p">();</span>
+
+    <span class="nb">curl_setopt_array</span><span class="p">(</span><span class="nv">$curl</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span>
+        <span class="nx">CURLOPT_URL</span> <span class="o">=&gt;</span> <span class="s2">&quot;http://127.0.0.1:8000/api/measures/1&quot;</span><span class="p">,</span>
+        <span class="nx">CURLOPT_RETURNTRANSFER</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
+        <span class="nx">CURLOPT_MAXREDIRS</span> <span class="o">=&gt;</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="nx">CURLOPT_TIMEOUT</span> <span class="o">=&gt;</span> <span class="mi">30</span><span class="p">,</span>
+        <span class="nx">CURLOPT_HTTP_VERSION</span> <span class="o">=&gt;</span> <span class="nx">CURL_HTTP_VERSION_1_1</span><span class="p">,</span>
+        <span class="nx">CURLOPT_CUSTOMREQUEST</span> <span class="o">=&gt;</span> <span class="s2">&quot;GET&quot;</span><span class="p">,</span>
+        <span class="nx">CURLOPT_POSTFIELDS</span> <span class="o">=&gt;</span> <span class="k">null</span><span class="p">,</span>
+        <span class="nx">CURLOPT_HTTPHEADER</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+            <span class="s2">&quot;accept: application/json&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Authorization: &quot;</span> <span class="o">.</span> <span class="s2">&quot;Bearer&quot;</span> <span class="o">.</span> <span class="s2">&quot; &quot;</span> <span class="o">.</span> <span class="nv">$token</span> <span class="o">.</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;cache-control: no-cache&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;content-type: application/json&quot;</span><span class="p">,</span>
+        <span class="p">),</span>
+    <span class="p">));</span>
+
+    <span class="nv">$response</span> <span class="o">=</span> <span class="nb">curl_exec</span><span class="p">(</span><span class="nv">$curl</span><span class="p">);</span>
+    <span class="nv">$err</span> <span class="o">=</span> <span class="nb">curl_error</span><span class="p">(</span><span class="nv">$curl</span><span class="p">);</span>
+    <span class="nb">curl_close</span><span class="p">(</span><span class="nv">$curl</span><span class="p">);</span>
+
+    <span class="nb">var_dump</span><span class="p">(</span><span class="nv">$response</span><span class="p">);</span>
+</code></pre></div>
 <h2 id="python">Python<a class="headerlink" href="#python" title="Permanent link">&para;</a></h2>
-<p>Voici un exemple d'utilisation de l'API en Python</p>
+<p>Here is an example of using the API in Python:</p>
 <div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/python3</span>
 
 <span class="kn">import</span> <span class="nn">requests</span>
@@ -971,22 +1124,30 @@ This user must have the "API" role.</p>
 
 <span class="n">vheaders</span><span class="p">[</span><span class="s1">&#39;Authorization&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Bearer &quot;</span> <span class="o">+</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;token&#39;</span><span class="p">]</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Get domains&quot;</span><span class="p">)</span>
-<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;http://127.0.0.1:8000/api/domains&quot;</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">vheaders</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Get security measures&quot;</span><span class="p">)</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;http://127.0.0.1:8000/api/controls&quot;</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">vheaders</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Get audit instances&quot;</span><span class="p">)</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;http://127.0.0.1:8000/api/measures&quot;</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">vheaders</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
 </code></pre></div>
 <h2 id="bash">bash<a class="headerlink" href="#bash" title="Permanent link">&para;</a></h2>
-<p>Voici un exemple d'utilisation de l'API en ligne de commande avec <a href="https://curl.se/docs/manpage.html">CURL</a> et <a href="https://stedolan.github.io/jq/">JQ</a>
-<div class="highlight"><pre><span></span><code># valid login and password
-data=&#39;{&quot;email&quot;:&quot;api@admin.localhost&quot;,&quot;password&quot;:&quot;12345678&quot;}&#39;
+<p>Here is an example of using the API from the command line with <a href="https://curl.se/docs/manpage.html">CURL</a> and <a href="https://stedolan.github.io/jq/">JQ</a>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># valid login and password</span>
+<span class="nv">data</span><span class="o">=</span><span class="s1">&#39;{&quot;email&quot;:&quot;api@admin.localhost&quot;,&quot;password&quot;:&quot;12345678&quot;}&#39;</span>
 
-# get a token after correct login
-token=$(curl -s -d ${data} -H &quot;Content-Type: application/json&quot; http://localhost:8000/api/login | jq -r .token)
+<span class="c1"># get a token after correct login</span>
+<span class="nv">token</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span>-d<span class="w"> </span><span class="si">${</span><span class="nv">data</span><span class="si">}</span><span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span>http://localhost:8000/api/login<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span>.token<span class="k">)</span>
 
-# query users and decode JSON data with JQ.
-curl -s -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer ${token}&quot; &quot;http://127.0.0.1:8000/api/domains&quot; | jq .
-</code></pre></div></p>
+<span class="c1"># list security measures</span>
+curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">token</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;http://127.0.0.1:8000/api/controls&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+
+<span class="c1"># list audit instances</span>
+curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">token</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;http://127.0.0.1:8000/api/measures&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+</code></pre></div>
 
 
 

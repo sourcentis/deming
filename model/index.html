@@ -598,22 +598,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#measures" class="md-nav__link">
-    <span class="md-ellipsis">
-      measures
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#controls" class="md-nav__link">
     <span class="md-ellipsis">
       controls
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="controls">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#measures" class="md-nav__link">
+    <span class="md-ellipsis">
+      measures
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="measures">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -723,28 +723,32 @@
 <ul>
 <li>attributes  </li>
 <li>domains  </li>
-<li>measures  </li>
 <li>controls  </li>
+<li>measures  </li>
 <li>documents  </li>
 </ul>
+<blockquote>
+<p><strong>Roles:</strong> <code>controls</code> = <strong>security measures</strong> (requirements to implement).<br />
+<code>measures</code> = <strong>audit instances</strong> (periodic verifications of those requirements).</p>
+</blockquote>
 <h2 id="table-dependencies"><strong>Table Dependencies</strong><a class="headerlink" href="#table-dependencies" title="Permanent link">&para;</a></h2>
 <p>Overview: who uses what.</p>
 <pre class="mermaid"><code>flowchart LR
-    domains --&gt;|"domain_id (1:N)"| measures
-    measures --&gt;|"controls[ ] (N:N)"| controls
+    domains --&gt;|"domain_id (1:N)"| controls
     controls --&gt;|"measures[ ] (N:N)"| measures
-    attributes -.-&gt;|"optional"| measures
+    measures --&gt;|"controls[ ] (N:N)"| controls
     attributes -.-&gt;|"optional"| controls
-    controls -.-&gt;|"next_id (self)"| controls
-    documents -.-&gt;|"optional"| controls</code></pre>
+    attributes -.-&gt;|"optional"| measures
+    measures -.-&gt;|"next_id (self)"| measures
+    documents -.-&gt;|"optional"| measures</code></pre>
 <p>The detailed schema below describes the fields of each table.</p>
 <pre class="mermaid"><code>erDiagram
-    domains ||--o{ measures : "domain_id"
-    measures }o--o{ controls : "many-to-many"
-    attributes }o--o{ measures : "optional"
+    domains ||--o{ controls : "domain_id"
+    controls }o--o{ measures : "many-to-many"
     attributes }o--o{ controls : "optional"
-    controls o|--o| controls : "next_id"
-    documents }o--o| controls : "optional"
+    attributes }o--o{ measures : "optional"
+    measures o|--o| measures : "next_id"
+    documents }o--o| measures : "optional"
 
     domains {
         int id PK
@@ -757,16 +761,16 @@
         string name
         string values
     }
-    measures {
+    controls {
         int id PK
         int domain_id FK
         string name
         string clause
         string objective
-        array controls
+        array measures
         array attributes
     }
-    controls {
+    measures {
         int id PK
         int next_id FK
         string name
@@ -774,11 +778,12 @@
         date plan_date
         date realisation_date
         int status
-        array measures
+        array controls
         array attributes
     }
     documents {
         int id PK
+        int measure_id FK
     }</code></pre>
 <p>The relationships are as follows:</p>
 <table>
@@ -791,40 +796,45 @@
 </thead>
 <tbody>
 <tr>
-<td><code>domains</code> → <code>measures</code></td>
+<td><code>domains</code> → <code>controls</code></td>
 <td>Foreign key (1:N)</td>
-<td>Each measure references its domain via <code>domain_id</code></td>
+<td>Each security measure references its domain via <code>domain_id</code></td>
 </tr>
 <tr>
-<td><code>measures</code> ↔ <code>controls</code></td>
+<td><code>controls</code> ↔ <code>measures</code></td>
 <td>Many-to-many (bidirectional)</td>
-<td>Each measure lists its controls in <code>controls[]</code>; each control lists its measures in <code>measures[]</code></td>
-</tr>
-<tr>
-<td><code>attributes</code> → <code>measures</code></td>
-<td>Optional</td>
-<td>The <code>attributes</code> field of a measure may contain a list of attribute IDs</td>
+<td>Each security measure lists its audit instances in <code>measures[]</code>; each audit instance lists its security measures in <code>controls[]</code></td>
 </tr>
 <tr>
 <td><code>attributes</code> → <code>controls</code></td>
 <td>Optional</td>
-<td>Same for controls</td>
+<td>The <code>attributes</code> field of a security measure may contain a list of attribute IDs</td>
 </tr>
 <tr>
-<td><code>controls</code> → <code>controls</code></td>
+<td><code>attributes</code> → <code>measures</code></td>
+<td>Optional</td>
+<td>Same for audit instances</td>
+</tr>
+<tr>
+<td><code>measures</code> → <code>measures</code></td>
 <td>Self-reference via <code>next_id</code></td>
-<td>Allows chaining successive campaigns of the same control</td>
+<td>Allows chaining successive campaigns of the same audit</td>
+</tr>
+<tr>
+<td><code>documents</code> → <code>measures</code></td>
+<td>Optional (1:N)</td>
+<td>Documents and evidence are attached to audit instances via <code>measure_id</code></td>
 </tr>
 </tbody>
 </table>
 <blockquote>
-<p><strong>Note:</strong> There is no exposed join table for the measures/controls relationship.<br />
+<p><strong>Note:</strong> There is no exposed join table for the controls/measures relationship.<br />
 IDs are directly embedded in each object on both sides.</p>
 </blockquote>
 <hr />
 <h2 id="attributes"><strong>attributes</strong><a class="headerlink" href="#attributes" title="Permanent link">&para;</a></h2>
 <p>Attributes are multi-value classification reference sets.<br />
-Each attribute defines a set of tags (prefixed with <code>#</code>) that can be associated with measures and controls.</p>
+Each attribute defines a set of tags (prefixed with <code>#</code>) that can be associated with security measures and audit instances.</p>
 <table>
 <thead>
 <tr>
@@ -872,7 +882,7 @@ Each attribute defines a set of tags (prefixed with <code>#</code>) that can be 
 </code></pre></div>
 <hr />
 <h2 id="domains"><strong>domains</strong><a class="headerlink" href="#domains" title="Permanent link">&para;</a></h2>
-<p>Domains group measures by thematic area.<br />
+<p>Domains group security measures by thematic area.<br />
 Each domain belongs to a regulatory or methodological framework (<code>framework</code>).</p>
 <table>
 <thead>
@@ -926,9 +936,9 @@ Each domain belongs to a regulatory or methodological framework (<code>framework
 <span class="p">}</span>
 </code></pre></div>
 <hr />
-<h2 id="measures"><strong>measures</strong><a class="headerlink" href="#measures" title="Permanent link">&para;</a></h2>
+<h2 id="controls"><strong>controls</strong><a class="headerlink" href="#controls" title="Permanent link">&para;</a></h2>
 <p>Security measures describe the requirements to be implemented.<br />
-Each measure belongs to a domain and is verified by one or more controls.</p>
+Each security measure belongs to a domain and is verified by one or more audit instances.</p>
 <table>
 <thead>
 <tr>
@@ -951,7 +961,7 @@ Each measure belongs to a domain and is verified by one or more controls.</p>
 <tr>
 <td><code>name</code></td>
 <td>string</td>
-<td>Name of the measure, often with article number (e.g., <em>Art.21.2.a – Risk Analysis</em>)</td>
+<td>Name of the security measure, often with article number (e.g., <em>Art.21.2.a – Risk Analysis</em>)</td>
 </tr>
 <tr>
 <td><code>clause</code></td>
@@ -961,7 +971,7 @@ Each measure belongs to a domain and is verified by one or more controls.</p>
 <tr>
 <td><code>objective</code></td>
 <td>string</td>
-<td>Expected objective of this measure</td>
+<td>Expected objective of this security measure</td>
 </tr>
 <tr>
 <td><code>input</code></td>
@@ -994,9 +1004,9 @@ Each measure belongs to a domain and is verified by one or more controls.</p>
 <td>List of associated attribute IDs; <code>null</code> if none</td>
 </tr>
 <tr>
-<td><code>controls</code></td>
+<td><code>measures</code></td>
 <td>array</td>
-<td>List of control IDs verifying this measure</td>
+<td>List of audit instance IDs verifying this security measure</td>
 </tr>
 <tr>
 <td><code>created_at</code></td>
@@ -1023,13 +1033,13 @@ Each measure belongs to a domain and is verified by one or more controls.</p>
 <span class="w">  </span><span class="nt">&quot;action_plan&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Risk treatment plan approved by Management&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;standard&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;attributes&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;controls&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="w">  </span><span class="nt">&quot;measures&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 <span class="p">}</span>
 </code></pre></div>
 <hr />
-<h2 id="controls"><strong>controls</strong><a class="headerlink" href="#controls" title="Permanent link">&para;</a></h2>
-<p>Controls describe periodic operational verifications.<br />
-A control checks whether one or more measures are properly applied.<br />
+<h2 id="measures"><strong>measures</strong><a class="headerlink" href="#measures" title="Permanent link">&para;</a></h2>
+<p>Audit instances describe periodic operational verifications.<br />
+An audit instance checks whether one or more security measures are properly applied.<br />
 It contains planning, execution, and result data.</p>
 <table>
 <thead>
@@ -1053,7 +1063,7 @@ It contains planning, execution, and result data.</p>
 <tr>
 <td><code>objective</code></td>
 <td>string | null</td>
-<td>Specific objective of this control</td>
+<td>Specific objective of this audit instance</td>
 </tr>
 <tr>
 <td><code>input</code></td>
@@ -1066,14 +1076,9 @@ It contains planning, execution, and result data.</p>
 <td>Operating procedure</td>
 </tr>
 <tr>
-<td><code>indicator</code></td>
-<td>string | null</td>
-<td>Result indicator</td>
-</tr>
-<tr>
 <td><code>action_plan</code></td>
 <td>string | null</td>
-<td>Corrective actions if the control fails</td>
+<td>Corrective actions if the audit fails</td>
 </tr>
 <tr>
 <td><code>periodicity</code></td>
@@ -1088,7 +1093,7 @@ It contains planning, execution, and result data.</p>
 <tr>
 <td><code>realisation_date</code></td>
 <td>date | null</td>
-<td>Actual execution date of the last control</td>
+<td>Actual execution date</td>
 </tr>
 <tr>
 <td><code>observations</code></td>
@@ -1098,22 +1103,22 @@ It contains planning, execution, and result data.</p>
 <tr>
 <td><code>score</code></td>
 <td>number | null</td>
-<td>Numeric score from the evaluation; <code>null</code> if not performed</td>
+<td>Numeric score from the evaluation; <code>null</code> if not yet performed</td>
 </tr>
 <tr>
 <td><code>note</code></td>
-<td>string | null</td>
+<td>number | null</td>
 <td>Additional qualitative note</td>
 </tr>
 <tr>
 <td><code>status</code></td>
 <td>integer</td>
-<td>Current status of the control (see below)</td>
+<td>Current status of the audit instance (see below)</td>
 </tr>
 <tr>
 <td><code>next_id</code></td>
 <td>integer | null</td>
-<td>ID of the next control in the historical chain (self FK)</td>
+<td>ID of the next audit instance in the historical chain (self FK)</td>
 </tr>
 <tr>
 <td><code>standard</code></td>
@@ -1131,9 +1136,9 @@ It contains planning, execution, and result data.</p>
 <td>Scope of application (entity, site, system)</td>
 </tr>
 <tr>
-<td><code>measures</code></td>
+<td><code>controls</code></td>
 <td>array</td>
-<td>List of measure IDs verified by this control</td>
+<td>List of security measure IDs verified by this audit instance</td>
 </tr>
 <tr>
 <td><code>created_at</code></td>
@@ -1158,23 +1163,15 @@ It contains planning, execution, and result data.</p>
 <tbody>
 <tr>
 <td><code>0</code></td>
-<td>Not performed / To be planned</td>
+<td>To do / Not yet performed (<code>realisation_date</code> is null)</td>
 </tr>
 <tr>
 <td><code>1</code></td>
-<td>In progress</td>
+<td>Proposed (auditee submitted a result, pending validation)</td>
 </tr>
 <tr>
 <td><code>2</code></td>
-<td>Performed</td>
-</tr>
-<tr>
-<td><code>3</code></td>
-<td>Validated / Compliant</td>
-</tr>
-<tr>
-<td><code>4</code></td>
-<td>Non-compliant</td>
+<td>Done / Completed (<code>realisation_date</code> is set)</td>
 </tr>
 </tbody>
 </table>
@@ -1188,17 +1185,18 @@ It contains planning, execution, and result data.</p>
 <span class="w">  </span><span class="nt">&quot;plan_date&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-07-31&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;realisation_date&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2025-03-25&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;score&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;next_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;standard&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;attributes&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;scope&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;measures&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="w">  </span><span class="nt">&quot;controls&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 <span class="p">}</span>
 </code></pre></div>
 <hr />
 <h2 id="documents"><strong>documents</strong><a class="headerlink" href="#documents" title="Permanent link">&para;</a></h2>
-<p>The <code>documents</code> table is intended to store attachments and documentary evidence associated with controls or measures.</p>
+<p>The <code>documents</code> table stores attachments and documentary evidence associated with audit instances.<br />
+Each document is linked to a <code>measures</code> record via <code>measure_id</code>.</p>
 
 
 
