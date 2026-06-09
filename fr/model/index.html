@@ -639,6 +639,30 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#risks" class="md-nav__link">
+    <span class="md-ellipsis">
+      risks
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="risks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#valeurs-du-champ-status_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Valeurs du champ status
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -726,10 +750,12 @@
 <li>controls</li>
 <li>measures</li>
 <li>documents</li>
+<li>risks</li>
 </ul>
 <blockquote>
 <p><strong>Rôles :</strong> <code>controls</code> = <strong>mesures de sécurité</strong> (exigences à mettre en œuvre).<br />
-<code>measures</code> = <strong>instances d'audit</strong> (vérifications périodiques de ces exigences).</p>
+<code>measures</code> = <strong>instances d'audit</strong> (vérifications périodiques de ces exigences).<br />
+<code>risks</code> = <strong>risques de sécurité de l'information</strong> (registre ISO 27001 §6.1.2).</p>
 </blockquote>
 <h2 id="dependances-entre-tables">Dépendances entre tables<a class="headerlink" href="#dependances-entre-tables" title="Permanent link">&para;</a></h2>
 <p>Vue d'ensemble : qui utilise quoi.</p>
@@ -740,7 +766,10 @@
     attributes -.-&gt;|"optionnel"| controls
     attributes -.-&gt;|"optionnel"| measures
     measures -.-&gt;|"next_id (self)"| measures
-    documents -.-&gt;|"optionnel"| measures</code></pre>
+    documents -.-&gt;|"optionnel"| measures
+    risks --&gt;|"owner_id (1:N)"| users
+    risks --&gt;|"control_risk (N:N)"| controls
+    controls --&gt;|"control_risk (N:N)"| risks</code></pre>
 <p>Le schéma détaillé ci-dessous décrit les champs de chaque table.</p>
 <pre class="mermaid"><code>erDiagram
     domains ||--o{ controls : "domain_id"
@@ -749,6 +778,8 @@
     attributes }o--o{ measures : "optionnel"
     measures o|--o| measures : "next_id"
     documents }o--o| measures : "optionnel"
+    risks }o--o{ controls : "control_risk"
+    users ||--o{ risks : "owner_id"
 
     domains {
         int id PK
@@ -769,6 +800,7 @@
         string objective
         array measures
         array attributes
+        array risks
     }
     measures {
         int id PK
@@ -784,6 +816,17 @@
     documents {
         int id PK
         int measure_id FK
+    }
+    risks {
+        int id PK
+        int owner_id FK
+        string name
+        string status
+        int probability
+        int impact
+        int review_frequency
+        date next_review_at
+        array controls
     }</code></pre>
 <p>Les relations sont les suivantes :</p>
 <table>
@@ -825,11 +868,22 @@
 <td>Optionnel (1:N)</td>
 <td>Les documents et preuves sont attachés aux instances d'audit via <code>measure_id</code></td>
 </tr>
+<tr>
+<td><code>risks</code> ↔ <code>controls</code></td>
+<td>Many-to-many via <code>control_risk</code></td>
+<td>Un risque mitigé doit être lié à au moins un contrôle de sécurité ; la liste est stockée dans <code>controls[]</code> du risque</td>
+</tr>
+<tr>
+<td><code>users</code> → <code>risks</code></td>
+<td>Optionnel (1:N)</td>
+<td>Chaque risque peut être attribué à un propriétaire (<code>owner_id</code>) responsable de la revue périodique</td>
+</tr>
 </tbody>
 </table>
 <blockquote>
 <p><strong>Note :</strong> il n'y a pas de table de jonction exposée pour la relation controls/measures.<br />
-Les IDs sont directement embarqués dans chaque objet des deux côtés.</p>
+Les IDs sont directement embarqués dans chaque objet des deux côtés.<br />
+La table pivot <code>control_risk</code> relie les risques aux mesures de sécurité.</p>
 </blockquote>
 <hr />
 <h2 id="attributes">attributes<a class="headerlink" href="#attributes" title="Permanent link">&para;</a></h2>
@@ -1197,6 +1251,171 @@ Elle porte les données de planification, de réalisation et de résultat.</p>
 <h2 id="documents">documents<a class="headerlink" href="#documents" title="Permanent link">&para;</a></h2>
 <p>La table <code>documents</code> stocke les pièces jointes et preuves documentaires associées aux instances d'audit.<br />
 Chaque document est lié à un enregistrement <code>measures</code> via <code>measure_id</code>.</p>
+<hr />
+<h2 id="risks">risks<a class="headerlink" href="#risks" title="Permanent link">&para;</a></h2>
+<p>Le registre des risques enregistre les risques de sécurité de l'information conformément aux exigences de la norme ISO 27001:2022 §6.1.2 et §8.2.<br />
+Chaque risque est évalué selon une méthode de scoring configurable, optionnellement assigné à un propriétaire, et soumis à un cycle de revue périodique.<br />
+Un risque avec le statut <em>Mitigé</em> doit être lié à au moins un contrôle de sécurité via la table pivot <code>control_risk</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Champ</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>integer</td>
+<td>Identifiant unique (PK)</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>Intitulé court et identifiable du risque (obligatoire)</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>string | null</td>
+<td>Description détaillée du risque</td>
+</tr>
+<tr>
+<td><code>owner_id</code></td>
+<td>integer | null</td>
+<td>Référence vers <code>users.id</code> — responsable de la revue périodique</td>
+</tr>
+<tr>
+<td><code>probability</code></td>
+<td>integer</td>
+<td>Niveau de probabilité (1 à N, formules standard)</td>
+</tr>
+<tr>
+<td><code>probability_comment</code></td>
+<td>string | null</td>
+<td>Commentaire libre sur l'évaluation de la probabilité</td>
+</tr>
+<tr>
+<td><code>impact</code></td>
+<td>integer</td>
+<td>Niveau de gravité si le risque se matérialise (1 à N)</td>
+</tr>
+<tr>
+<td><code>impact_comment</code></td>
+<td>string | null</td>
+<td>Commentaire libre sur l'évaluation de l'impact</td>
+</tr>
+<tr>
+<td><code>exposure</code></td>
+<td>integer | null</td>
+<td>Accessibilité du système (formule BSI 200-3 : 0 = hors réseau, 1 = interne, 2 = Internet)</td>
+</tr>
+<tr>
+<td><code>vulnerability</code></td>
+<td>integer | null</td>
+<td>Niveau d'exploitabilité des failles connues (formule BSI 200-3 uniquement)</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>enum</td>
+<td>Décision de traitement (voir valeurs ci-dessous)</td>
+</tr>
+<tr>
+<td><code>status_comment</code></td>
+<td>string | null</td>
+<td>Commentaire libre sur la décision de traitement</td>
+</tr>
+<tr>
+<td><code>review_frequency</code></td>
+<td>integer</td>
+<td>Intervalle en mois entre deux revues (défaut : 12)</td>
+</tr>
+<tr>
+<td><code>next_review_at</code></td>
+<td>date | null</td>
+<td>Date prévue de la prochaine revue</td>
+</tr>
+<tr>
+<td><code>controls</code></td>
+<td>array</td>
+<td>Liste des IDs de contrôles de sécurité liés à ce risque (via <code>control_risk</code>)</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td>datetime</td>
+<td>Date de création</td>
+</tr>
+<tr>
+<td><code>updated_at</code></td>
+<td>datetime</td>
+<td>Date de dernière modification</td>
+</tr>
+<tr>
+<td><code>deleted_at</code></td>
+<td>datetime | null</td>
+<td>Date de suppression logique</td>
+</tr>
+</tbody>
+</table>
+<h3 id="valeurs-du-champ-status_1">Valeurs du champ <code>status</code><a class="headerlink" href="#valeurs-du-champ-status_1" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Valeur</th>
+<th>Signification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>not_evaluated</code></td>
+<td>Non évalué</td>
+</tr>
+<tr>
+<td><code>not_accepted</code></td>
+<td>Non accepté — un plan d'action lié est requis</td>
+</tr>
+<tr>
+<td><code>temporarily_accepted</code></td>
+<td>Accepté temporairement</td>
+</tr>
+<tr>
+<td><code>accepted</code></td>
+<td>Accepté</td>
+</tr>
+<tr>
+<td><code>mitigated</code></td>
+<td>Mitigé — au moins un contrôle de sécurité lié est requis</td>
+</tr>
+<tr>
+<td><code>transferred</code></td>
+<td>Transféré (assurance, tiers)</td>
+</tr>
+<tr>
+<td><code>avoided</code></td>
+<td>Évité</td>
+</tr>
+</tbody>
+</table>
+<p>Exemple :</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Accès non autorisé aux données sensibles&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Risque d&#39;exfiltration de données via des identifiants compromis.&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;owner_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;probability&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;impact&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;exposure&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;vulnerability&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;mitigated&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;status_comment&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Politique de contrôle d&#39;accès déployée au T1.&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;review_frequency&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;next_review_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2027-06-01&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;controls&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">12</span><span class="p">,</span><span class="w"> </span><span class="mi">15</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;created_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-06-09T10:00:00.000000Z&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;updated_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-06-09T10:00:00.000000Z&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;deleted_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span>
+<span class="p">}</span>
+</code></pre></div>
 
 
 
