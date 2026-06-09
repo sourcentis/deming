@@ -753,23 +753,21 @@
 <li>risks  </li>
 </ul>
 <blockquote>
-<p><strong>Roles:</strong> <code>controls</code> = <strong>security measures</strong> (requirements to implement).<br />
+<p><code>controls</code> = <strong>security measures</strong> (requirements to implement).<br />
 <code>measures</code> = <strong>audit instances</strong> (periodic verifications of those requirements).<br />
 <code>risks</code> = <strong>information security risks</strong> (ISO 27001 §6.1.2 register).</p>
 </blockquote>
 <h2 id="table-dependencies"><strong>Table Dependencies</strong><a class="headerlink" href="#table-dependencies" title="Permanent link">&para;</a></h2>
 <p>Overview: who uses what.</p>
 <pre class="mermaid"><code>flowchart LR
-    domains --&gt;|"domain_id (1:N)"| controls
-    controls --&gt;|"measures[ ] (N:N)"| measures
-    measures --&gt;|"controls[ ] (N:N)"| controls
-    attributes -.-&gt;|"optional"| controls
-    attributes -.-&gt;|"optional"| measures
-    measures -.-&gt;|"next_id (self)"| measures
-    documents -.-&gt;|"optional"| measures
-    risks --&gt;|"owner_id (1:N)"| users
-    risks --&gt;|"control_risk (N:N)"| controls
-    controls --&gt;|"control_risk (N:N)"| risks</code></pre>
+    controls --&gt; |"domain_id (0:1)"| domains
+    controls &lt;--&gt;|"control_measure (N:N)"| measures
+    attributes -.-o |"optional"| controls
+    attributes -.-o |"optional"| measures
+    measures --&gt;|"measure_id (0:1)"| measures
+    documents --&gt;|"document_id (1:1)"| measures
+    risks --&gt;|"owner_id (0:1)"| users
+    risks &lt;--&gt;|"control_risk (N:N)"| controls</code></pre>
 <p>The detailed schema below describes the fields of each table.</p>
 <pre class="mermaid"><code>erDiagram
     domains ||--o{ controls : "domain_id"
