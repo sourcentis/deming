@@ -615,6 +615,24 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#get-apirisksid-risk" class="md-nav__link">
+    <span class="md-ellipsis">
+      GET /api/risks/{id} — risk
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#postput-apirisks-optional-related-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      POST/PUT /api/risks — optional related fields
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#postput-apimeasures-optional-related-fields" class="md-nav__link">
     <span class="md-ellipsis">
       POST/PUT /api/measures — optional related fields
@@ -841,6 +859,10 @@ architecture and enables interaction with RESTful web services.</p>
 <td><strong>Measures</strong> (periodic verifications of controls)</td>
 </tr>
 <tr>
+<td><code>/api/risks</code></td>
+<td><strong>Risks</strong> (risk register, with linked controls and actions)</td>
+</tr>
+<tr>
 <td><code>/api/users</code></td>
 <td>Users</td>
 </tr>
@@ -926,6 +948,42 @@ security measures covered by this audit instance:</p>
 <span class="w">  </span><span class="nt">&quot;measures&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 <span class="p">}</span>
 </code></pre></div>
+<h3 id="get-apirisksid-risk">GET /api/risks/{id} — risk<a class="headerlink" href="#get-apirisksid-risk" title="Permanent link">&para;</a></h3>
+<p>Returns the risk fields plus <code>controls</code> and <code>actions</code> keys containing the IDs
+of the linked security controls and action plan items:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Data leakage&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;owner_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;probability&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;impact&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;not_evaluated&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;review_frequency&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;next_review_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2027-07-29&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;controls&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;actions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="postput-apirisks-optional-related-fields">POST/PUT /api/risks — optional related fields<a class="headerlink" href="#postput-apirisks-optional-related-fields" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>controls</code></td>
+<td>Sync the list of security control IDs linked to this risk</td>
+</tr>
+<tr>
+<td><code>actions</code></td>
+<td>Sync the list of action plan item IDs linked to this risk</td>
+</tr>
+</tbody>
+</table>
 <h3 id="postput-apimeasures-optional-related-fields">POST/PUT /api/measures — optional related fields<a class="headerlink" href="#postput-apimeasures-optional-related-fields" title="Permanent link">&para;</a></h3>
 <p>When creating or updating an audit instance, the following keys are accepted to
 update related records:</p>

@@ -615,6 +615,24 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#get-apirisksid-risque" class="md-nav__link">
+    <span class="md-ellipsis">
+      GET /api/risks/{id} — risque
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#postput-apirisks-champs-lies-optionnels" class="md-nav__link">
+    <span class="md-ellipsis">
+      POST/PUT /api/risks — champs liés optionnels
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#postput-apimeasures-champs-lies-optionnels" class="md-nav__link">
     <span class="md-ellipsis">
       POST/PUT /api/measures — champs liés optionnels
@@ -841,6 +859,10 @@ et permet d'interagir avec les services web RESTful.</p>
 <td><strong>Contrôles</strong> (vérifications périodiques des mesures de sécurité)</td>
 </tr>
 <tr>
+<td><code>/api/risks</code></td>
+<td><strong>Risques</strong> (registre des risques, avec mesures et actions liées)</td>
+</tr>
+<tr>
 <td><code>/api/users</code></td>
 <td>Utilisateurs</td>
 </tr>
@@ -926,6 +948,42 @@ des mesures de sécurité couvertes par cette instance :</p>
 <span class="w">  </span><span class="nt">&quot;measures&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 <span class="p">}</span>
 </code></pre></div>
+<h3 id="get-apirisksid-risque">GET /api/risks/{id} — risque<a class="headerlink" href="#get-apirisksid-risque" title="Permanent link">&para;</a></h3>
+<p>Renvoie les champs du risque ainsi que les clés <code>controls</code> et <code>actions</code> contenant
+les identifiants des mesures de sécurité et des actions du plan d'action liées :</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Fuite de données&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;owner_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;probability&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;impact&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;not_evaluated&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;review_frequency&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;next_review_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2027-07-29&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;controls&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;actions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="postput-apirisks-champs-lies-optionnels">POST/PUT /api/risks — champs liés optionnels<a class="headerlink" href="#postput-apirisks-champs-lies-optionnels" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Clé</th>
+<th>Effet</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>controls</code></td>
+<td>Synchronise la liste des identifiants de mesures de sécurité liées à ce risque</td>
+</tr>
+<tr>
+<td><code>actions</code></td>
+<td>Synchronise la liste des identifiants d'actions du plan d'action liées à ce risque</td>
+</tr>
+</tbody>
+</table>
 <h3 id="postput-apimeasures-champs-lies-optionnels">POST/PUT /api/measures — champs liés optionnels<a class="headerlink" href="#postput-apimeasures-champs-lies-optionnels" title="Permanent link">&para;</a></h3>
 <p>Lors de la création ou de la mise à jour d'une instance d'audit, les clés suivantes sont
 acceptées pour mettre à jour les enregistrements liés :</p>
