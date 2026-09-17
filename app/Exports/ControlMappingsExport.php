@@ -27,6 +27,7 @@ class ControlMappingsExport implements FromCollection, ShouldAutoSize, WithHeadi
             'target_clause',
             'mapping_type',
             'coverage',
+            'confidence',
             'rationale',
             'source_reference',
             'source_url',

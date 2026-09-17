@@ -100,7 +100,7 @@ class ControlMappingController extends Controller
 
     public function matrix(Request $request): View
     {
-        $filters = $this->filters($request);
+        $filters = $this->filters($request, true);
         $sourceFramework = $filters['source_framework'] ?? null;
         $targetFramework = $filters['target_framework'] ?? null;
         $matrix = null;
@@ -122,8 +122,9 @@ class ControlMappingController extends Controller
 
     public function export(Request $request): BinaryFileResponse
     {
-        $filters = $this->filters($request);
-        $filters['directional'] = $request->boolean('directional');
+        $directional = $request->boolean('directional');
+        $filters = $this->filters($request, $directional);
+        $filters['directional'] = $directional;
         $rows = $this->crosswalkService->exportRows($filters);
 
         return Excel::download(
@@ -170,13 +171,18 @@ class ControlMappingController extends Controller
         $mapping->save();
     }
 
-    private function filters(Request $request): array
+    private function filters(Request $request, bool $directional = false): array
     {
         return $request->validate([
             'search' => ['nullable', 'string', 'max:255'],
             'source_framework' => ['nullable', 'string', 'exists:frameworks,code'],
             'target_framework' => ['nullable', 'string', 'exists:frameworks,code'],
-            'mapping_type' => ['nullable', Rule::in(ControlMapping::MAPPING_TYPES)],
+            'mapping_type' => [
+                'nullable',
+                Rule::in($directional
+                    ? ControlMapping::DIRECTIONAL_MAPPING_TYPES
+                    : ControlMapping::MAPPING_TYPES),
+            ],
             'coverage' => ['nullable', Rule::in(ControlMapping::COVERAGE_LEVELS)],
             'unmapped' => ['nullable', 'boolean'],
             'directional' => ['nullable', 'boolean'],

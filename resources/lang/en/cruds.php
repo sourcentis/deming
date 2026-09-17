@@ -568,6 +568,7 @@ return [
         'unmapped_source' => 'Without a mapping',
         'relations' => 'Relations',
         'unmapped' => 'No mapping',
+        'no_filtered_mapping' => 'No mapping matches the selected filters',
         'no_mappings' => 'No mapping found.',
         'no_controls' => 'No source control found.',
         'control_mappings' => 'Mappings to other frameworks',
@@ -583,6 +584,7 @@ return [
             'covered_by' => 'Covered by',
             'partial' => 'Partial',
             'supports' => 'Supports',
+            'supported_by' => 'Supported by',
             'related' => 'Related',
         ],
         'coverage_levels' => [

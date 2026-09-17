@@ -19,6 +19,20 @@ class ControlMapping extends Model
         'related',
     ];
 
+    /**
+     * Directional presentation types include the non-persisted inverse of
+     * supports. Database values remain restricted to MAPPING_TYPES.
+     */
+    public const DIRECTIONAL_MAPPING_TYPES = [
+        'equivalent',
+        'covers',
+        'covered_by',
+        'partial',
+        'supports',
+        'supported_by',
+        'related',
+    ];
+
     public const COVERAGE_LEVELS = [
         'full',
         'high',
@@ -76,6 +90,8 @@ class ControlMapping extends Model
         return match ($mappingType) {
             'covers' => 'covered_by',
             'covered_by' => 'covers',
+            'supports' => 'supported_by',
+            'supported_by' => 'supports',
             default => $mappingType,
         };
     }

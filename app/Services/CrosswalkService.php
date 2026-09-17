@@ -137,23 +137,31 @@ class CrosswalkService
         array $filters = []
     ): array {
         $sourceControls = $this->controlsForFramework($sourceFramework);
+        $allMappings = $this->directionalMappings($sourceFramework, $targetFramework);
         $mappings = $this->directionalMappings($sourceFramework, $targetFramework, $filters);
+        $allMappingsBySource = $allMappings->groupBy(
+            fn (array $item): int => $item['source_control']->id
+        );
         $mappingsBySource = $mappings->groupBy(
             fn (array $item): int => $item['source_control']->id
         );
 
-        $rows = $sourceControls->map(function (Control $control) use ($mappingsBySource): array {
+        $rows = $sourceControls->map(function (Control $control) use (
+            $allMappingsBySource,
+            $mappingsBySource
+        ): array {
             return [
                 'control' => $control,
                 'mappings' => $mappingsBySource->get($control->id, collect()),
+                'has_any_mapping' => $allMappingsBySource->has($control->id),
             ];
         });
 
-        $mappedSourceCount = $mappingsBySource->keys()->count();
+        $mappedSourceCount = $allMappingsBySource->keys()->count();
 
         if ($filters['unmapped'] ?? false) {
             $rows = $rows
-                ->filter(fn (array $row): bool => $row['mappings']->isEmpty())
+                ->filter(fn (array $row): bool => ! $row['has_any_mapping'])
                 ->values();
         }
 
@@ -186,12 +194,7 @@ class CrosswalkService
             }
 
             return $this->directionalMappings($sourceFramework, $targetFramework, $filters)
-                ->map(fn (array $item): array => $this->exportRow(
-                    $item['mapping'],
-                    $item['source_control'],
-                    $item['target_control'],
-                    $item['mapping_type']
-                ));
+                ->map(fn (array $item): array => $this->exportDirectionalRow($item));
         }
 
         return $this->filteredMappings($filters)
@@ -219,10 +222,36 @@ class CrosswalkService
             'target_clause' => trim($targetControl->clause),
             'mapping_type' => $mappingType,
             'coverage' => $mapping->coverage,
+            'confidence' => $mapping->confidence,
             'rationale' => $mapping->rationale,
             'source_reference' => $mapping->source_reference,
             'source_url' => $mapping->source_url,
         ];
+    }
+
+    private function exportDirectionalRow(array $item): array
+    {
+        $mapping = $item['mapping'];
+        assert($mapping instanceof ControlMapping);
+
+        // "supported_by" is a display-only inverse and cannot be persisted.
+        // Preserve the stored direction so the exported row stays truthful and
+        // can be imported again without inventing a new mapping type.
+        if ($item['mapping_type'] === 'supported_by') {
+            return $this->exportRow(
+                $mapping,
+                $mapping->sourceControl,
+                $mapping->targetControl,
+                $mapping->mapping_type
+            );
+        }
+
+        return $this->exportRow(
+            $mapping,
+            $item['source_control'],
+            $item['target_control'],
+            $item['mapping_type']
+        );
     }
 
     private function exportUnmappedRow(Control $sourceControl): array
@@ -234,6 +263,7 @@ class CrosswalkService
             'target_clause' => null,
             'mapping_type' => null,
             'coverage' => null,
+            'confidence' => null,
             'rationale' => null,
             'source_reference' => null,
             'source_url' => null,

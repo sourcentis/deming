@@ -4,11 +4,11 @@ use App\Models\Control;
 use App\Models\ControlMapping;
 use App\Models\Domain;
 use App\Models\User;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Event;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
-function mappingWorkbook(array $rows): string
+function mappingWorkbook(array $rows, bool $includeConfidence = true): string
 {
     $headers = [
         'source_framework',
@@ -17,10 +17,14 @@ function mappingWorkbook(array $rows): string
         'target_clause',
         'mapping_type',
         'coverage',
+        'confidence',
         'rationale',
         'source_reference',
         'source_url',
     ];
+    if (! $includeConfidence) {
+        $headers = array_values(array_diff($headers, ['confidence']));
+    }
 
     $spreadsheet = new Spreadsheet;
     $spreadsheet->getActiveSheet()->fromArray([
@@ -111,6 +115,48 @@ test('normal import creates a mapping with documentary provenance', function () 
     ]);
 });
 
+test('import preserves optional confidence from an exported workbook', function () {
+    $path = mappingWorkbook([validMappingRow(['confidence' => 92.75])]);
+    $this->mappingFiles[] = $path;
+
+    $this->artisan('deming:import-mappings', ['filename' => $path])
+        ->assertSuccessful();
+
+    expect(ControlMapping::query()->sole()->confidence)->toBe('92.75');
+});
+
+test('update without a confidence column preserves the existing value', function () {
+    $mapping = ControlMapping::factory()->create([
+        'source_control_id' => $this->source->id,
+        'target_control_id' => $this->target->id,
+        'mapping_type' => 'partial',
+        'coverage' => 'low',
+        'confidence' => 73.25,
+    ]);
+    $path = mappingWorkbook([validMappingRow()], false);
+    $this->mappingFiles[] = $path;
+
+    $this->artisan('deming:import-mappings', [
+        'filename' => $path,
+        '--update' => true,
+    ])->assertSuccessful();
+
+    $mapping->refresh();
+    expect($mapping->mapping_type)->toBe('related')
+        ->and($mapping->confidence)->toBe('73.25');
+});
+
+test('import rejects confidence outside the zero to one hundred range', function () {
+    $path = mappingWorkbook([validMappingRow(['confidence' => 101])]);
+    $this->mappingFiles[] = $path;
+
+    $this->artisan('deming:import-mappings', ['filename' => $path])
+        ->expectsOutputToContain('confidence must be a number between 0 and 100.')
+        ->assertFailed();
+
+    expect(ControlMapping::query()->count())->toBe(0);
+});
+
 test('update changes an existing mapping and clears its validation', function () {
     $mapping = ControlMapping::factory()->create([
         'source_control_id' => $this->source->id,
@@ -197,18 +243,19 @@ test('a write failure rolls back mappings already inserted in the transaction', 
     ]);
     $this->mappingFiles[] = $path;
 
-    DB::statement(sprintf(
-        'CREATE TRIGGER fail_mapping_insert BEFORE INSERT ON control_mappings '
-        ."WHEN NEW.target_control_id = %d BEGIN SELECT RAISE(ABORT, 'forced failure'); END",
-        $secondTarget->id
-    ));
+    $eventName = 'eloquent.creating: '.ControlMapping::class;
+    Event::listen($eventName, function (ControlMapping $mapping) use ($secondTarget): void {
+        if ($mapping->target_control_id === $secondTarget->id) {
+            throw new RuntimeException('forced failure');
+        }
+    });
 
     try {
         $this->artisan('deming:import-mappings', ['filename' => $path])
             ->expectsOutputToContain('Import failed and was rolled back:')
             ->assertFailed();
     } finally {
-        DB::statement('DROP TRIGGER IF EXISTS fail_mapping_insert');
+        Event::forget($eventName);
     }
 
     expect(ControlMapping::query()->count())->toBe(0);

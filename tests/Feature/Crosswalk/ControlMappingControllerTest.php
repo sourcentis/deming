@@ -202,3 +202,16 @@ test('control detail displays outgoing and incoming mappings', function () {
         ->assertSee('REF-TARGET')
         ->assertSee('REF-INCOMING');
 });
+
+test('control detail labels an incoming supports relation as supported by', function () {
+    ControlMapping::factory()->create([
+        'source_control_id' => $this->source->id,
+        'target_control_id' => $this->target->id,
+        'mapping_type' => 'supports',
+    ]);
+
+    $this->actingAs($this->admin)
+        ->get("/alice/show/{$this->target->id}")
+        ->assertOk()
+        ->assertSee('Supported by');
+});

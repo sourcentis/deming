@@ -39,7 +39,7 @@
                     <label>{{ trans('cruds.crosswalk.fields.mapping_type') }}</label>
                     <select name="mapping_type" data-role="select">
                         <option value="">-- {{ trans('cruds.crosswalk.all') }} --</option>
-                        @foreach(\App\Models\ControlMapping::MAPPING_TYPES as $mappingType)
+                        @foreach(\App\Models\ControlMapping::DIRECTIONAL_MAPPING_TYPES as $mappingType)
                             <option value="{{ $mappingType }}"
                                 {{ ($filters['mapping_type'] ?? '') === $mappingType ? 'selected' : '' }}>
                                 {{ trans('cruds.crosswalk.mapping_types.' . $mappingType) }}
@@ -158,7 +158,11 @@
                                         {{ trim($row['control']->clause) }} — {{ $row['control']->name }}
                                     </a>
                                 </td>
-                                <td colspan="4"><em>{{ trans('cruds.crosswalk.unmapped') }}</em></td>
+                                <td colspan="4"><em>
+                                    {{ $row['has_any_mapping']
+                                        ? trans('cruds.crosswalk.no_filtered_mapping')
+                                        : trans('cruds.crosswalk.unmapped') }}
+                                </em></td>
                             </tr>
                         @else
                             @foreach($row['mappings'] as $item)

@@ -566,6 +566,7 @@ return [
         'unmapped_source' => 'Sans relation',
         'relations' => 'Relations',
         'unmapped' => 'Aucune correspondance',
+        'no_filtered_mapping' => 'Aucune correspondance ne répond aux filtres',
         'no_mappings' => 'Aucune correspondance trouvée.',
         'no_controls' => 'Aucun contrôle source trouvé.',
         'control_mappings' => 'Correspondances avec d’autres référentiels',
@@ -581,6 +582,7 @@ return [
             'covered_by' => 'Couvert par',
             'partial' => 'Partiel',
             'supports' => 'Contribue à',
+            'supported_by' => 'Bénéficie du soutien de',
             'related' => 'Lié',
         ],
         'coverage_levels' => [

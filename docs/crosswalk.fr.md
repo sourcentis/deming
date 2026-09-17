@@ -6,7 +6,7 @@ Le module `/crosswalk` gère des relations documentaires génériques entre deux
 
 La table `frameworks` complète les codes déjà présents dans `Domain.framework` avec des métadonnées. Elle ne remplace pas ce champ et ne modifie pas sa sémantique. La migration initialise une ligne de métadonnées pour chaque code existant. La sauvegarde ultérieure d'un domaine initialise également les métadonnées minimales de son code.
 
-Une ligne de `control_mappings` est enregistrée une seule fois de `source_control_id` vers `target_control_id`. L'application lit aussi cette relation dans le sens inverse. Dans ce cas, `covers` devient `covered_by`, et réciproquement. Aucun enregistrement miroir n'est créé.
+Une ligne de `control_mappings` est enregistrée une seule fois de `source_control_id` vers `target_control_id`. L'application lit aussi cette relation dans le sens inverse. Dans ce cas, `covers` devient `covered_by`, et réciproquement. Le sens inverse de `supports` est affiché comme `supported_by` (« bénéficie du soutien de ») sans ajouter cette valeur aux types persistés. Aucun enregistrement miroir n'est créé.
 
 Les types autorisés sont `equivalent`, `covers`, `covered_by`, `partial`, `supports` et `related`. Les couvertures autorisées sont `full`, `high`, `medium`, `low` et `none`.
 
@@ -36,11 +36,15 @@ source_framework, source_clause, target_framework, target_clause,
 mapping_type, coverage, rationale, source_reference, source_url
 ```
 
+La colonne `confidence` est facultative (nombre de 0 à 100). Elle est incluse dans les exports afin de permettre un aller-retour sans perte. Si la colonne est absente pendant `--update`, la valeur existante est conservée ; si elle est présente avec une cellule vide, elle est effacée. Lorsqu'une relation `supports` est exportée depuis une vue inversée, sa source, sa cible et son type persistés sont conservés : exporter une ligne directionnelle ne doit jamais transformer « A contribue à B » en « B contribue à A ».
+
 Toutes les lignes sont validées avant la première écriture. Les écritures sont ensuite exécutées dans une transaction unique. Une erreur empêche donc tout import partiel. Une relation modifiée par import doit être validée à nouveau.
 
 ## Premier jeu ReCyF 2.5 vers ISO 2700X
 
 `storage/app/repository/ReCyF-2.5-ISO27001-2022.mappings.xlsx` contient 281 relations issues du comparateur officiel ANSSI. Elles couvrent 118 contrôles ReCyF et 66 contrôles ISO présents dans `ISO27001-2022.fr.xlsx`.
+
+Ce classeur contient uniquement les relations : il ne crée pas les contrôles. Avant l'import, l'instance doit donc déjà contenir les contrôles source sous le code exact `Domain.framework = NIS2-ReCyF-2.5-FR` et les contrôles cibles sous `Domain.framework = 27001:2022`. C'est notamment le cas de l'instance ReCyF de 152 contrôles décrite pour ce lot. Toujours exécuter `--dry-run` sur l'instance cible avant l'import normal ; une clause absente ou ambiguë bloque le fichier entier.
 
 Le jeu est volontairement conservateur :
 

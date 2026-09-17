@@ -37,6 +37,7 @@ beforeEach(function () {
         'target_control_id' => $this->targetTwo->id,
         'mapping_type' => 'supports',
         'coverage' => 'medium',
+        'confidence' => 87.5,
     ]);
 });
 
@@ -91,6 +92,47 @@ test('matrix can display only source controls without a filtered mapping', funct
                 && $matrix['rows']->first()['control']->is($this->sourceTwo)
                 && $matrix['rows']->first()['mappings']->isEmpty();
         });
+});
+
+test('unmapped controls and metrics remain absolute when relation filters are active', function () {
+    $this->actingAs($this->user)
+        ->get(route('crosswalk.matrix', [
+            'source_framework' => 'MATRIX-A',
+            'target_framework' => 'MATRIX-B',
+            'mapping_type' => 'equivalent',
+            'coverage' => 'low',
+            'unmapped' => 1,
+        ]))
+        ->assertOk()
+        ->assertViewHas('matrix', function (array $matrix): bool {
+            return $matrix['stats'] === [
+                'source_total' => 2,
+                'mapped_source' => 1,
+                'unmapped_source' => 1,
+                'relations' => 0,
+            ]
+                && $matrix['rows']->count() === 1
+                && $matrix['rows']->first()['control']->is($this->sourceTwo);
+        });
+});
+
+test('matrix labels an incoming supports relation as supported by', function () {
+    $this->actingAs($this->user)
+        ->get(route('crosswalk.matrix', [
+            'source_framework' => 'MATRIX-B',
+            'target_framework' => 'MATRIX-A',
+            'mapping_type' => 'supported_by',
+        ]))
+        ->assertOk()
+        ->assertViewHas('matrix', function (array $matrix): bool {
+            $mapping = $matrix['mappings']->first();
+
+            return $matrix['mappings']->count() === 1
+                && $mapping['mapping']->is($this->directStored)
+                && $mapping['mapping_type'] === 'supported_by'
+                && $mapping['reversed'] === true;
+        })
+        ->assertSee('Supported by');
 });
 
 test('directional XLSX export applies filters and reverses asymmetric mapping types', function () {
@@ -168,5 +210,36 @@ test('standard XLSX export applies stored-direction filters', function () {
         fn (ControlMappingsExport $export): bool => $export->collection()->count() === 1
             && $export->collection()->first()['source_clause'] === 'MA-1'
             && $export->collection()->first()['target_clause'] === 'MB-2'
+            && $export->collection()->first()['confidence'] === '87.50'
+            && in_array('confidence', $export->headings(), true)
+    );
+});
+
+test('reverse supports export preserves the stored direction and type', function () {
+    Excel::fake();
+    $this->travelTo(CarbonImmutable::parse('2026-09-16 13:15:00'));
+
+    $this->actingAs($this->user)
+        ->get(route('crosswalk.export', [
+            'source_framework' => 'MATRIX-B',
+            'target_framework' => 'MATRIX-A',
+            'mapping_type' => 'supported_by',
+            'directional' => 1,
+        ]))
+        ->assertOk();
+
+    Excel::assertDownloaded(
+        'control-mappings-20260916-131500.xlsx',
+        function (ControlMappingsExport $export): bool {
+            $row = $export->collection()->first();
+
+            return $export->collection()->count() === 1
+                && $row['source_framework'] === 'MATRIX-A'
+                && $row['source_clause'] === 'MA-1'
+                && $row['target_framework'] === 'MATRIX-B'
+                && $row['target_clause'] === 'MB-2'
+                && $row['mapping_type'] === 'supports'
+                && $row['confidence'] === '87.50';
+        }
     );
 });

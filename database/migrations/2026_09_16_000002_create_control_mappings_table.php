@@ -53,6 +53,7 @@ return new class extends Migration
                 ['source_control_id', 'target_control_id'],
                 'control_mappings_source_target_unique'
             );
+            $table->index('target_control_id', 'control_mappings_target_control_index');
             $table->index('mapping_type');
             $table->index('coverage');
         });

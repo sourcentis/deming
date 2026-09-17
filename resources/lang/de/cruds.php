@@ -568,6 +568,7 @@ return [
         'unmapped_source' => 'Ohne Zuordnung',
         'relations' => 'Beziehungen',
         'unmapped' => 'Keine Zuordnung',
+        'no_filtered_mapping' => 'Keine Zuordnung entspricht den Filtern',
         'no_mappings' => 'Keine Zuordnung gefunden.',
         'no_controls' => 'Keine Quellkontrolle gefunden.',
         'control_mappings' => 'Zuordnungen zu anderen Rahmenwerken',
@@ -583,6 +584,7 @@ return [
             'covered_by' => 'Abgedeckt durch',
             'partial' => 'Teilweise',
             'supports' => 'Unterstützt',
+            'supported_by' => 'Unterstützt durch',
             'related' => 'Verwandt',
         ],
         'coverage_levels' => [

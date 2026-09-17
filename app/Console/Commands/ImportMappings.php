@@ -26,6 +26,10 @@ class ImportMappings extends Command
         'source_url',
     ];
 
+    private const OPTIONAL_HEADERS = [
+        'confidence',
+    ];
+
     protected $signature = 'deming:import-mappings
                             {filename : XLSX file containing control mappings}
                             {--dry-run : Validate and report without writing anything}
@@ -150,6 +154,7 @@ class ImportMappings extends Command
             ];
         }
 
+        $hasConfidenceColumn = isset($headers['confidence']);
         $frameworks = Framework::query()->pluck('code')->flip();
         $seenPairs = [];
 
@@ -157,8 +162,10 @@ class ImportMappings extends Command
             $line = $index + 1;
             $raw = [];
 
-            foreach (self::HEADERS as $header) {
-                $value = $values[$headers[$header]] ?? null;
+            foreach ([...self::HEADERS, ...self::OPTIONAL_HEADERS] as $header) {
+                $value = isset($headers[$header])
+                    ? ($values[$headers[$header]] ?? null)
+                    : null;
                 $raw[$header] = is_string($value) ? trim($value) : $value;
             }
 
@@ -258,6 +265,12 @@ class ImportMappings extends Command
                     : null,
                 'source_url' => $raw['source_url'] !== '' ? $raw['source_url'] : null,
             ];
+            if ($hasConfidenceColumn) {
+                $attributes['confidence'] = $raw['confidence'] !== null
+                    && $raw['confidence'] !== ''
+                        ? (float) $raw['confidence']
+                        : null;
+            }
 
             if ($mapping === null) {
                 $counts['create']++;
@@ -306,6 +319,14 @@ class ImportMappings extends Command
             && ! in_array($row['coverage'], ControlMapping::COVERAGE_LEVELS, true)) {
             $errors[] = 'Invalid coverage. Allowed values: '
                 .implode(', ', ControlMapping::COVERAGE_LEVELS).'.';
+        }
+
+        if ($row['confidence'] !== null && $row['confidence'] !== '') {
+            if (! is_numeric($row['confidence'])
+                || (float) $row['confidence'] < 0
+                || (float) $row['confidence'] > 100) {
+                $errors[] = 'confidence must be a number between 0 and 100.';
+            }
         }
 
         if (is_string($row['source_reference']) && mb_strlen($row['source_reference']) > 255) {
