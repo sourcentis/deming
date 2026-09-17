@@ -219,4 +219,63 @@
 	<div>
 	</div>
 </div>
+@if($control->outgoingMappings->isNotEmpty() || $control->incomingMappings->isNotEmpty())
+<div>
+    <br>
+</div>
+<div data-role="panel"
+     data-title-caption="{{ trans('cruds.crosswalk.control_mappings') }}"
+     data-collapsible="false"
+     data-title-icon="<span class='mif-shuffle'></span>">
+    <div class="overflow-auto">
+        <table id="control-crosswalk" class="table striped row-hover cell-border"
+               data-role="table" data-show-search="false" data-show-pagination="false">
+            <thead>
+                <tr>
+                    <th>{{ trans('cruds.crosswalk.corresponding_control') }}</th>
+                    <th>{{ trans('cruds.crosswalk.fields.mapping_type') }}</th>
+                    <th>{{ trans('cruds.crosswalk.fields.coverage') }}</th>
+                    <th>{{ trans('cruds.crosswalk.stored_direction') }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($control->outgoingMappings as $mapping)
+                    <tr>
+                        <td>
+                            <strong>{{ $mapping->targetControl->domain->framework }}</strong> —
+                            <a href="/alice/show/{{ $mapping->targetControl->id }}">
+                                {{ trim($mapping->targetControl->clause) }} — {{ $mapping->targetControl->name }}
+                            </a>
+                        </td>
+                        <td>
+                            <a href="{{ route('crosswalk.show', $mapping) }}">
+                                {{ trans('cruds.crosswalk.mapping_types.' . $mapping->mapping_type) }}
+                            </a>
+                        </td>
+                        <td>{{ $mapping->coverage ? trans('cruds.crosswalk.coverage_levels.' . $mapping->coverage) : '–' }}</td>
+                        <td>{{ trans('cruds.crosswalk.direct') }}</td>
+                    </tr>
+                @endforeach
+                @foreach($control->incomingMappings as $mapping)
+                    <tr>
+                        <td>
+                            <strong>{{ $mapping->sourceControl->domain->framework }}</strong> —
+                            <a href="/alice/show/{{ $mapping->sourceControl->id }}">
+                                {{ trim($mapping->sourceControl->clause) }} — {{ $mapping->sourceControl->name }}
+                            </a>
+                        </td>
+                        <td>
+                            <a href="{{ route('crosswalk.show', $mapping) }}">
+                                {{ trans('cruds.crosswalk.mapping_types.' . \App\Models\ControlMapping::inverseMappingType($mapping->mapping_type)) }}
+                            </a>
+                        </td>
+                        <td>{{ $mapping->coverage ? trans('cruds.crosswalk.coverage_levels.' . $mapping->coverage) : '–' }}</td>
+                        <td>{{ trans('cruds.crosswalk.reversed') }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+</div>
+@endif
 @endsection
