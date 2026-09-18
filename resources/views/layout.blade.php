@@ -117,6 +117,12 @@
                     <span class="caption">{{ trans("menu.controls") }}</span>
                 </a>
             </li>
+            <li class="{{ request()->is('crosswalk*') ? 'active': '' }}">
+                <a href="{{ route('crosswalk.index') }}">
+                    <span class="icon mif-shuffle"></span>
+                    <span class="caption">{{ trans('menu.crosswalk') }}</span>
+                </a>
+            </li>
             @if (Auth::User()->role <= 3)
             <li class="{{ request()->is('bob/history') ? 'active': '' }}">
                 <a href="/bob/history">

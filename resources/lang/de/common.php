@@ -9,6 +9,7 @@ return [
     'clone' => 'Kopieren',
     'delete' => 'Löschen',
     'download' => 'Download',
+    'export' => 'Exportieren',
     'edit' => 'Editieren',
     'import' => 'Import',
     'make' => 'Erledigen',

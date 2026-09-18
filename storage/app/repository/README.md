@@ -17,4 +17,5 @@
 | NIS2.de.xlsx                         | [NIS 2 directive requirements](https://www.recht.bund.de/bgbl/1/2025/301/VO) |
 | MVSP-3.0.xlsx                        | [Minimum Viable Security Product, v3.0](https://mvsp.dev/mvsp.en/)             |
 | PCI.DSS.4.0.EN.xlsx                  | [PCI DSS, v4.0, in English](https://blog.pcisecuritystandards.org/pci-dss-v4-0-resource-hub) |
+| ReCyF-2.5-ISO27001-2022.mappings.xlsx | [ANSSI ReCyF 2.5 / ISO 2700X comparator](https://messervices.cyber.gouv.fr/nis2#exigences), normalized to the controls in `ISO27001-2022.fr.xlsx`; requires pre-existing controls with framework codes `NIS2-ReCyF-2.5-FR` and `27001:2022` |
 | sp800-53r5-control-catalog-full.xlsx | [NIST SP 800-53 Rev. 5](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final)    |

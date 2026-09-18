@@ -218,6 +218,11 @@ class ControlController extends Controller
 
         abort_if($control === null, Response::HTTP_NOT_FOUND, '404 Not Found');
 
+        $control->load([
+            'outgoingMappings.targetControl.domain',
+            'incomingMappings.sourceControl.domain',
+        ]);
+
         $measures = DB::table('measures')
             ->select('measures.id', 'measures.name', 'measures.scope', 'score', 'measures.status', 'realisation_date', 'plan_date')
             ->join('control_measure', 'control_measure.measure_id', '=', 'measures.id')
