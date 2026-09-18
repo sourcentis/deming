@@ -80,13 +80,13 @@ nav:
   - home.md
   - measures.md
   - controls.md
-  - crosswalk.md
   - delegation.md
   - plan.md
   - dashboards.md
   - actions.md
   - risks.md
   - exceptions.md
+  - crosswalk.md
   - config.md
   - api.md
   - model.md
