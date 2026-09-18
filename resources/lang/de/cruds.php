@@ -53,6 +53,12 @@ return [
             'opportunity' => 'Gelegenheit',
             'observation' => 'Beobachtung'
         ],
+        'types_short' => [
+            'major' => 'Maj',
+            'minor' => 'Min',
+            'opportunity' => 'Gel',
+            'observation' => 'Beo'
+        ],
      ],
     'attribute' => [
         'fields' => [
