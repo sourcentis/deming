@@ -117,12 +117,6 @@
                     <span class="caption">{{ trans("menu.controls") }}</span>
                 </a>
             </li>
-            <li class="{{ request()->is('crosswalk*') ? 'active': '' }}">
-                <a href="{{ route('crosswalk.index') }}">
-                    <span class="icon mif-shuffle"></span>
-                    <span class="caption">{{ trans('menu.crosswalk') }}</span>
-                </a>
-            </li>
             @if (Auth::User()->role <= 3)
             <li class="{{ request()->is('bob/history') ? 'active': '' }}">
                 <a href="/bob/history">
@@ -212,6 +206,7 @@
                     request()->is('alice/import*')||
                     request()->is('doc*')||
                     request()->is('config*')||
+                    request()->is('crosswalk*')||
                     request()->is('logs*')
                 ) ? 'active': '' }}">
                 <a href="#" class="dropdown-toggle open">
@@ -230,6 +225,7 @@
                             request()->is('alice/import*')||
                             request()->is('doc*')||
                             request()->is('config*')||
+                            request()->is('crosswalk*')||
                             request()->is('logs*')
                         ) ? 'false': 'true' }}">
                     <li  class="{{ request()->is('attributes*') ? 'active': '' }}">
@@ -257,7 +253,7 @@
                         <span class="caption">{{ trans("menu.configuration.groups") }}</span>
                         </a>
                     </li>
-                    <li class="{{ request()->is('risks/scoring*') ? 'active': '' }}">
+                    <li class="{{ request()->is('risk/scoring*') ? 'active': '' }}">
                         <a href="/risk/scoring">
                         <span class="icon mif-calculator"></span>
                         <span class="caption">{{ trans("menu.configuration.scoring") }}</span>
@@ -267,6 +263,12 @@
                         <a href="/alice/import">
                         <span class="icon mif-import"></span>
                         <span class="caption">{{ trans("menu.configuration.import") }}</span>
+                        </a>
+                    </li>
+                    <li class="{{ request()->is('crosswalk*') ? 'active': '' }}">
+                        <a href="{{ route('crosswalk.index') }}">
+                            <span class="icon mif-shuffle"></span>
+                            <span class="caption">{{ trans('menu.crosswalk') }}</span>
                         </a>
                     </li>
                     <li class="{{ request()->is('doc*') ? 'active': '' }}">
