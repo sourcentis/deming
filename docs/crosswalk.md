@@ -1,18 +1,33 @@
 # Framework crosswalks
 
-The `/crosswalk` module stores generic documentary relationships between controls. It contains no ISO-, NIS2-, or framework-specific application logic.
+The `/crosswalk` module manages generic documentary relationships between two controls. It contains no rules specific to ISO, NIS2, or any other framework.
 
-`frameworks` adds metadata to the codes already stored in `Domain.framework`; it does not replace that field or change its semantics. A `control_mappings` row is stored once from source to target and is read in either direction without creating a mirror row. When read in reverse, `covers` and `covered_by` are inverted. The reverse of `supports` is presented as the non-persisted label `supported_by`; reverse exports retain the stored source, target, and type so they cannot misstate the relation.
+## Data model
 
-All authenticated users can read mappings, the matrix, and XLSX exports. Only administrators (`role=1`) can create, update, validate, or delete them. Matrix counts are documentary metrics, never compliance scores.
+The `frameworks` table adds metadata to the codes already present in `Domain.framework`. It does not replace that field and does not change its semantics. The initial migration seeds a metadata row for each existing code. Subsequently saving a domain also seeds the minimal metadata for its code.
+
+A `control_mappings` row is stored once, from `source_control_id` to `target_control_id`. The application also reads this relationship in the reverse direction. In that case, `covers` becomes `covered_by`, and vice versa. The reverse of `supports` is displayed as `supported_by` ("benefits from the support of") without adding this value to the persisted types. No mirror row is created.
+
+The allowed types are `equivalent`, `covers`, `covered_by`, `partial`, `supports`, and `related`. The allowed coverage values are `full`, `high`, `medium`, `low`, and `none`.
+
+## Permissions and screens
+
+All authenticated users can view the list, detail, matrix, and exports. Only administrators (`role=1`) can create, update, validate, or delete a relationship.
+
+The matrix presents documentary metrics: number of source controls, number of controls with a relationship, number of controls without a relationship, and number of relationships. These values are never compliance scores.
 
 ## XLSX import
 
+Command:
+
 ```console
 php artisan deming:import-mappings file.xlsx
-php artisan deming:import-mappings file.xlsx --dry-run
-php artisan deming:import-mappings file.xlsx --update
 ```
+
+Options:
+
+- `--dry-run` validates the entire file without writing;
+- `--update` allows updating an existing source/target pair.
 
 Required columns:
 
@@ -21,14 +36,22 @@ source_framework, source_clause, target_framework, target_clause,
 mapping_type, coverage, rationale, source_reference, source_url
 ```
 
-The command validates every row before writing, then performs all writes in a single transaction. Updated mappings require human validation again.
+The `confidence` column is optional (a number from 0 to 100). It is included in exports to allow lossless round trips. If the column is absent during `--update`, the existing value is preserved; if it is present with an empty cell, it is cleared. When a `supports` relationship is exported from a reversed view, its persisted source, target, and type are preserved: exporting a directional row must never turn "A supports B" into "B supports A".
 
-`confidence` is an optional import column containing a number from 0 to 100. Exports include it for lossless round trips. On `--update`, an absent column preserves the existing value; a present but empty cell clears it.
+All rows are validated before the first write. The writes are then performed in a single transaction. An error therefore prevents any partial import. A relationship modified by import must be validated again.
 
-## ReCyF 2.5 to ISO 2700X starter file
+## Initial ReCyF 2.5 to ISO 2700X dataset
 
-`storage/app/repository/ReCyF-2.5-ISO27001-2022.mappings.xlsx` contains 281 relations for 118 ReCyF controls and 66 ISO controls present in Deming's `ISO27001-2022.fr.xlsx` workbook.
+`storage/app/repository/ReCyF-2.5-ISO27001-2022.mappings.xlsx` contains 281 relations from the official ANSSI comparator. They cover 118 ReCyF controls and 66 ISO controls present in `ISO27001-2022.fr.xlsx`.
 
-The workbook contains relationships only; it does not create controls. Before importing it, the instance must contain source controls under the exact `Domain.framework` code `NIS2-ReCyF-2.5-FR` and target controls under `27001:2022`. Run `--dry-run` on the target instance first; any missing or ambiguous clause aborts the complete import.
+This workbook contains only the relationships: it does not create the controls. Before importing, the instance must therefore already contain the source controls under the exact code `Domain.framework = NIS2-ReCyF-2.5-FR` and the target controls under `Domain.framework = 27001:2022`. This is notably the case for the 152-control ReCyF instance described for this batch. Always run `--dry-run` on the target instance before the actual import; a missing or ambiguous clause blocks the entire file.
 
-Only references published in the official [ANSSI comparator](https://messervices.cyber.gouv.fr/nis2#exigences) and matched to an exact Deming ISO clause are included. Every row uses `related`; it does not assert equivalence or that ISO conformity implies NIS2 conformity. ANSSI's original level, observation, ISO reference, normalized Deming clause, and source URL are retained for review.
+The dataset is deliberately conservative:
+
+- only references published by ANSSI and found exactly in Deming's ISO workbook are included;
+- each relationship is of type `related`, because a documentary correspondence cannot establish equivalence or imply compliance;
+- ANSSI's `ÉLEVÉE`, `MOYENNE`, and `FAIBLE/NULLE` levels are converted respectively to `high`, `medium`, and `low`, while the original label remains in the rationale;
+- the ANSSI observation, the original ISO reference, the normalized Deming clause, and the source URL are retained;
+- all imported relationships remain unvalidated until a human review in Deming.
+
+Sources: [ANSSI comparator](https://messervices.cyber.gouv.fr/nis2#exigences) and [presentation of ReCyF and the comparator](https://lab.cyber.gouv.fr/les-actualit%C3%A9s-du-lab-anssi/recyf--publication-du-r%C3%A9f%C3%A9rentiel-dexigences-et-du-comparateur/).
