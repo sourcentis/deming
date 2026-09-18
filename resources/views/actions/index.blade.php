@@ -85,8 +85,8 @@
 	       data-check-style="1">
 	    <thead>
 	    <tr>
-            <th class="sortable-column sort-asc">{{ trans('cruds.action.fields.reference') }}</th>
-            <th class="sortable-column sort-asc">{{ trans('cruds.action.fields.type') }}</th>
+            <th class="sortable-column sort-asc"><span style="font-size: 0.8em;">{{ trans('cruds.action.fields.reference') }}</span></th>
+            <th class="sortable-column sort-asc"><span style="font-size: 0.8em;">{{ trans('cruds.action.fields.type') }}</span></th>
             <th class="sortable-column sort-asc">{{ trans('cruds.action.fields.status') }}</th>
             <th class="sortable-column sort-asc">{{ trans('cruds.action.fields.progress') }}</th>
             <th class="sortable-column sort-asc">{{ trans('cruds.action.fields.name') }}</th>
@@ -98,19 +98,19 @@
 	@foreach($actions as $action)
         <tr>
             <td>
-                <b id="{{ $action->reference }}">
+                <b id="{{ $action->reference }}" style="font-size: 0.8em;">
                     <a href="/action/show/{{ $action->id }}">{{ $action->reference==null ? ("ACT-".$action->id) : $action->reference }}</a>
                 </b>
             </td>
             <td>
                 @if ($action->type==1)
-                    <div class="fg-red text-bold">{{ trans('cruds.action.types.major') }}</div>
+                    <div class="fg-red text-bold" style="font-size: 0.8em;" title="{{ trans('cruds.action.types.major') }}">{{ trans('cruds.action.types_short.major') }}</div>
                 @elseif ($action->type==2)
-                    <div class="fg-orange text-bold">{{ trans('cruds.action.types.minor') }}</div>
+                    <div class="fg-orange text-bold" style="font-size: 0.8em;" title="{{ trans('cruds.action.types.minor') }}">{{ trans('cruds.action.types_short.minor') }}</div>
                 @elseif ($action->type==3)
-                    <div class="fg-yellow text-bold">{{ trans('cruds.action.types.observation') }}</div>
+                    <div class="fg-yellow text-bold" style="font-size: 0.8em;" title="{{ trans('cruds.action.types.observation') }}">{{ trans('cruds.action.types_short.observation') }}</div>
                 @elseif ($action->type==4)
-                    <div class="fg-green text-bold">{{ trans('cruds.action.types.opportunity') }}</div>
+                    <div class="fg-green text-bold" style="font-size: 0.8em;" title="{{ trans('cruds.action.types.opportunity') }}">{{ trans('cruds.action.types_short.opportunity') }}</div>
                 @endif
             </td>
             <td id="{{ $action->status }}">

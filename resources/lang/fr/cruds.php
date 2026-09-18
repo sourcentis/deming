@@ -52,6 +52,12 @@ return [
             'opportunity' => 'Opportunité',
             'observation' => 'Observation'
         ],
+        'types_short' => [
+            'major' => 'Maj',
+            'minor' => 'Min',
+            'opportunity' => 'Opp',
+            'observation' => 'Obs'
+        ],
     ],
     'attribute' => [
         'fields' => [
