@@ -42,7 +42,7 @@ All rows are validated before the first write. The writes are then performed in 
 
 ## Initial ReCyF 2.5 to ISO 2700X dataset
 
-`storage/app/repository/ReCyF-2.5-ISO27001-2022.mappings.xlsx` contains 281 relations from the official ANSSI comparator. They cover 118 ReCyF controls and 66 ISO controls present in `ISO27001-2022.fr.xlsx`.
+`storage/app/crosswalks/ReCyF-2.5-ISO27001-2022.mappings.xlsx` contains 281 relations from the official ANSSI comparator. They cover 118 ReCyF controls and 66 ISO controls present in `ISO27001-2022.fr.xlsx`.
 
 This workbook contains only the relationships: it does not create the controls. Before importing, the instance must therefore already contain the source controls under the exact code `Domain.framework = NIS2-ReCyF-2.5-FR` and the target controls under `Domain.framework = 27001:2022`. This is notably the case for the 152-control ReCyF instance described for this batch. Always run `--dry-run` on the target instance before the actual import; a missing or ambiguous clause blocks the entire file.
 

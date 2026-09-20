@@ -6,7 +6,7 @@ use App\Models\Domain;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
 test('official ReCyF to ISO workbook is structurally valid and conservative', function () {
-    $mappingPath = storage_path('app/repository/ReCyF-2.5-ISO27001-2022.mappings.xlsx');
+    $mappingPath = storage_path('app/crosswalks/ReCyF-2.5-ISO27001-2022.mappings.xlsx');
     $isoPath = storage_path('app/repository/ISO27001-2022.fr.xlsx');
 
     expect($mappingPath)->toBeFile()
@@ -71,7 +71,7 @@ test('official ReCyF to ISO workbook is structurally valid and conservative', fu
 });
 
 test('official workbook imports transactionally when both control sets are present', function () {
-    $mappingPath = storage_path('app/repository/ReCyF-2.5-ISO27001-2022.mappings.xlsx');
+    $mappingPath = storage_path('app/crosswalks/ReCyF-2.5-ISO27001-2022.mappings.xlsx');
     $mappingBook = IOFactory::load($mappingPath);
     $mappingRows = $mappingBook->getActiveSheet()->toArray(null, true, true, false);
     $mappingBook->disconnectWorksheets();

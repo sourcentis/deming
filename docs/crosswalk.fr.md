@@ -42,7 +42,7 @@ Toutes les lignes sont validées avant la première écriture. Les écritures so
 
 ## Premier jeu ReCyF 2.5 vers ISO 2700X
 
-`storage/app/repository/ReCyF-2.5-ISO27001-2022.mappings.xlsx` contient 281 relations issues du comparateur officiel ANSSI. Elles couvrent 118 contrôles ReCyF et 66 contrôles ISO présents dans `ISO27001-2022.fr.xlsx`.
+`storage/app/crosswalks/ReCyF-2.5-ISO27001-2022.mappings.xlsx` contient 281 relations issues du comparateur officiel ANSSI. Elles couvrent 118 contrôles ReCyF et 66 contrôles ISO présents dans `ISO27001-2022.fr.xlsx`.
 
 Ce classeur contient uniquement les relations : il ne crée pas les contrôles. Avant l'import, l'instance doit donc déjà contenir les contrôles source sous le code exact `Domain.framework = NIS2-ReCyF-2.5-FR` et les contrôles cibles sous `Domain.framework = 27001:2022`. C'est notamment le cas de l'instance ReCyF de 152 contrôles décrite pour ce lot. Toujours exécuter `--dry-run` sur l'instance cible avant l'import normal ; une clause absente ou ambiguë bloque le fichier entier.
 
