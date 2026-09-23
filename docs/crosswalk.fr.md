@@ -54,4 +54,4 @@ Le jeu est volontairement conservateur :
 - l'observation ANSSI, la référence ISO d'origine, la clause Deming normalisée et l'URL de la source sont conservées ;
 - toutes les relations importées restent non validées jusqu'à une revue humaine dans Deming.
 
-Sources : [comparateur ANSSI](https://messervices.cyber.gouv.fr/nis2#exigences) et [présentation du ReCyF et du comparateur](https://lab.cyber.gouv.fr/les-actualit%C3%A9s-du-lab-anssi/recyf--publication-du-r%C3%A9f%C3%A9rentiel-dexigences-et-du-comparateur/).
+    Sources : [comparateur ANSSI](https://messervices.cyber.gouv.fr/nis2#exigences) et [présentation du ReCyF et du comparateur](https://lab.cyber.gouv.fr/les-actualit%C3%A9s-du-lab-anssi/recyf--publication-du-r%C3%A9f%C3%A9rentiel-dexigences-et-du-comparateur/).

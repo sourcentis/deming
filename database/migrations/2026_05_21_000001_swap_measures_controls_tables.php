@@ -96,7 +96,7 @@ return new class extends Migration
             foreach ($sources as $table) {
                 $backup = self::BACKUP_PREFIX.$table;
                 if (! Schema::hasTable($backup)) {
-                    DB::statement("CREATE TABLE {$backup} AS SELECT * FROM {$table}");
+                    $this->copyTable($table, $backup);
                 }
             }
         }
@@ -111,6 +111,29 @@ return new class extends Migration
         }
 
         return $expected;
+    }
+
+    /**
+     * Copie structure + données, sans les clés étrangères.
+     * MySQL/MariaDB : CREATE TABLE … LIKE conserve la clé primaire (compatible
+     * sql_require_primary_key) et évite CREATE … SELECT, refusé avec
+     * enforce_gtid_consistency sur MySQL < 8.0.21.
+     */
+    private function copyTable(string $source, string $target): void
+    {
+        switch (DB::getDriverName()) {
+            case 'mysql':
+            case 'mariadb':
+                DB::statement("CREATE TABLE `{$target}` LIKE `{$source}`");
+                DB::statement("INSERT INTO `{$target}` SELECT * FROM `{$source}`");
+                break;
+            case 'pgsql':
+                DB::statement("CREATE TABLE \"{$target}\" (LIKE \"{$source}\" INCLUDING DEFAULTS)");
+                DB::statement("INSERT INTO \"{$target}\" SELECT * FROM \"{$source}\"");
+                break;
+            default:
+                DB::statement("CREATE TABLE \"{$target}\" AS SELECT * FROM \"{$source}\"");
+        }
     }
 
     /** Étape 1, rejouable depuis n'importe quel état intermédiaire. */
