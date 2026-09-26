@@ -4,7 +4,7 @@ ARG APP_VERSION=dev
 LABEL org.opencontainers.image.version="${APP_VERSION}"
 
 # Installer Nginx et dépendances
- RUN apt update \
+RUN apt-get update \
   && apt-get install -y --no-install-recommends \
      nginx \
      git \
