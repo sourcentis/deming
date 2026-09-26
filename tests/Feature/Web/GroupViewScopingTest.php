@@ -22,7 +22,17 @@ beforeEach(function () {
     $otherMeasure->users()->attach($this->other->id);
 });
 
-test('admin sees only their own domains when group view is toggled off', function () {
+// In personal view every domain is listed; only the measure counter is scoped (#748)
+function expectScopedCounts($response, int $ownedId, int $otherId): void
+{
+    $response->assertViewHas('domains', function ($domains) use ($ownedId, $otherId) {
+        $counts = collect($domains)->pluck('measures_count', 'id');
+
+        return (int) $counts[$ownedId] === 1 && (int) $counts[$otherId] === 0;
+    });
+}
+
+test('admin sees all domains but only counts their own measures when group view is toggled off', function () {
     $admin = User::factory()->admin()->create();
     // Assign the admin to the "owned" measure instead of $this->owner
     Measure::whereHas('controls', fn ($q) => $q->where('domain_id', $this->ownedDomain->id))
@@ -35,7 +45,8 @@ test('admin sees only their own domains when group view is toggled off', functio
     $response = $this->actingAs($admin)->get('/domains');
 
     $response->assertSee('Owned Domain');
-    $response->assertDontSee('Other Domain');
+    $response->assertSee('Other Domain');
+    expectScopedCounts($response, $this->ownedDomain->id, $this->otherDomain->id);
 });
 
 test('admin sees all domains by default (group view on)', function () {
@@ -57,13 +68,14 @@ test('regular user sees all domains by default (group view on)', function () {
     $response->assertSee('Other Domain');
 });
 
-test('regular user only sees their own domains when group view is toggled off', function () {
+test('regular user sees all domains but only counts their own measures when group view is toggled off', function () {
     $this->actingAs($this->owner)->get('/group/toggle');
 
     $response = $this->actingAs($this->owner)->get('/domains');
 
     $response->assertSee('Owned Domain');
-    $response->assertDontSee('Other Domain');
+    $response->assertSee('Other Domain');
+    expectScopedCounts($response, $this->ownedDomain->id, $this->otherDomain->id);
 });
 
 test('auditee stays filtered even with a forged group_view session value', function () {
@@ -77,7 +89,8 @@ test('auditee stays filtered even with a forged group_view session value', funct
     $response = $this->actingAs($auditee)->get('/domains');
 
     $response->assertSee('Owned Domain');
-    $response->assertDontSee('Other Domain');
+    $response->assertSee('Other Domain');
+    expectScopedCounts($response, $this->ownedDomain->id, $this->otherDomain->id);
 });
 
 test('mif-group icon is rendered for admins and users, not for auditees', function () {
