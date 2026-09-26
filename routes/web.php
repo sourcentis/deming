@@ -12,6 +12,7 @@
 */
 
 use App\Http\Controllers\ExceptionController;
+use App\Http\Controllers\ControlMappingController;
 use App\Http\Controllers\RiskController;
 use App\Http\Controllers\RiskScoringConfigController;
 
@@ -143,6 +144,17 @@ Route::namespace('App\\Http\\Controllers')->middleware('auth')->group(function (
     Route::get('/export/actions', 'ActionController@export');
     Route::get('/export/users', 'UserController@export');
     Route::get('/export/risks', 'RiskController@export');
+
+    /* Framework crosswalk */
+    Route::get('/crosswalk', [ControlMappingController::class, 'index'])->name('crosswalk.index');
+    Route::get('/crosswalk/matrix', [ControlMappingController::class, 'matrix'])->name('crosswalk.matrix');
+    Route::get('/crosswalk/export', [ControlMappingController::class, 'export'])->name('crosswalk.export');
+    Route::get('/crosswalk/create', [ControlMappingController::class, 'create'])->name('crosswalk.create');
+    Route::post('/crosswalk', [ControlMappingController::class, 'store'])->name('crosswalk.store');
+    Route::get('/crosswalk/{controlMapping}', [ControlMappingController::class, 'show'])->name('crosswalk.show');
+    Route::get('/crosswalk/{controlMapping}/edit', [ControlMappingController::class, 'edit'])->name('crosswalk.edit');
+    Route::put('/crosswalk/{controlMapping}', [ControlMappingController::class, 'update'])->name('crosswalk.update');
+    Route::delete('/crosswalk/{controlMapping}', [ControlMappingController::class, 'destroy'])->name('crosswalk.destroy');
 
 // --- Registre des risques ---
     Route::get('/risk/index',           [RiskController::class, 'index'])->name('risk.index');

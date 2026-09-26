@@ -4,7 +4,8 @@
 |--------------------------------------|--------------------------------------------------------------------------------|
 | DORA.en.xlsx                         | Digital Operational Resilience Act                                             |
 | DORA_fr.xlsx                         | Digital Operational Resilience Act, en français                                |
-| HDS.fr.xlsx                          | Hébergeur de Données de Santé (https://esante.gouv.fr/services/hebergeurs-de-donnees-de-sante/les-referentiels-de-la-procedure-| HDS-V2.fr.xlsx             | Hébergeur de Données de Santé (https://esante.gouv.fr/services/hebergeurs-de-donnees-de-sante/les-referentiels-de-la-procedure-de-certification) |
+| HDS.fr.xlsx                          | [Hébergeur de Données de Santé](https://esante.gouv.fr/services/hebergeurs-de-donnees-de-sante/les-referentiels-de-la-procedure-de-certification) |
+| HDS-V2.fr.xlsx                       | [Hébergeur de Données de Santé, v2](https://esante.gouv.fr/services/hebergeurs-de-donnees-de-sante/les-referentiels-de-la-procedure-de-certification) |
 | ISO22301-2019.fr.xlsx                | ISO/IEC 22301, 2019, in French                                                 |
 | ISO27001-2013.fr.xlsx                | ISO/IEC 27001, 2013, in French                                                 |
 | ISO27001-2022.en.xlsx                | [ISO/IEC 27001, 2022, in English](https://www.iso.org/standard/27001)          |
@@ -17,4 +18,5 @@
 | NIS2.de.xlsx                         | [NIS 2 directive requirements](https://www.recht.bund.de/bgbl/1/2025/301/VO) |
 | MVSP-3.0.xlsx                        | [Minimum Viable Security Product, v3.0](https://mvsp.dev/mvsp.en/)             |
 | PCI.DSS.4.0.EN.xlsx                  | [PCI DSS, v4.0, in English](https://blog.pcisecuritystandards.org/pci-dss-v4-0-resource-hub) |
+| NIS2-ReCyF-2.5-FR.xlsx               | [ReCyF v2.5, ANSSI cybersecurity framework for NIS 2 (objectives and measures), in French](https://messervices.cyber.gouv.fr/documents-ressources/20260317_NIS_V2_ReCyF_v2.5.pdf) |
 | sp800-53r5-control-catalog-full.xlsx | [NIST SP 800-53 Rev. 5](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final)    |

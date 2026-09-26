@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\DB;
 
 class Control extends Model
@@ -46,9 +47,28 @@ class Control extends Model
     }
 
     // Return the domain associated to this control
+    /**
+     * @return BelongsTo<Domain, $this>
+     */
     public function domain(): BelongsTo
     {
         return $this->belongsTo(Domain::class, 'domain_id');
+    }
+
+    /**
+     * @return HasMany<ControlMapping, $this>
+     */
+    public function outgoingMappings(): HasMany
+    {
+        return $this->hasMany(ControlMapping::class, 'source_control_id');
+    }
+
+    /**
+     * @return HasMany<ControlMapping, $this>
+     */
+    public function incomingMappings(): HasMany
+    {
+        return $this->hasMany(ControlMapping::class, 'target_control_id');
     }
 
     // Return the completed measures associated to this control

@@ -5,6 +5,7 @@ return [
     'domains' => 'Domaines',
     'measures' => 'Mesures',
     'controls' => 'Contrôles',
+    'crosswalk' => 'Correspondances',
     'planning' => 'Planning',
     'radar' => 'Analyse',
     'radar_by_domains' => 'par domaines',
