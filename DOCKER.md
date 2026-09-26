@@ -748,6 +748,75 @@ host in production.
 
 ## Troubleshooting
 
+### Build fails: "Temporary failure resolving 'deb.debian.org'"
+
+`docker build` stops on the `apt-get update` step with exit code 100 and lines such as:
+
+```
+Failed to fetch http://deb.debian.org/debian/dists/bookworm/InRelease  Temporary failure resolving 'deb.debian.org'
+```
+
+This is a **DNS problem inside the build container**, not a certificate problem
+(apt uses plain `http://` here). The host resolves names fine, but build containers
+do not use the host's resolver directly:
+
+- if the host uses a local stub resolver (`127.0.0.53` with systemd-resolved,
+  `127.0.0.1` with dnsmasq...), Docker cannot reach it from the container and falls
+  back to public DNS servers (`8.8.8.8`, `8.8.4.4`);
+- on a corporate network, the firewall usually blocks outgoing DNS to those public
+  servers, so resolution fails.
+
+Check it:
+
+```bash
+cat /etc/resolv.conf                                   # on the host
+docker run --rm debian:bookworm cat /etc/resolv.conf   # inside a container
+docker run --rm debian:bookworm getent hosts deb.debian.org
+```
+
+**Fix 1 — give Docker your internal DNS servers** (recommended, permanent). Get the
+real upstream servers with `resolvectl status` (or from your network team), then
+create or edit `/etc/docker/daemon.json`:
+
+```json
+{
+  "dns": ["10.0.0.53", "10.0.0.54"]
+}
+```
+
+```bash
+sudo systemctl restart docker
+docker build -t deming:local .
+```
+
+**Fix 2 — build with the host network** (quick workaround, one-off):
+
+```bash
+docker build --network=host -t deming:local .
+```
+
+**If an outgoing HTTP proxy is required** on your network, pass it to the build
+(these build arguments are predefined by Docker, no change to the Dockerfile is needed):
+
+```bash
+docker build \
+  --build-arg http_proxy=http://proxy.example.com:3128 \
+  --build-arg https_proxy=http://proxy.example.com:3128 \
+  --build-arg no_proxy=localhost,127.0.0.1 \
+  -t deming:local .
+```
+
+**If your firewall performs TLS inspection** (later steps such as the Composer
+download fail with `SSL certificate problem: unable to get local issuer certificate`),
+add your corporate root CA to the image, right after the `FROM` line of the `Dockerfile`:
+
+```dockerfile
+COPY docker/certs/*.crt /usr/local/share/ca-certificates/
+RUN update-ca-certificates
+```
+
+(place your CA file(s) in PEM format with a `.crt` extension in `docker/certs/`).
+
 ### Container loops on "Not ready, retrying"
 
 MySQL is reachable at the network level but Laravel cannot connect.
