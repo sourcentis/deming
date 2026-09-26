@@ -52,13 +52,7 @@ return new class extends Migration
             }
 
             // ── Étapes 3 à 8 : renommage des colonnes de liaison ─────────────
-            foreach (self::COLUMN_RENAMES as [$table, $from, $to]) {
-                if (Schema::hasTable($table)
-                    && Schema::hasColumn($table, $from)
-                    && ! Schema::hasColumn($table, $to)) {
-                    Schema::table($table, fn (Blueprint $t) => $t->renameColumn($from, $to));
-                }
-            }
+            $this->renameLinkColumns();
         } finally {
             Schema::enableForeignKeyConstraints();
         }
@@ -67,6 +61,51 @@ return new class extends Migration
     }
 
     // ─────────────────────────────────────────────────────────────────────────
+
+    /**
+     * Étapes 3 à 8 (cf. COLUMN_RENAMES). Écrites explicitement, avec des noms
+     * littéraux, pour que Larastan puisse suivre les renommages.
+     */
+    private function renameLinkColumns(): void
+    {
+        if ($this->mustRenameColumn('control_user', 'control_id', 'measure_id')) {
+            Schema::table('control_user', function (Blueprint $table) {
+                $table->renameColumn('control_id', 'measure_id');
+            });
+        }
+        if ($this->mustRenameColumn('control_user_group', 'control_id', 'measure_id')) {
+            Schema::table('control_user_group', function (Blueprint $table) {
+                $table->renameColumn('control_id', 'measure_id');
+            });
+        }
+        if ($this->mustRenameColumn('actions', 'control_id', 'measure_id')) {
+            Schema::table('actions', function (Blueprint $table) {
+                $table->renameColumn('control_id', 'measure_id');
+            });
+        }
+        if ($this->mustRenameColumn('documents', 'control_id', 'measure_id')) {
+            Schema::table('documents', function (Blueprint $table) {
+                $table->renameColumn('control_id', 'measure_id');
+            });
+        }
+        if ($this->mustRenameColumn('action_measure', 'measure_id', 'control_id')) {
+            Schema::table('action_measure', function (Blueprint $table) {
+                $table->renameColumn('measure_id', 'control_id');
+            });
+        }
+        if ($this->mustRenameColumn('exceptions', 'measure_id', 'control_id')) {
+            Schema::table('exceptions', function (Blueprint $table) {
+                $table->renameColumn('measure_id', 'control_id');
+            });
+        }
+    }
+
+    private function mustRenameColumn(string $table, string $from, string $to): bool
+    {
+        return Schema::hasTable($table)
+            && Schema::hasColumn($table, $from)
+            && ! Schema::hasColumn($table, $to);
+    }
 
     /**
      * Les instances d'audit sont les seules à porter realisation_date :
@@ -136,24 +175,26 @@ return new class extends Migration
         }
     }
 
-    /** Étape 1, rejouable depuis n'importe quel état intermédiaire. */
+    /**
+     * Étape 1, rejouable depuis n'importe quel état intermédiaire : chaque
+     * renommage est ignoré s'il a déjà été fait.
+     *
+     * Les trois renommages restent écrits dans l'ordre, avec des noms littéraux :
+     * Larastan reconstruit le schéma en lisant les migrations séquentiellement.
+     */
     private function swapTables(): void
     {
-        if (Schema::hasTable('controls_swap_tmp')) {
-            // Reprise : measures → controls_swap_tmp a déjà été fait
-            if (! Schema::hasTable('measures')) {
-                Schema::rename('controls', 'measures');
-            }
-            Schema::rename('controls_swap_tmp', 'controls');
-
+        if ($this->tablesSwapped()) {
             return;
         }
 
-        if (! $this->tablesSwapped()) {
+        if (! Schema::hasTable('controls_swap_tmp')) {
             Schema::rename('measures', 'controls_swap_tmp');
-            Schema::rename('controls', 'measures');
-            Schema::rename('controls_swap_tmp', 'controls');
         }
+        if (! Schema::hasTable('measures')) {
+            Schema::rename('controls', 'measures');
+        }
+        Schema::rename('controls_swap_tmp', 'controls');
     }
 
     /**
