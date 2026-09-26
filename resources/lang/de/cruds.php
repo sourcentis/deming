@@ -8,7 +8,7 @@ return [
          'action_plans' => "Aktionsplan",
          'next_controls' => 'Zeigt die Planung der nächsten 30 Tage',
          'control_status' => 'Kontrollstatus',
-         'control_planning' => 'Maßnahmenplanung',
+         'control_planning' => 'Kontrollplanung',
     ],
      'action' => [
         'index' => 'Aktionspläne',
@@ -117,30 +117,30 @@ return [
             'groups' => 'Gruppen'
          ],
         'error' => [
-            'made' => 'Diese Maßnahme wurde bereits umgesetzt.',
-            'duplicate' => 'Diese Maßnahme existiert bereits.',
+            'made' => 'Diese Kontrolle wurde bereits durchgeführt.',
+            'duplicate' => 'Diese Kontrolle existiert bereits.',
         ],
-        'checklist' => 'Maßnahmentabelle',
-        'create' => 'Erstelle eine Maßnahme',
-        'list' => 'Liste der Maßnahmen',
-        'edit' => 'Maßnahme ändern',
+        'checklist' => 'Kontrollblatt',
+        'create' => 'Erstelle eine Kontrolle',
+        'list' => 'Liste der Kontrollen',
+        'edit' => 'Kontrolle ändern',
         'history' => 'Zeitplan',
-        'make' => 'Maßnahme durchführen',
-        'plan' => 'Planung einer Maßnahme',
+        'make' => 'Kontrolle durchführen',
+        'plan' => 'Planung einer Kontrolle',
         'radar' => 'Status der Sicherheitsmaßnahmen',
-        'status_date' => 'Stand der Kontrolle am',
-        'title' => 'Maßnahmen',
-        'title_singular' => 'Maßnahme',
+        'status_date' => 'Stand der Kontrollen am',
+        'title' => 'Kontrollen',
+        'title_singular' => 'Kontrolle',
         'groupBy' => 'Gruppiert nach',
         'create_action' => 'Aktionsplan erstellen',
         'calendar' => 'Kalender',
         'confirm_delete' => 'Möchten Sie die Kontrollen löschen?'
     ],
      'notification' => [
-         'subject' => 'Liste der durchzuführenden Maßnahmen',
+         'subject' => 'Liste der durchzuführenden Kontrollen',
      ],
      'control' => [
-         'title' => 'Kontrolle',
+         'title' => 'Maßnahme',
          'fields' => [
              'domain' => 'Domäne',
              'clause' => 'Klausel',
@@ -153,18 +153,18 @@ return [
              'periodicity' => 'Wiederholung',
              'input' => 'Eingabe-Elemente',
          ],
-         'show' => 'Kontrolle',
-         'index' => 'Liste der Kontrollen',
-         'create' => 'Eine Kontrolle hinzufügen',
-         'edit' => 'Eine Kontrolle bearbeiten',
-         'plan' => 'Maßnahmenplanung'
+         'show' => 'Sicherheitsmaßnahme',
+         'index' => 'Liste der Sicherheitsmaßnahmen',
+         'create' => 'Eine Sicherheitsmaßnahme hinzufügen',
+         'edit' => 'Eine Sicherheitsmaßnahme bearbeiten',
+         'plan' => 'Eine Kontrolle planen'
      ],
      'domain' => [
          'fields' => [
              'framework' => 'Framework',
              'name' => 'Name',
              'description' => 'Beschreibung',
-             'measures' => '# Kontrollen',
+             'measures' => '# Maßnahmen',
          ],
          'add' => 'Domäne hinzufügen',
          'edit' => 'Domäne ändern',
@@ -173,7 +173,7 @@ return [
          'choose' => 'Wähle eine Domäne',
          'title' => 'Domänen',
          'radar' => 'Ergebnis der Kontrollen nach Domänen',
-         'measure_date' => 'Stand der Maßnahmen zum',
+         'measure_date' => 'Stand der Kontrollen zum',
      ],
      'document' => [
         'title' => [
@@ -214,7 +214,7 @@ return [
          'domains_export'=> 'Exportiere Domänen',
          'attributes_export' => 'Exportiere Attribute',
          'measures_export' => 'Exportiere Sicherheitsmaßnahmen',
-         'controls_export' => 'Exportiere Kontrollen',
+         'controls_export' => 'Exportiere Sicherheitsmaßnahmen',
          'import' => 'Import',
          'actions_export' => 'Exportiere Aktionsplan',
          'risks_export' => 'Risikoregister exportieren',
@@ -335,7 +335,7 @@ return [
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-<p>Hier ist die Liste der Maßnahmen, die bald fällig sind:</p>
+<p>Hier ist die Liste der Kontrollen, die bald fällig sind:</p>
 %table%
 <p>Dies ist eine automatisch generierte Mail.</p>
 <p>Mit freundlichen Grüßen,<br>Deming</p>
@@ -400,7 +400,7 @@ return [
             // Behandlung
             'status' => 'Behandlungsstatus',
             'status_comment' => 'Kommentar Status',
-            'controls' => 'Verknüpfte Kontrollen',
+            'controls' => 'Verknüpfte Maßnahmen',
             'controls_hint' => 'Erforderlich bei Status = Gemindert',
             'action_plan' => 'Verknüpfte Aktionspläne',
             'actions_hint' => 'Erforderlich bei Status = Nicht akzeptiert (optional bei Minderung im MONARC-Modus)',
@@ -541,10 +541,10 @@ return [
             ],
             'monarc_vulnerability_levels' => [
                 0 => ['label' => 'Nicht vorhanden', 'description' => 'Alle Sicherheitskontrollen sind eingerichtet, dokumentiert und wirksam'],
-                1 => ['label' => 'Sehr gering',     'description' => 'Kontrollen sind eingerichtet und werden überwacht, geringfügige Verbesserungen möglich'],
-                2 => ['label' => 'Gering',          'description' => 'Kontrollen weitgehend vorhanden, werden aber nicht systematisch überwacht'],
-                3 => ['label' => 'Mittel',          'description' => 'Kontrollen teilweise vorhanden, Lücken identifiziert'],
-                4 => ['label' => 'Hoch',            'description' => 'Kontrollen in der Entstehung begriffen oder unwirksam'],
+                1 => ['label' => 'Sehr gering',     'description' => 'Maßnahmen sind eingerichtet und werden überwacht, geringfügige Verbesserungen möglich'],
+                2 => ['label' => 'Gering',          'description' => 'Maßnahmen weitgehend vorhanden, werden aber nicht systematisch überwacht'],
+                3 => ['label' => 'Mittel',          'description' => 'Maßnahmen teilweise vorhanden, Lücken identifiziert'],
+                4 => ['label' => 'Hoch',            'description' => 'Maßnahmen in der Entstehung begriffen oder unwirksam'],
                 5 => ['label' => 'Sehr hoch',       'description' => 'Vollständiges Fehlen von Sicherheitskontrollen'],
             ],
         ],
@@ -639,7 +639,7 @@ return [
         'fields' => [
             'name' => 'Name',
             'measure' => 'Verknüpfte Kontrolle',
-            'no_measure' => 'Keine Kontrollmaßnahme',
+            'no_measure' => 'Keine Kontrolle',
             'description' => 'Beschreibung',
             'justification' => 'Begründung',
             'compensating_controls' => 'Kompensationsmaßnahmen',
@@ -654,7 +654,7 @@ return [
             'approval_comment_optional' => 'Optionaler Kommentar',
             'approval_comment_required' => 'Grund für die Ablehnung (erforderlich)',
             'choose_status' => 'Filtern nach Status',
-            'choose_measure' => 'Nach Kontrollgruppe filtern',
+            'choose_measure' => 'Nach Kontrolle filtern',
             'expired_only' => 'Nur abgelaufene',
         ],
     ],
