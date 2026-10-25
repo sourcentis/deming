@@ -46,6 +46,7 @@ class HomeController extends Controller
         $activeControls = $this->getActiveControls();
         $controlsTodo = $this->getControlsTodo();
         $expandedControls = $this->getExpandedControls();
+        $controlsToValidate = $expandedControls->filter(fn ($control) => (int) $control->status === 1)->count();
 
         // Store counts in session
         $request->session()->put([
@@ -61,6 +62,8 @@ class HomeController extends Controller
             'active_measures_count' => $activeMeasuresCount,
             'controls_made_count' => $controlsMadeCount,
             'controls_never_made' => $controlsNeverMade,
+            'controls_to_validate' => $controlsToValidate,
+            'can_validate' => Auth::user()->isAdmin() || Auth::user()->isUser(),
             'risks_count' => $risksCount,
             'exceptions_count' => $exceptionsCount,
             'active_controls' => $activeControls,
@@ -398,7 +401,7 @@ class HomeController extends Controller
     private function getExpandedControls()
     {
         $query = DB::table('measures')
-            ->select('id', 'score', 'realisation_date', 'plan_date', 'periodicity');
+            ->select('id', 'score', 'status', 'realisation_date', 'plan_date', 'periodicity');
 
         // Filtrer sauf si l'utilisateur voit toutes les données
         if (!Auth::user()->seesAllData()) {

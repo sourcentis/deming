@@ -42,8 +42,8 @@ Hinweis:
 
 In der Mitte:
 
-* Der Zeitplan der Kontrollen, der die durchgeführten Kontrollen mit ihrem Ergebnis (grün, orange oder rot) und die geplanten Kontrollen (grau) zeigt
-* Ein Gesamtstatus der Kontrollen
+* Der Zeitplan der Kontrollen, der die durchgeführten Kontrollen mit ihrem Ergebnis (grün, orange oder rot), die durchgeführten Kontrollen, die auf ihre Validierung warten (hellblau), und die geplanten Kontrollen (grau) zeigt
+* Ein Gesamtstatus der Kontrollen. Für Administratoren und Benutzer, die Kontrollen validieren können, zeigt er auch die Kontrollen, die auf ihre Validierung warten (hellblau)
 
 [![Screenshot](images/home1.de.png)](images/home1.de.png)
 

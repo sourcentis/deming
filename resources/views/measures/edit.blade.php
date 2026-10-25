@@ -309,16 +309,20 @@ const myDropzone = new Dropzone("div#dropzoneFileUpload", {
 		}
 	});
 
-    document.onpaste = function(event) {
-      const items = (event.clipboardData || event.originalEvent.clipboardData).items;
+    // Paste document or image on page
+    document.addEventListener('paste', function(event) {
+      const clipboardData = event.clipboardData || window.clipboardData;
+      if (!clipboardData || !clipboardData.items) return;
+      const items = Array.from(clipboardData.items);
       items.forEach((item) => {
-      	console.log(item.kind);
         if (item.kind === 'file') {
-          	// adds the file to your dropzone instance
-          	myDropzone.addFile(item.getAsFile())
-        	}
-      	})
-    }
+          const file = item.getAsFile();
+          if (file) {
+            myDropzone.addFile(file);
+          }
+        }
+      });
+    });
 });
 </script>
 @endsection

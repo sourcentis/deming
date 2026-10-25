@@ -46,6 +46,7 @@ return [
     'alert' => 'Alert',
     'success' => 'Success',
     'unknown' => 'Unknown',
+    'to_validate' => 'To validate',
 
     'date' => 'Date',
 
