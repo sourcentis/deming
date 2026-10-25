@@ -41,8 +41,8 @@ Note :
 
 Au milieu :
 
-* Le planning des contrôles qui montre les contrôles réalisés avec leur résultat (vert, orange ou rouge) et les contrôles planifiés (en gris)
-* Un état global des contrôles
+* Le planning des contrôles qui montre les contrôles réalisés avec leur résultat (vert, orange ou rouge), les contrôles réalisés en attente de validation (en bleu clair) et les contrôles planifiés (en gris)
+* Un état global des contrôles. Pour les administrateurs et les utilisateurs, qui peuvent valider les contrôles, il affiche aussi les contrôles en attente de validation (en bleu clair)
 
 [![Screenshot](images/home1.fr.png)](images/home1.fr.png)
 

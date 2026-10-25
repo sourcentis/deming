@@ -243,7 +243,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         ?>
                         @foreach ($controls as $control)
                             <?php
-                            if (($control->score == 3) && ($control->realisation_date != null) && (\Carbon\Carbon::parse($control->plan_date)->between($first, $second))) { $count++; }
+                            if (($control->score == 3) && ($control->status != 1) && ($control->realisation_date != null) && (\Carbon\Carbon::parse($control->plan_date)->between($first, $second))) { $count++; }
                             ?>
                         @endforeach
                         {{ $count }},
@@ -263,7 +263,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         ?>
                         @foreach ($controls as $control)
                             <?php
-                            if (($control->score == 2) && ($control->realisation_date != null) && (\Carbon\Carbon::parse($control->plan_date)->between($first, $second))) { $count++; }
+                            if (($control->score == 2) && ($control->status != 1) && ($control->realisation_date != null) && (\Carbon\Carbon::parse($control->plan_date)->between($first, $second))) { $count++; }
                             ?>
                         @endforeach
                         {{ $count }},
@@ -283,7 +283,27 @@ document.addEventListener("DOMContentLoaded", function () {
                         ?>
                         @foreach ($controls as $control)
                             <?php
-                            if (($control->score == 1) && ($control->realisation_date != null) && (\Carbon\Carbon::parse($control->plan_date)->between($first, $second))) { $count++; }
+                            if (($control->score == 1) && ($control->status != 1) && ($control->realisation_date != null) && (\Carbon\Carbon::parse($control->plan_date)->between($first, $second))) { $count++; }
+                            ?>
+                        @endforeach
+                        {{ $count }},
+                    <?php } ?>
+                ]
+            },
+            {
+                backgroundColor: "#7EC8F0", // bleu clair : en attente de validation
+                borderColor: "#7EC8F0",
+                stack: 'Stack 0',
+                data: [
+                    <?php
+                    for ($i = -12; $i < 12; $i++) {
+                        $count = 0;
+                        $first = \Carbon\Carbon::today()->startOfMonth()->addMonth($i);
+                        $second = \Carbon\Carbon::today()->startOfMonth()->addMonth($i)->endOfMonth();
+                        ?>
+                        @foreach ($controls as $control)
+                            <?php
+                            if (($control->status == 1) && (\Carbon\Carbon::parse($control->plan_date)->between($first, $second))) { $count++; }
                             ?>
                         @endforeach
                         {{ $count }},
@@ -380,12 +400,15 @@ document.addEventListener("DOMContentLoaded", function () {
             "{{ trans('common.fail') }}",
             "{{ trans('common.alert') }}",
             "{{ trans('common.success') }}",
+            @if ($can_validate)
+            "{{ trans('common.to_validate') }}",
+            @endif
             "{{ trans('common.unknown') }}"
         ],
         datasets: [
             {
                 backgroundColor: [
-                    '#D94F45', '#E8731A', '#3AB87A', 'gray'
+                    '#D94F45', '#E8731A', '#3AB87A', @if ($can_validate) '#7EC8F0', @endif 'gray'
                 ],
                 borderWidth: 0,
                 data: [
@@ -404,6 +427,9 @@ document.addEventListener("DOMContentLoaded", function () {
                         <?php if ($c->score=="3") { $count++; } ?>
                     @endforeach
                     {{ $count }},
+                    @if ($can_validate)
+                    {{ $controls_to_validate }},
+                    @endif
                     {{ $controls_never_made }}
                 ]
             }

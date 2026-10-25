@@ -41,8 +41,8 @@ Note:
 
 In the middle:
 
-* The measurement schedule, which shows the measurements carried out with their result (green, orange or red) and the planned measurements (in grey)
-* An overall status of the measurements
+* The measurement schedule, which shows the measurements carried out with their result (green, orange or red), the measurements carried out and awaiting validation (light blue) and the planned measurements (in grey)
+* An overall status of the measurements. For administrators and users, who can validate measurements, it also shows the measurements awaiting validation (light blue)
 
 [![Screenshot](images/home1.png)](images/home1.png)
 
