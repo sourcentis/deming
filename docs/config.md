@@ -187,7 +187,16 @@ The screen contains:
 
 * The periodicity of sending notifications;
 
-* The notification deadlines.
+* The notification deadlines;
+
+* The SMTP server used to send the mails: server, port, encryption (none, SSL or TLS), automatic STARTTLS,
+  authentication, user and password, and the optional DKIM signature (domain, selector, private key path and
+  passphrase).
+
+The SMTP server settings are stored in the database. The password and the DKIM passphrase are encrypted with the
+application key (`APP_KEY`) and are never displayed again: leaving the field empty keeps the saved value, the "Delete"
+box erases it. When Deming is upgraded, the `MAIL_*` values of the `.env` file are copied once into the database;
+they are no longer used afterwards.
 
 [![Screenshot](images/config.png)](images/config.png)
 
@@ -195,7 +204,7 @@ When you click on:
 
 * "Save" - the configuration is saved;
 
-* "Test" - a test mail is sent to the current user;
+* "Test" - a test mail is sent to the current user, with the values entered (they are not saved);
 
 * "Cancel" - you return to the main page.
 

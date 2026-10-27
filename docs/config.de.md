@@ -189,7 +189,16 @@ Die Ansicht enthält:
 
 * die Periodizität des Versands der Benachrichtigungen;
 
-* die Benachrichtigungsfristen.
+* die Benachrichtigungsfristen;
+
+* den SMTP-Server für den Versand: Server, Port, Verschlüsselung (keine, SSL oder TLS), automatisches STARTTLS,
+  Authentifizierung, Benutzer und Passwort sowie die optionale DKIM-Signatur (Domäne, Selektor, Pfad des privaten
+  Schlüssels und Passphrase).
+
+Die Einstellungen des SMTP-Servers werden in der Datenbank gespeichert. Das Passwort und die DKIM-Passphrase werden mit
+dem Anwendungsschlüssel (`APP_KEY`) verschlüsselt und nie wieder angezeigt: Ein leeres Feld behält den gespeicherten
+Wert, das Kästchen „Löschen“ entfernt ihn. Bei der Aktualisierung von Deming werden die `MAIL_*`-Werte der Datei `.env`
+einmalig in die Datenbank übernommen; danach werden sie nicht mehr verwendet.
 
 [![Screenshot](images/config.de.png)](images/config.de.png)
 
@@ -197,7 +206,7 @@ Wenn Sie klicken auf:
 
 * „Sichern“ – die Konfiguration wird gespeichert;
 
-* „Testen“ – eine Test-E-Mail wird an den aktuellen Benutzer gesendet;
+* „Testen“ – eine Test-E-Mail wird mit den eingegebenen Werten (ohne sie zu speichern) an den aktuellen Benutzer gesendet;
 
 * „Abbruch“ – Sie kehren zur Hauptseite zurück.
 

@@ -187,7 +187,16 @@ L'écran contient :
 
 * La périodicité de l'envoi des notifications ;
 
-* Les délais de notification.
+* Les délais de notification ;
+
+* Le serveur SMTP utilisé pour l'envoi : serveur, port, chiffrement (aucun, SSL ou TLS), STARTTLS automatique,
+  authentification, utilisateur et mot de passe, ainsi que la signature DKIM facultative (domaine, sélecteur, chemin
+  de la clé privée et phrase secrète).
+
+Les paramètres du serveur SMTP sont enregistrés dans la base de données. Le mot de passe et la phrase secrète DKIM
+sont chiffrés avec la clé de l'application (`APP_KEY`) et ne sont jamais réaffichés : laisser le champ vide conserve la
+valeur enregistrée, la case « Supprimer » l'efface. Lors de la mise à jour de Deming, les valeurs `MAIL_*` du fichier
+`.env` sont reprises une seule fois dans la base de données ; elles ne sont plus utilisées ensuite.
 
 [![Screenshot](images/config.fr.png)](images/config.fr.png)
 
@@ -195,7 +204,7 @@ Lorsque vous cliquez sur :
 
 * « Sauver » - la configuration est sauvée ;
 
-* « Test » - un mail de test est envoyé à l'utilisateur courant ;
+* « Test » - un mail de test est envoyé à l'utilisateur courant, avec les valeurs saisies (elles ne sont pas enregistrées) ;
 
 * « Annuler » - vous revenez à la page principale.
 
