@@ -70,8 +70,9 @@ function aiCreateSubject(string $type): \Illuminate\Database\Eloquent\Model
         'measure' => tap(\App\Models\Measure::factory()->create(), function ($measure) {
             $measure->controls()->sync([\App\Models\Control::factory()->create()->id]);
         }),
-        'action' => \App\Models\Action::factory()->create(),
-        'risk' => \App\Models\Risk::factory()->create(),
+        // Fixed values, so that tests changing them always make a difference
+        'action' => \App\Models\Action::factory()->create(['progress' => 50]),
+        'risk' => \App\Models\Risk::factory()->create(['probability' => 3]),
     };
 
     return $object->fresh();
