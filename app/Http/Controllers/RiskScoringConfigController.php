@@ -27,14 +27,13 @@ class RiskScoringConfigController extends Controller
         }
     }
 
-    public function index(): View
+    // Data of the "Classification" tab of the settings page
+    public function tabData(): array
     {
-        $this->checkAdmin();
-
-        $configs  = RiskScoringConfig::query()->orderByDesc('is_active')->orderBy('name')->get();
-        $formulas = $this->scoringService->availableFormulas();
-
-        return view('risks.scoring.index', compact('configs', 'formulas'));
+        return [
+            'configs' => RiskScoringConfig::query()->orderByDesc('is_active')->orderBy('name')->get(),
+            'formulas' => $this->scoringService->availableFormulas(),
+        ];
     }
 
     public function create(): View
@@ -66,7 +65,7 @@ class RiskScoringConfigController extends Controller
 
         RiskScoringConfig::create($validated);
 
-        return redirect('/risk/scoring')
+        return redirect('/config/parameters?tab=scoring')
             ->with('success', __('Configuration créée. Activez-la pour l\'appliquer.'));
     }
 
@@ -99,7 +98,7 @@ class RiskScoringConfigController extends Controller
             RiskScoringConfig::clearCache();
         }
 
-        return redirect('/risk/scoring')
+        return redirect('/config/parameters?tab=scoring')
             ->with('success', __('Configuration mise à jour.'));
     }
 
@@ -110,7 +109,7 @@ class RiskScoringConfigController extends Controller
         $config = RiskScoringConfig::findOrFail($id);
         $config->activate();
 
-        return redirect('/risk/scoring')
+        return redirect('/config/parameters?tab=scoring')
             ->with('messages', [__('Configuration "' . $config->name . '" activée.')]);
     }
 
@@ -126,7 +125,7 @@ class RiskScoringConfigController extends Controller
 
         $config->delete();
 
-        return redirect('/risk/scoring')
+        return redirect('/config/parameters?tab=scoring')
             ->with('messages', [__('Configuration supprimée.')]);
     }
 

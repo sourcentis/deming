@@ -16,7 +16,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Illuminate\View\View;
 
 /**
  * Configuration of the AI agent (administrators only).
@@ -27,10 +26,9 @@ class AiConfigController extends Controller
     // controls = security measures, measures = controls (UI naming is inverted)
     private const TABLES = ['controls', 'measures', 'actions', 'risks'];
 
-    public function index(): View
+    // Data of the "AI" tab of the settings page
+    public function tabData(): array
     {
-        abort_if(! Auth::user()->isAdmin(), Response::HTTP_FORBIDDEN, '403 Forbidden');
-
         $prompts = [];
         foreach (AiSubjects::TYPES as $type => $subject) {
             $value = (string) Configuration::get($subject['prompt']);
@@ -43,7 +41,7 @@ class AiConfigController extends Controller
 
         $key = Configuration::get('ai.api_key');
 
-        return view('config.ai', [
+        return [
             'enabled' => Configuration::bool('ai.enabled'),
             'base_url' => Configuration::get('ai.base_url'),
             'model' => Configuration::get('ai.model'),
@@ -51,7 +49,7 @@ class AiConfigController extends Controller
             'has_key' => $key !== null && $key !== '',
             'prompts' => $prompts,
             'schema' => AiResponseValidator::schemaJson(),
-        ]);
+        ];
     }
 
     public function save(Request $request): RedirectResponse
@@ -64,7 +62,7 @@ class AiConfigController extends Controller
             abort_if(! array_key_exists($restore, AiSubjects::TYPES), Response::HTTP_UNPROCESSABLE_ENTITY);
             Configuration::forget(AiSubjects::TYPES[$restore]['prompt']);
 
-            return redirect('/config/ai')->with('messages', [trans('ai.config.restored')]);
+            return redirect('/config/parameters?tab=ai')->with('messages', [trans('ai.config.restored')]);
         }
 
         $request->validate([
@@ -105,7 +103,7 @@ class AiConfigController extends Controller
             }
         }
 
-        return redirect('/config/ai')->with('messages', [trans('ai.config.saved')]);
+        return redirect('/config/parameters?tab=ai')->with('messages', [trans('ai.config.saved')]);
     }
 
     /**
@@ -188,7 +186,7 @@ class AiConfigController extends Controller
             'host' => request()->ip(),
         ]);
 
-        return redirect('/config/ai')->with('messages', [trans('ai.config.purged', ['count' => $count])]);
+        return redirect('/config/parameters?tab=ai')->with('messages', [trans('ai.config.purged', ['count' => $count])]);
     }
 
     private function update(string $name, string $value): void

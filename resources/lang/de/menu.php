@@ -26,7 +26,9 @@ return [
         'documents' => 'Dokumente',
         'models' => 'Models',
         'notifications' => 'Benachrichtigungen',
-        'ai' => 'KI'
+        'ai' => 'KI',
+        'parameters' => 'Einstellungen',
+        'templates' => 'Vorlagen'
     ],
     'test' => 'Sie befinden sich in einer Test-Umgebung - Die Daten sind fiktiv',
     'logout' => 'Logout',

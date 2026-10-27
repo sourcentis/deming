@@ -23,11 +23,11 @@ function aiConfigPayload(array $overrides = []): array
 }
 
 test('guest is redirected to login', function () {
-    $this->get('/config/ai')->assertRedirect('/login');
+    $this->get('/config/parameters?tab=ai')->assertRedirect('/login');
 });
 
 test('admin sees the configuration page with the four prompts', function () {
-    $response = $this->actingAs($this->admin)->get('/config/ai')->assertOk();
+    $response = $this->actingAs($this->admin)->get('/config/parameters?tab=ai')->assertOk();
 
     foreach (['control', 'measure', 'action', 'risk'] as $type) {
         $response->assertSee("prompts[{$type}]", false);
@@ -36,7 +36,7 @@ test('admin sees the configuration page with the four prompts', function () {
 });
 
 test('the page shows the data protection box and the documentation link', function () {
-    $this->actingAs($this->admin)->get('/config/ai')
+    $this->actingAs($this->admin)->get('/config/parameters?tab=ai')
         ->assertOk()
         ->assertSee(trans('ai.config.privacy_title'))
         ->assertSee('ai/#privacy', false);
@@ -46,7 +46,7 @@ test('non admins get 403 on every action', function (string $role) {
     $user = User::factory()->{$role}()->create();
     Http::fake();
 
-    $this->actingAs($user)->get('/config/ai')->assertForbidden();
+    $this->actingAs($user)->get('/config/parameters?tab=ai')->assertForbidden();
     $this->actingAs($user)->post('/config/ai/save', aiConfigPayload())->assertForbidden();
     $this->actingAs($user)->post('/config/ai/test')->assertForbidden();
     $this->actingAs($user)->post('/config/ai/purge')->assertForbidden();
@@ -64,8 +64,8 @@ test('a forged save by a non admin leaves the configuration unchanged', function
 });
 
 test('admin saves the configuration without duplicates', function () {
-    $this->actingAs($this->admin)->post('/config/ai/save', aiConfigPayload(['model' => 'llama3']))->assertRedirect('/config/ai');
-    $this->actingAs($this->admin)->post('/config/ai/save', aiConfigPayload(['model' => 'mistral']))->assertRedirect('/config/ai');
+    $this->actingAs($this->admin)->post('/config/ai/save', aiConfigPayload(['model' => 'llama3']))->assertRedirect('/config/parameters?tab=ai');
+    $this->actingAs($this->admin)->post('/config/ai/save', aiConfigPayload(['model' => 'mistral']))->assertRedirect('/config/parameters?tab=ai');
 
     expect(Configuration::bool('ai.enabled'))->toBeTrue()
         ->and(Configuration::get('ai.model'))->toBe('mistral')
@@ -80,7 +80,7 @@ test('the API key is encrypted, never shown, kept when empty and deletable', fun
     expect($raw)->not->toBe('sk-very-secret')
         ->and(Configuration::get('ai.api_key'))->toBe('sk-very-secret');
 
-    $this->actingAs($this->admin)->get('/config/ai')
+    $this->actingAs($this->admin)->get('/config/parameters?tab=ai')
         ->assertOk()
         ->assertDontSee('sk-very-secret')
         ->assertSee(trans('ai.config.api_key_saved'));
@@ -104,7 +104,7 @@ test('the audit log masks the API key', function () {
 });
 
 test('a non https URL is refused, except localhost', function (string $url, bool $accepted) {
-    $response = $this->actingAs($this->admin)->from('/config/ai')
+    $response = $this->actingAs($this->admin)->from('/config/parameters?tab=ai')
         ->post('/config/ai/save', aiConfigPayload(['base_url' => $url]));
 
     if ($accepted) {
@@ -127,7 +127,7 @@ test('the schema cannot be changed', function () {
     $this->actingAs($this->admin)->post('/config/ai/save', aiConfigPayload(['schema' => '{"type":"string"}']));
 
     expect(DB::table('configuration')->where('name', 'like', '%schema%')->exists())->toBeFalse();
-    $this->actingAs($this->admin)->get('/config/ai')->assertSee('&quot;synthese&quot;', false);
+    $this->actingAs($this->admin)->get('/config/parameters?tab=ai')->assertSee('&quot;synthese&quot;', false);
 });
 
 test('a prompt can be customized and restored', function () {
@@ -135,7 +135,7 @@ test('a prompt can be customized and restored', function () {
     Configuration::clearCache();
     expect(Configuration::get('ai.prompt_risk'))->toBe('Mon prompt {{langue}}');
 
-    $this->actingAs($this->admin)->post('/config/ai/save', ['restore' => 'risk'])->assertRedirect('/config/ai');
+    $this->actingAs($this->admin)->post('/config/ai/save', ['restore' => 'risk'])->assertRedirect('/config/parameters?tab=ai');
     Configuration::clearCache();
     expect(Configuration::get('ai.prompt_risk'))->toBe(file_get_contents(resource_path('ai/prompt_risk.md')))
         ->and(DB::table('configuration')->where('name', 'ai.prompt_risk')->exists())->toBeFalse();
@@ -189,7 +189,7 @@ test('admin purges every analysis with an audit entry without content', function
         ]);
     }
 
-    $this->actingAs($this->admin)->post('/config/ai/purge')->assertRedirect('/config/ai');
+    $this->actingAs($this->admin)->post('/config/ai/purge')->assertRedirect('/config/parameters?tab=ai');
 
     foreach ($tables as $table) {
         expect(DB::table($table)->whereNotNull('ai_analysis')->orWhereNotNull('ai_analysis_hash')->count())->toBe(0);
@@ -208,9 +208,6 @@ test('a non admin cannot purge', function () {
     expect(DB::table('risks')->where('id', $object->id)->value('ai_analysis'))->toBe('{}');
 });
 
-test('the sidebar highlights AI and Notifications separately', function () {
-    $html = $this->actingAs($this->admin)->get('/config/ai')->getContent();
-
-    expect($html)->toMatch('#<a href="/config/ai" class="active">#')
-        ->and($html)->toMatch('#<a href="/config" class="">#');
+test('the former URL opens the AI tab of the settings page', function () {
+    $this->actingAs($this->admin)->get('/config/ai')->assertRedirect('/config/parameters?tab=ai');
 });

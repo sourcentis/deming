@@ -27,7 +27,9 @@ return [
         'import' => "Import",
         'documents' => 'Documents',
         'notifications' => 'Notifications',
-        'ai' => 'IA'
+        'ai' => 'IA',
+        'parameters' => 'Paramètres',
+        'templates' => 'Modèles'
     ],
     'test' => 'Vous êtes en environnement de test – Les données sont fictives',
     'logout' => 'Quitter',

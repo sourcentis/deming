@@ -12,12 +12,18 @@ test('guest is redirected to login', function () {
     $this->get('/risk/scoring')->assertRedirect('/login');
 });
 
+test('the former URL opens the classification tab of the settings page', function () {
+    $this->actingAs($this->admin)->get('/risk/scoring')->assertRedirect('/config/parameters?tab=scoring');
+});
+
 test('admin can list scoring configs', function () {
-    $this->actingAs($this->admin)->get('/risk/scoring')->assertStatus(200);
+    $this->actingAs($this->admin)->get('/config/parameters?tab=scoring')
+        ->assertStatus(200)
+        ->assertSee('/risk/scoring/create', false);
 });
 
 test('non-admin cannot list scoring configs', function () {
-    $this->actingAs($this->user)->get('/risk/scoring')->assertStatus(403);
+    $this->actingAs($this->user)->get('/config/parameters?tab=scoring')->assertStatus(403);
 });
 
 test('admin can access create form', function () {

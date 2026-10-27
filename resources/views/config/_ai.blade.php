@@ -1,6 +1,4 @@
-@extends("layout")
-
-@section("styles")
+{{-- "AI" tab of the settings page --}}
 <style>
     .ai-config details { border: 1px solid var(--bs-border-color, #dee2e6); border-radius: 4px; padding: .5rem .75rem; margin-bottom: .5rem; }
     .ai-config details > summary { cursor: pointer; font-weight: 600; }
@@ -12,14 +10,9 @@
     .ai-config details.ai-purge > summary::-webkit-details-marker { display: none; }
     .ai-config details.ai-purge { border: 0; padding: 0; }
 </style>
-@endsection
 
-@section("content")
-<div class="card ai-config">
-    <div class="card-header">@include('partials.help', ['page' => 'ai_config'])<i class="bi bi-robot"></i> {{ trans('ai.config.title') }}</div>
-    <div class="card-body">
-
-    @include('partials.errors')
+<div class="ai-config">
+    @include('partials.help', ['page' => 'ai_config'])
 
     <div class="alert alert-warning ai-privacy col-lg-9" role="note">
         <strong><i class="bi bi-shield-lock"></i> {{ trans('ai.config.privacy_title') }}</strong>
@@ -151,8 +144,6 @@
             </div>
         </details>
     </form>
-
-    </div>
 </div>
 
 @php
@@ -202,4 +193,3 @@
     });
 })();
 </script>
-@endsection

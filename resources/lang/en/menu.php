@@ -28,7 +28,9 @@ return [
         'documents' => 'Documents',
         'models' => 'Models',
         'notifications' => 'Notifications',
-        'ai' => 'AI'
+        'ai' => 'AI',
+        'parameters' => 'Settings',
+        'templates' => 'Templates'
     ],
     'test' => 'You are in a test environment - The data is fictitious',
     'logout' => 'Logout',

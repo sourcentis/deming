@@ -11,19 +11,24 @@ test('guest is redirected to login', function () {
     $this->get('/config')->assertRedirect('/login');
 });
 
+test('the former URL opens the notifications tab of the settings page', function () {
+    $this->actingAs($this->admin)->get('/config')->assertRedirect('/config/parameters?tab=notifications');
+});
+
 test('admin can view configuration', function () {
-    $this->actingAs($this->admin)->get('/config')->assertStatus(200);
+    $this->actingAs($this->admin)->get('/config/parameters?tab=notifications')
+        ->assertStatus(200)
+        ->assertSee('action="/config/save"', false);
 });
 
 test('non-admin cannot view configuration', function () {
-    $this->actingAs($this->user)->get('/config')->assertStatus(403);
+    $this->actingAs($this->user)->get('/config/parameters?tab=notifications')->assertStatus(403);
 });
 
-test('admin can save configuration and gets 200 response', function () {
-    // config/save returns a view (200), not a redirect, unless action=cancel
+test('admin can save configuration and goes back to the notifications tab', function () {
     $this->actingAs($this->admin)
         ->post('/config/save', ['action' => 'save'])
-        ->assertStatus(200);
+        ->assertRedirect('/config/parameters?tab=notifications');
 });
 
 test('admin config save with cancel redirects to home', function () {

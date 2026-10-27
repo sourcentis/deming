@@ -11,36 +11,18 @@ use PHPMailer\PHPMailer\PHPMailer;
 class ConfigurationController extends Controller
 {
     /*
-    * Return the configuration
+    * Data of the "Notifications" tab of the settings page
     */
-    public function index()
+    public function tabData(): array
     {
-        abort_if(Auth::user()->role !== 1, Response::HTTP_FORBIDDEN, '403 Forbidden');
-
-        // Get configuration
-        $mail_from = config('deming.notification.mail-from');
-        $mail_subject = config('deming.notification.mail-subject');
-        $mail_content = config('deming.notification.mail-content');
-        $frequency = config('deming.notification.frequency');
-        $expire_delay = config('deming.notification.expire-delay');
-        $reminder = config('deming.notification.reminder');
-
-        // set emply message
-        $message = null;
-
-        // Return
-        return view(
-            'config',
-            compact(
-                'mail_from',
-                'mail_subject',
-                'mail_content',
-                'frequency',
-                'expire_delay',
-                'reminder',
-                'message'
-            )
-        );
+        return [
+            'mail_from' => config('deming.notification.mail-from'),
+            'mail_subject' => config('deming.notification.mail-subject'),
+            'mail_content' => config('deming.notification.mail-content'),
+            'frequency' => config('deming.notification.frequency'),
+            'expire_delay' => config('deming.notification.expire-delay'),
+            'reminder' => config('deming.notification.reminder'),
+        ];
     }
 
     /*
@@ -139,11 +121,10 @@ class ConfigurationController extends Controller
                 $messages->push('No actions made.');
         }
 
-        return view(
-            'config',
-            compact('mail_from', 'mail_subject', 'mail_content', 'frequency', 'expire_delay', 'reminder')
-        )
-            ->with('messages', $messages)
-            ->with('errors', $errors);
+        // Back to the "Notifications" tab, keeping the values entered (e.g. after a test)
+        return redirect('/config/parameters?tab=notifications')
+            ->withInput()
+            ->with('messages', $messages->all())
+            ->withErrors($errors->all());
     }
 }

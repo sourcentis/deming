@@ -1,12 +1,12 @@
-@extends("layout")
-
-@section("content")
-<div class="card">
-    <div class="card-header">@include('partials.help', ['page' => 'notifications'])<i class="bi bi-alarm"></i> {{ trans('cruds.config.notifications.title') }}</div>
-    <div class="card-body">
-
-    @include('partials.errors')
-
+{{-- "Notifications" tab of the settings page; values entered are kept after a test --}}
+@php
+    $mail_from = old('mail_from', $mail_from);
+    $mail_subject = old('mail_subject', $mail_subject);
+    $mail_content = old('mail_content', $mail_content);
+    $frequency = old('frequency', $frequency);
+    $expire_delay = old('expire_delay', $expire_delay);
+@endphp
+    @include('partials.help', ['page' => 'notifications'])
     <form method="POST" action="/config/save" enctype="multipart/form-data">
         @csrf
 
@@ -96,10 +96,5 @@
 
             </div>
         </div>
+        </div>
     </form>
-
-
-</div>
-</div>
-</div>
-@endsection

@@ -9,8 +9,10 @@ use App\Models\Risk;
 use App\Models\User;
 use App\Models\UserGroup;
 use Database\Seeders\RiskScoringConfigSeeder;
+use Illuminate\Cache\RateLimiter;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Routing\Middleware\ThrottleRequests;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 
@@ -223,6 +225,8 @@ test('the second call is cached and force runs a new analysis', function (string
 test('the eleventh request in a minute is throttled', function () {
     // Rate limiting is disabled for Feature/Web tests: restore it here
     $this->app->forgetInstance(ThrottleRequests::class);
+    // Fresh in-memory counters: the default cache store may persist between test runs
+    $this->app->instance(RateLimiter::class, new RateLimiter(Cache::store('array')));
     Http::fake(['*' => aiAgentResponse()]);
     $object = aiCreateSubject('control');
 
