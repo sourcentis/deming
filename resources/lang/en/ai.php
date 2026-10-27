@@ -40,7 +40,7 @@ return [
         'test_latency' => 'Latency',
         'test_model' => 'Model',
         'purge' => 'Delete all AI analyses',
-        'purge_help' => 'Erases the last analysis saved on every security measure, control, action plan and risk. This cannot be undone.',
+        'purge_help' => 'Erases the last analysis saved on every control, measurement, action plan and risk. This cannot be undone.',
         'purge_confirm' => 'Confirm deletion',
         'purged' => ':count analysis(es) deleted.',
     ],
