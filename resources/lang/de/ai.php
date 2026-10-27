@@ -46,6 +46,7 @@ return [
     ],
 
     'panel' => [
+        'colon' => ': ',
         'title' => 'KI-Analyse',
         'close' => 'Schließen',
         'loading' => 'Analyse läuft…',

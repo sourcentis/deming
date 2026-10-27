@@ -6,6 +6,7 @@
 <div class="card">
     <div class="card-header">@include('partials.help', ['page' => 'measures.show'])<i class="bi bi-clipboard-check"></i> {{ trans('cruds.measure.title_singular') }}</div>
     <div class="card-body">
+    @include('partials.ai-button', ['type' => 'measure', 'object' => $measure])
 
 	<div class="container-fluid px-0">
 		<div class="row">

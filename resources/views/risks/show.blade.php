@@ -6,6 +6,7 @@
 <div class="card">
     <div class="card-header">@include('partials.help', ['page' => 'risks.show'])<i class="bi bi-exclamation-triangle"></i> {{ trans("cruds.risk.singular") }}</div>
     <div class="card-body">
+    @include('partials.ai-button', ['type' => 'risk', 'object' => $risk])
 
 <div class="container-fluid px-0">
 

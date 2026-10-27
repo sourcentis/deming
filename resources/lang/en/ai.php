@@ -46,6 +46,7 @@ return [
     ],
 
     'panel' => [
+        'colon' => ': ',
         'title' => 'AI analysis',
         'close' => 'Close',
         'loading' => 'Analysing…',

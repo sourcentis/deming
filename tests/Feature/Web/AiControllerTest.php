@@ -264,3 +264,69 @@ test('preview is refused to the API role', function () {
 
     $this->actingAs(User::factory()->apiUser()->create())->postJson("/ai/risk/{$object->id}/preview")->assertForbidden();
 });
+
+// -----------------------------------------------------------------------------
+// Icon and panel on the show pages
+// -----------------------------------------------------------------------------
+
+function aiShowUrl(string $type, int $id): string
+{
+    return [
+        'control' => "/alice/show/{$id}",
+        'measure' => "/bob/show/{$id}",
+        'action' => "/action/show/{$id}",
+        'risk' => "/risk/show/{$id}",
+    ][$type];
+}
+
+test('no icon when AI is disabled', function (string $type) {
+    Configuration::set('ai.enabled', '0');
+    $object = aiCreateSubject($type);
+
+    $this->actingAs($this->admin)->get(aiShowUrl($type, $object->id))
+        ->assertOk()
+        ->assertDontSee('data-ai-type', false)
+        ->assertDontSee('id="ai-panel"', false);
+})->with(AI_ENDPOINT_TYPES);
+
+test('the icon and the panel are shown to an authorized user', function (string $type) {
+    $object = aiCreateSubject($type);
+
+    $this->actingAs($this->admin)->get(aiShowUrl($type, $object->id))
+        ->assertOk()
+        ->assertSee('data-ai-type="' . $type . '"', false)
+        ->assertSee('data-ai-id="' . $object->id . '"', false)
+        ->assertSee('bi-stars', false)
+        ->assertSee('id="ai-panel"', false)
+        ->assertSee('aria-label="' . trans('ai.button') . '"', false)
+        ->assertSee('oai.endpoints.kepler.ai.cloud.ovh.net');
+})->with(AI_ENDPOINT_TYPES);
+
+test('the icon shows a dot when an analysis is saved', function (string $type) {
+    $object = aiCreateSubject($type);
+    storeAnalysis($object);
+
+    $this->actingAs($this->admin)->get(aiShowUrl($type, $object->id))
+        ->assertOk()
+        ->assertSee('has-analysis"', false);
+})->with(AI_ENDPOINT_TYPES);
+
+test('the auditor sees the page but neither the icon nor the panel', function (string $type) {
+    $auditor = User::factory()->auditor()->create();
+    $object = $type === 'risk' ? Risk::factory()->create(['owner_id' => $auditor->id])->fresh() : aiCreateSubject($type);
+    storeAnalysis($object);
+
+    $this->actingAs($auditor)->get(aiShowUrl($type, $object->id))
+        ->assertOk()
+        ->assertDontSee('data-ai-type', false)
+        ->assertDontSee('id="ai-panel"', false)
+        ->assertDontSee('CACHED-ANALYSIS');
+})->with(AI_ENDPOINT_TYPES);
+
+test('the panel never injects AI output as HTML', function () {
+    $source = file_get_contents(resource_path('views/partials/ai-panel.blade.php'));
+
+    expect($source)->not->toContain('innerHTML')
+        ->not->toContain('insertAdjacentHTML')
+        ->not->toContain('outerHTML');
+});
