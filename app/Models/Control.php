@@ -64,6 +64,7 @@ class Control extends Model
                 ->exists();
     }
 
+    /** @return BelongsToMany<Risk, $this> */
     public function risks(): BelongsToMany
     {
         return $this->belongsToMany(Risk::class, 'control_risk');

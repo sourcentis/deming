@@ -67,11 +67,13 @@ class Action extends Model
         return $this->belongsToMany(User::class, 'action_user', 'action_id')->orderBy('name');
     }
 
+    /** @return BelongsToMany<Control, $this> */
     public function controls() : BelongsToMany
     {
         return $this->belongsToMany(Control::class, 'action_control', 'action_id', 'control_id');
     }
 
+    /** @return BelongsToMany<Risk, $this> */
     public function risks() : BelongsToMany
     {
         return $this->belongsToMany(Risk::class, 'action_risk')->orderBy('name');

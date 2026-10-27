@@ -139,11 +139,13 @@ class Risk extends Model
         return $this->belongsTo(User::class, 'owner_id');
     }
 
+    /** @return BelongsToMany<Control, $this> */
     public function controls(): BelongsToMany
     {
         return $this->belongsToMany(Control::class, 'control_risk');
     }
 
+    /** @return BelongsToMany<Action, $this> */
     public function actions(): BelongsToMany
     {
         return $this->belongsToMany(Action::class, 'action_risk');
