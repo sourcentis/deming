@@ -73,7 +73,7 @@
 
 <aside id="ai-panel" class="ai-panel" role="dialog" aria-modal="false" aria-labelledby="ai-panel-title" aria-hidden="true">
     <div class="ai-panel-header position-relative">
-        <h2 id="ai-panel-title">{{ trans('ai.panel.title') }}</h2>
+        <h2><i class="bi bi-robot me-1" aria-hidden="true"></i><span id="ai-panel-title">{{ trans('ai.panel.title') }}</span></h2>
         <a href="{{ trans('help.url') . trans('help.pages.ai_use') }}" target="_blank" rel="noopener" class="btn btn-help">{{ trans('help.button') }}</a>
         <button type="button" class="ai-panel-close" id="ai-panel-close" aria-label="{{ trans('ai.panel.close') }}" title="{{ trans('ai.panel.close') }}">
             <i class="bi bi-x-lg" aria-hidden="true"></i>
@@ -87,7 +87,7 @@
     </div>
     <div class="ai-panel-body" id="ai-panel-body" aria-busy="false"></div>
     <div class="ai-panel-footer">
-        <i class="bi bi-stars" aria-hidden="true"></i> {{ trans('ai.panel.footer') }}
+        <i class="bi bi-robot" aria-hidden="true"></i> {{ trans('ai.panel.footer') }}
         · <span id="ai-panel-model">{{ \App\Models\Configuration::get('ai.model') }}</span>
         · <span>{{ parse_url((string) \App\Models\Configuration::get('ai.base_url'), PHP_URL_HOST) }}</span>
         · <a href="#" id="ai-panel-preview">{{ trans('ai.panel.data_sent') }}</a>

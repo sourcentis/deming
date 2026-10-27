@@ -16,7 +16,7 @@
 
 @section("content")
 <div class="card ai-config">
-    <div class="card-header">@include('partials.help', ['page' => 'ai_config'])<i class="bi bi-stars"></i> {{ trans('ai.config.title') }}</div>
+    <div class="card-header">@include('partials.help', ['page' => 'ai_config'])<i class="bi bi-robot"></i> {{ trans('ai.config.title') }}</div>
     <div class="card-body">
 
     @include('partials.errors')
