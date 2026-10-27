@@ -140,3 +140,10 @@ test('deleting a risk drops its analysis', function () {
     expect($row->ai_analysis)->toBeNull();
     expect($row->ai_analysis_hash)->toBeNull();
 });
+
+test('ai columns are not selectable in report templates', function (string $table) {
+    $columns = \App\Services\Report\ReportTableRegistry::realColumns($table);
+    foreach (Control::AI_COLUMNS as $column) {
+        expect($columns)->not->toContain($column);
+    }
+})->with(['controls', 'measures', 'actions', 'risks']);
