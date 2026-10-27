@@ -36,8 +36,8 @@
 @endphp
 <style>
     .btn-ai { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 2.1rem; height: 2.1rem; min-width: 0; padding: 0; font-size: 1.2rem; line-height: 1; color: #8059C8; background-color: #fff; border: 1px solid #c9b8ea; }
-    /* Bootstrap Icons shift glyphs down (vertical-align: -.125em): reset it to center the robot */
-    .btn-ai .bi { display: block; line-height: 1; }
+    /* Center the robot: no margin from ".btn .bi" (custom.css) nor vertical shift from Bootstrap Icons */
+    .btn-ai .bi { display: block; line-height: 1; margin: 0; }
     .btn-ai .bi::before { display: block; vertical-align: 0; }
     .btn-ai:hover, .btn-ai:focus { color: #5f3fa3; background-color: #f5f0ff; border-color: #8059C8; }
     .btn-ai.has-analysis::after { content: ""; position: absolute; top: -3px; right: -3px; width: 8px; height: 8px; border-radius: 50%; background: #3AB87A; border: 1px solid #fff; }
