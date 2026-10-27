@@ -26,7 +26,8 @@ return [
         'reports' => 'Rapports',
         'import' => "Import",
         'documents' => 'Documents',
-        'notifications' => 'Notifications'
+        'notifications' => 'Notifications',
+        'ai' => 'IA'
     ],
     'test' => 'Vous êtes en environnement de test – Les données sont fictives',
     'logout' => 'Quitter',

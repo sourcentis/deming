@@ -71,5 +71,7 @@ return [
         'documents' => 'config/#documents',
         'notifications' => 'config/#notifications',
         'logs' => 'config/#logs',
+        'ai_config' => 'ai/#config',
+        'ai_use' => 'ai/#use',
     ],
 ];
