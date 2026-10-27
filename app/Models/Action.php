@@ -54,6 +54,14 @@ class Action extends Model
     // 3 - Observation - yellow
     // 4 - Opportunity - green
 
+    /**
+     * Access rule of ActionController@show: administrators, users and auditors.
+     */
+    public static function isViewableBy(User $user, int $id): bool
+    {
+        return in_array($user->role, [User::ROLE_ADMIN, User::ROLE_USER, User::ROLE_AUDITOR], true);
+    }
+
     public function owners() : BelongsToMany
     {
         return $this->belongsToMany(User::class, 'action_user', 'action_id')->orderBy('name');

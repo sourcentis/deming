@@ -44,6 +44,26 @@ class Control extends Model
         'action_plan',
     ];
 
+    /**
+     * Access rule of ControlController@show (security measure page):
+     * no API account, and unless the user sees all data, at least one
+     * control (Measure) of this security measure assigned directly to the user.
+     */
+    public static function isViewableBy(User $user, int $id): bool
+    {
+        if ($user->isAPI()) {
+            return false;
+        }
+
+        return $user->seesAllData() ||
+            DB::table('measures')
+                ->join('control_measure', 'control_measure.measure_id', '=', 'measures.id')
+                ->join('measure_user', 'measure_user.measure_id', '=', 'measures.id')
+                ->where('control_measure.control_id', $id)
+                ->where('measure_user.user_id', $user->id)
+                ->exists();
+    }
+
     public function risks(): BelongsToMany
     {
         return $this->belongsToMany(Risk::class, 'control_risk');

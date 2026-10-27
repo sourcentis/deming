@@ -282,9 +282,7 @@ class ActionController extends Controller
     public function show(int $id)
     {
         abort_if(
-            ! ((Auth::user()->role === 1) ||
-            (Auth::user()->role === 2) ||
-            (Auth::user()->role === 3)),
+            ! Action::isViewableBy(Auth::user(), $id),
             Response::HTTP_FORBIDDEN,
             '403 Forbidden'
         );

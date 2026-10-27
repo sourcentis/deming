@@ -395,23 +395,7 @@ class MeasureController extends Controller
     public function show(int $id)
     {
         abort_if(
-            Auth::user()->isAPI(),
-            Response::HTTP_FORBIDDEN,
-            '403 Forbidden'
-        );
-
-        abort_if(
-            !Auth::user()->seesAllData() &&
-            ! (DB::table('measure_user')
-                    ->where('measure_id', $id)
-                    ->where('user_id', Auth::user()->id)
-                    ->exists()
-                ||
-                DB::table('measure_user_group')
-                    ->join('user_user_group', 'measure_user_group.user_group_id', '=', 'user_user_group.user_group_id')
-                    ->where('measure_user_group.measure_id', $id)
-                    ->where('user_user_group.user_id', Auth::user()->id)
-                    ->exists()),
+            ! Measure::isViewableBy(Auth::user(), $id),
             Response::HTTP_FORBIDDEN,
             '403 Forbidden'
         );

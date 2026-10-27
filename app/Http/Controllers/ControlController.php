@@ -197,20 +197,8 @@ class ControlController extends Controller
      */
     public function show(int $id)
     {
-        abort_if(Auth::user()->isAPI(),
-            Response::HTTP_FORBIDDEN,
-            '403 Forbidden'
-        );
-
-        // Must have an assigned measure on this control, unless the user sees all data
         abort_if(
-            (!Auth::user()->seesAllData()) &&
-            ! DB::table('measures')
-                ->join('control_measure', 'control_measure.measure_id', '=', 'measures.id')
-                ->join('measure_user', 'measure_user.measure_id', '=', 'measures.id')
-                ->where('control_measure.control_id', $id)
-                ->where('measure_user.user_id', Auth::user()->id)
-                ->exists(),
+            ! Control::isViewableBy(Auth::user(), $id),
             Response::HTTP_FORBIDDEN,
             '403 Forbidden'
         );

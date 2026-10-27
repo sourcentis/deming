@@ -333,7 +333,7 @@ class RiskController extends Controller
 
     private function authorizeView(Risk $risk): void
     {
-        if (Auth::user()->role === 3 && $risk->owner_id !== Auth::id()) {
+        if (! Risk::isViewableBy(Auth::user(), $risk->id)) {
             abort(403);
         }
     }
