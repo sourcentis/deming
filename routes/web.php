@@ -15,6 +15,7 @@ use App\Http\Controllers\ExceptionController;
 use App\Http\Controllers\ControlMappingController;
 use App\Http\Controllers\RiskController;
 use App\Http\Controllers\RiskScoringConfigController;
+use App\Services\Ai\AiSubjects;
 
 Auth::routes();
 
@@ -108,6 +109,12 @@ Route::namespace('App\\Http\\Controllers')->middleware('auth')->group(function (
     Route::post('/config/ai/save', 'AiConfigController@save');
     Route::post('/config/ai/test', 'AiConfigController@test')->middleware('throttle:10,1');
     Route::post('/config/ai/purge', 'AiConfigController@purge')->middleware('throttle:10,1');
+
+    /* AI analysis */
+    Route::post('/ai/{type}/{id}', 'AiController@analyze')
+        ->whereIn('type', AiSubjects::types())->whereNumber('id')->middleware('throttle:10,1');
+    Route::post('/ai/{type}/{id}/preview', 'AiController@preview')
+        ->whereIn('type', AiSubjects::types())->whereNumber('id')->middleware('throttle:10,1');
 
     /* Group view (admin toggle: own data vs all users' data) */
     Route::get('/group/toggle', 'GroupViewController@toggle');
