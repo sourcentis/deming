@@ -10,84 +10,14 @@
         $smtp[$field] = old($field, $smtp[$field]);
     }
 @endphp
-    @include('partials.help', ['page' => 'notifications'])
     <form method="POST" action="/config/save" enctype="multipart/form-data">
         @csrf
 
 		<div class="container-fluid px-0">
-	    	<div class="row">
-	    		<div class="col-md-12 col-lg-6">
-		            <label for="name">{{ trans("cruds.config.notifications.help") }}</label>
-		        </div>
-	        </div>
-
-	    	<div class="row">
-	    		<div class="col-md-12 col-lg-6">
-		        </div>
-	        </div>
-
-	    	<div class="row">
-	    		<div class="col-md-2 col-lg-1">
-		    		<strong>{{ trans("cruds.config.notifications.sent_from") }}</strong>
-		    	</div>
-                <div class="col-md-12 col-lg-11">
-		            <input class="form-control" type="text" name="mail_from" id="mail_from" value="{{ $mail_from }}" required size=64/>
-				</div>
-			</div>
-
-	    	<div class="row">
-	    		<div class="col-md-2 col-lg-1">
-		    		<strong>{{ trans("cruds.config.notifications.message_subject") }}</strong>
-		    	</div>
-                <div class="col-md-12 col-lg-11">
-		            <input class="form-control" type="text" name="mail_subject" id="mail_subject" value="{{ $mail_subject }}" required size=64/>
-				</div>
-			</div>
-
-	    	<div class="row">
-	    		<div class="col-md-2 col-lg-1">
-		    		<strong>{{ trans("cruds.config.notifications.message_content") }}</strong>
-		    	</div>
-				<div class="col-md-12 col-lg-11">
-		            <textarea class="form-control" name="mail_content" rows="10">{{ strlen($mail_content)==0 ? trans('cruds.config.notifications.message_default_content') : $mail_content }}</textarea>
-				</div>
-			</div>
-
-    	<div class="row">
-    		<div class="col-md-2 col-lg-1">
-	    		<strong>{{ trans("cruds.config.notifications.recurrence") }}</strong>
-	    	</div>
-			<div class="col-md-8 col-lg-4">
-	            <select class="form-select select2" name="frequency" id="frequency">
-	                <option value="0" {{ $frequency=="0" ? 'selected' : '' }}>{{ trans("common.never") }}</option>
-	                <option value="1" {{ $frequency=="1" ? 'selected' : '' }}>{{ trans("common.day") }}</option>
-	                <option value="7" {{ $frequency=="7" ? 'selected' : '' }}>{{ trans("common.week") }}</option>
-	                <option value="30" {{ $frequency=="30" ? 'selected' : '' }}>{{ trans("common.month") }}</option>
-	            </select>
-	        </div>
-	    </div>
-
-	    	<div class="row">
-	    		<div class="col-md-2 col-lg-1">
-		    		<strong>{{ trans("cruds.config.notifications.delay") }}</strong>
-		    	</div>
-				<div class="col-md-8 col-lg-4">
-		            <select class="form-select select2" name="expire_delay" id="expire_delay">
-		                <option value="1" {{ $expire_delay=="1" ? 'selected' : '' }}>1 {{ trans("cruds.config.notifications.duration.day") }}</option>
-		                <option value="7" {{ $expire_delay=="7" ? 'selected' : '' }}>7 {{ trans("cruds.config.notifications.duration.days") }}</option>
-		                <option value="15" {{ $expire_delay=="15" ? 'selected' : '' }}>15 {{ trans("cruds.config.notifications.duration.days") }}</option>
-		                <option value="30" {{ $expire_delay=="30" ? 'selected' : '' }}>1 {{ trans("cruds.config.notifications.duration.month") }}</option>
-		            </select>
-				</div>
-			</div>
-
-    	<div class="row">
-    		<div class="col-md-12 col-lg-6">
-	        </div>
-        </div>
 
         <fieldset class="border rounded p-2 mb-3">
             <legend class="float-none w-auto px-2 fs-6 fw-bold"><i class="bi bi-envelope-at"></i> {{ trans('cruds.config.notifications.smtp.title') }}</legend>
+            @include('partials.help', ['page' => 'notifications'])
             <p class="text-muted small mb-2">{{ trans('cruds.config.notifications.smtp.help') }}</p>
 
             <div class="row mb-2">
@@ -141,6 +71,66 @@
                 </div>
                 @include('config._secret_field', ['field' => 'dkim_passphrase', 'label' => trans('cruds.config.notifications.smtp.dkim_passphrase'), 'stored' => $smtp['has_dkim_passphrase']])
             </details>
+        </fieldset>
+
+        <fieldset class="border rounded p-2 mb-3">
+            <legend class="float-none w-auto px-2 fs-6 fw-bold"><i class="bi bi-alarm"></i> {{ trans('cruds.config.notifications.title_short') }}</legend>
+            <p class="text-muted small mb-2">{{ trans("cruds.config.notifications.help") }}</p>
+
+	    	<div class="row mb-2">
+	    		<div class="col-md-3 col-lg-2">
+		    		<strong>{{ trans("cruds.config.notifications.sent_from") }}</strong>
+		    	</div>
+                <div class="col-md-9 col-lg-10">
+		            <input class="form-control" type="text" name="mail_from" id="mail_from" value="{{ $mail_from }}" required size=64/>
+				</div>
+			</div>
+
+	    	<div class="row mb-2">
+	    		<div class="col-md-3 col-lg-2">
+		    		<strong>{{ trans("cruds.config.notifications.message_subject") }}</strong>
+		    	</div>
+                <div class="col-md-9 col-lg-10">
+		            <input class="form-control" type="text" name="mail_subject" id="mail_subject" value="{{ $mail_subject }}" required size=64/>
+				</div>
+			</div>
+
+	    	<div class="row mb-2">
+	    		<div class="col-md-3 col-lg-2">
+		    		<strong>{{ trans("cruds.config.notifications.message_content") }}</strong>
+		    	</div>
+				<div class="col-md-9 col-lg-10">
+		            <textarea class="form-control" name="mail_content" rows="10">{{ strlen($mail_content)==0 ? trans('cruds.config.notifications.message_default_content') : $mail_content }}</textarea>
+				</div>
+			</div>
+
+    	<div class="row mb-2">
+    		<div class="col-md-3 col-lg-2">
+	    		<strong>{{ trans("cruds.config.notifications.recurrence") }}</strong>
+	    	</div>
+			<div class="col-md-6 col-lg-4">
+	            <select class="form-select select2" name="frequency" id="frequency">
+	                <option value="0" {{ $frequency=="0" ? 'selected' : '' }}>{{ trans("common.never") }}</option>
+	                <option value="1" {{ $frequency=="1" ? 'selected' : '' }}>{{ trans("common.day") }}</option>
+	                <option value="7" {{ $frequency=="7" ? 'selected' : '' }}>{{ trans("common.week") }}</option>
+	                <option value="30" {{ $frequency=="30" ? 'selected' : '' }}>{{ trans("common.month") }}</option>
+	            </select>
+	        </div>
+	    </div>
+
+	    	<div class="row mb-2">
+	    		<div class="col-md-3 col-lg-2">
+		    		<strong>{{ trans("cruds.config.notifications.delay") }}</strong>
+		    	</div>
+				<div class="col-md-6 col-lg-4">
+		            <select class="form-select select2" name="expire_delay" id="expire_delay">
+		                <option value="1" {{ $expire_delay=="1" ? 'selected' : '' }}>1 {{ trans("cruds.config.notifications.duration.day") }}</option>
+		                <option value="7" {{ $expire_delay=="7" ? 'selected' : '' }}>7 {{ trans("cruds.config.notifications.duration.days") }}</option>
+		                <option value="15" {{ $expire_delay=="15" ? 'selected' : '' }}>15 {{ trans("cruds.config.notifications.duration.days") }}</option>
+		                <option value="30" {{ $expire_delay=="30" ? 'selected' : '' }}>1 {{ trans("cruds.config.notifications.duration.month") }}</option>
+		            </select>
+				</div>
+			</div>
         </fieldset>
 
     	<div class="row">
