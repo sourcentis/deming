@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Services\RiskScoringService;
 use App\Traits\Auditable;
+use App\Traits\HasAiAnalysis;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -42,7 +43,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Risk extends Model
 {
-    use HasFactory, SoftDeletes, Auditable;
+    use HasFactory, SoftDeletes, Auditable, HasAiAnalysis;
 
     // -------------------------------------------------------------------------
     // Constantes de statut
@@ -92,6 +93,8 @@ class Risk extends Model
     // -------------------------------------------------------------------------
     // Fillable / Casts
     // -------------------------------------------------------------------------
+
+    protected $hidden = self::AI_COLUMNS;
 
     protected $fillable = [
         'name', 'description', 'owner_id',

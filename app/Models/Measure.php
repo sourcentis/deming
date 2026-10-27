@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\Auditable;
+use App\Traits\HasAiAnalysis;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -14,7 +15,7 @@ use Illuminate\Support\Facades\File;
 
 class Measure extends Model
 {
-    use HasFactory, Auditable;
+    use HasFactory, Auditable, HasAiAnalysis;
 
     public static $searchable = [
         'name',
@@ -33,6 +34,8 @@ class Measure extends Model
         'updated_at',
         'deleted_at',
     ];
+
+    protected $hidden = self::AI_COLUMNS;
 
     protected $fillable = [
         'name',

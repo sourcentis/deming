@@ -191,7 +191,10 @@ class RiskController extends Controller
             abort(403);
         }
 
-        Risk::query()->findOrFail($id)->delete();
+        $risk = Risk::query()->findOrFail($id);
+        // The risk is soft-deleted: drop its AI analysis with it
+        $risk->clearAiAnalysis();
+        $risk->delete();
 
         return redirect('/risk/index')
             ->with('success', __('Risque supprimé.'));

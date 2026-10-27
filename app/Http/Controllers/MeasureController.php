@@ -1277,7 +1277,7 @@ class MeasureController extends Controller
             $measure->status = 2;
 
             if (($measure->next_id === null) && ($measure->periodicity !== 0)) {
-                $new_measure = $measure->replicate();
+                $new_measure = $measure->replicate(Measure::AI_COLUMNS);
                 $new_measure->observations    = null;
                 $new_measure->realisation_date = null;
                 $new_measure->note            = null;
@@ -1495,7 +1495,7 @@ class MeasureController extends Controller
         $measure->action_plan      = request('action_plan');
 
         if ($measure->periodicity !== 0) {
-            $new_measure                   = $measure->replicate();
+            $new_measure                   = $measure->replicate(Measure::AI_COLUMNS);
             $new_measure->status           = 0;
             $new_measure->observations     = null;
             $new_measure->realisation_date = null;

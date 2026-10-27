@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\Auditable;
+use App\Traits\HasAiAnalysis;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 
 class Control extends Model
 {
-    use HasFactory, Auditable;
+    use HasFactory, Auditable, HasAiAnalysis;
 
     public static $searchable = [
         'name',
@@ -28,6 +29,8 @@ class Control extends Model
         'updated_at',
         'deleted_at',
     ];
+
+    protected $hidden = self::AI_COLUMNS;
 
     protected $fillable = [
         'domain_id',

@@ -3,13 +3,14 @@
 namespace App\Models;
 
 use App\Traits\Auditable;
+use App\Traits\HasAiAnalysis;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Action extends Model
 {
-    use HasFactory, Auditable;
+    use HasFactory, Auditable, HasAiAnalysis;
 
     public static $searchable = [
         'reference',
@@ -25,6 +26,8 @@ class Action extends Model
         'due_date',
         'close_date',
     ];
+
+    protected $hidden = self::AI_COLUMNS;
 
     protected $fillable = [
         'reference',
