@@ -98,7 +98,10 @@
         <a href="/doc" class="{{ request()->is('doc*') ? 'active' : '' }}">
             <i class="bi bi-file-earmark-text"></i><span class="menu-text">{{ trans("menu.configuration.documents") }}</span>
         </a>
-        <a href="/config" class="{{ request()->is('config*') ? 'active' : '' }}">
+        <a href="/config/ai" class="{{ request()->is('config/ai*') ? 'active' : '' }}">
+            <i class="bi bi-stars"></i><span class="menu-text">{{ trans("menu.configuration.ai") }}</span>
+        </a>
+        <a href="/config" class="{{ request()->is('config') || request()->is('config/save') ? 'active' : '' }}">
             <i class="bi bi-alarm"></i><span class="menu-text">{{ trans("menu.configuration.notifications") }}</span>
         </a>
         <a href="/logs" class="{{ request()->is('logs*') ? 'active' : '' }}">

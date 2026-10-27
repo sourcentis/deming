@@ -103,6 +103,12 @@ Route::namespace('App\\Http\\Controllers')->middleware('auth')->group(function (
     Route::get('/config', 'ConfigurationController@index');
     Route::post('/config/save', 'ConfigurationController@save');
 
+    /* AI agent configuration */
+    Route::get('/config/ai', 'AiConfigController@index');
+    Route::post('/config/ai/save', 'AiConfigController@save');
+    Route::post('/config/ai/test', 'AiConfigController@test')->middleware('throttle:10,1');
+    Route::post('/config/ai/purge', 'AiConfigController@purge')->middleware('throttle:10,1');
+
     /* Group view (admin toggle: own data vs all users' data) */
     Route::get('/group/toggle', 'GroupViewController@toggle');
 
