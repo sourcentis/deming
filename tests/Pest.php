@@ -7,6 +7,7 @@ pest()->extend(Tests\TestCase::class)
     ->use(RefreshDatabase::class)
     ->beforeEach(function () {
         \App\Models\RiskScoringConfig::clearCache();
+        \App\Models\Configuration::clearCache();
     })
     ->in('Feature');
 
