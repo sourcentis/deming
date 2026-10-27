@@ -1,7 +1,7 @@
 # Setup
 
-The "Configuration" menu gives access to the attributes, domains, users, groups, [risk scoring](risks.md#scoring),
-import, [framework crosswalks](crosswalk.md), documents, notifications and logs.
+The "Configuration" menu gives access to the attributes, domains, users, groups, import,
+[framework crosswalks](crosswalk.md), [settings](#parameters) and logs.
 
 ## Attributes {#tags}
 
@@ -102,15 +102,53 @@ When importing, all other controls and measures can be deleted and test data gen
 
 [![Screenshot](images/import.png)](images/import.png)
 
+## Settings {#parameters}
+
+The "Settings" page, restricted to administrators, groups the application settings in tabs:
+
+* **Documents**: the [document check and retention period](#documents);
+
+* **Templates**: the [document templates](#templates);
+
+* **Scoring**: the [risk scoring configuration](risks.md#scoring);
+
+* **AI**: the configuration of the [AI agent](#ai);
+
+* **Notifications**: the [notifications](#notifications) sent to users.
+
+Each tab has its own buttons. After saving, the page comes back to the tab that was changed.
+
+<!-- TODO capture : images/parameters.png -->
+
 ## Documents {#documents}
 
-This screen lets you modify the document management settings used in Deming.
+The "Documents" tab of the [Settings](#parameters) page is used to check the documents stored in Deming and to
+configure their retention period.
 
 [![Screenshot](images/documents.png)](images/documents.png)
 
-### Templates
+### Storage
 
-This part of the screen lets you modify the document templates used for control sheets and the ISMS management report, and gives you an overview of all the documents used as proof when carrying out security controls.
+This part of the tab lets you check the integrity of documents stored in the application.
+
+By clicking on “Check”, Deming launches the integrity check of documents stored in the application, using a CRC32.
+
+### Retention
+
+This part of the tab lets you configure the retention period (in months) for checks carried out in the application.
+
+All checks carried out after this date are deleted, along with the associated documents and action plans.
+
+This is done by executing the command
+
+    php artisan deming:cleanup
+
+command via a cron.
+
+## Templates {#templates}
+
+The "Templates" tab of the [Settings](#parameters) page is used to modify the document templates used for control
+sheets and the ISMS management report.
 
 The steering report template is a Word document (.docx) whose tags are replaced when the report is generated.
 The "Template tags" panel, displayed next to the templates, lists the available tags; clicking on a tag copies it
@@ -129,27 +167,9 @@ Example:
 
     ${table:actions:reference,name,owners,due_date|where:status=0|order:due_date}
 
-### Storage
-
-This part of the screen lets you check the integrity of documents stored in the application.
-
-By clicking on “Check”, Deming launches the integrity check of documents stored in the application, using a CRC32.
-
-### Retention
-
-This part of the screen lets you configure the retention period (in months) for checks carried out in the application.
-
-All checks carried out after this date are deleted, along with the associated documents and action plans.
-
-This is done by executing the command
-
-    php artisan deming:cleanup
-
-command via a cron.
-
 ## AI {#ai}
 
-This screen, restricted to administrators, is used to enable and configure the [AI agent](ai.md) that analyses
+The "AI" tab of the [Settings](#parameters) page, restricted to administrators, is used to enable and configure the [AI agent](ai.md) that analyses
 controls, measurements, action plans and risks: activation, agent URL, model, API key, prompts, connection test and
 deletion of all analyses. AI is disabled by default.
 
@@ -157,7 +177,7 @@ See [Enable and configure](ai.md#config) and, before enabling it, [Data protecti
 
 ## Notifications {#notifications}
 
-This screen is used to configure the notifications sent to users when they have to carry out controls.
+The "Notifications" tab of the [Settings](#parameters) page is used to configure the notifications sent to users when they have to carry out controls.
 
 The screen contains:
 

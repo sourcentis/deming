@@ -138,6 +138,9 @@ When you click:
 
 ## Scoring Configuration {#scoring}
 
+The scoring configuration is in the "Scoring" tab of the [Settings](config.md#parameters) page, restricted to
+administrators.
+
 Risk scoring is fully configurable. Multiple configurations can be defined, but only one is active at a time. Changing the active configuration takes effect immediately across the entire register.
 
 ### Configuration List {#scoring-list}

@@ -1,8 +1,7 @@
 # Konfiguration
 
-Das Menü „Konfiguration“ bietet Zugriff auf die Attribute, die Domänen, die Benutzer, die Gruppen, die
-[Risikobewertung](risks.de.md#scoring), den Import, die [Zuordnungen zwischen Rahmenwerken](crosswalk.de.md),
-die Dokumente, die Benachrichtigungen und die Logs.
+Das Menü „Konfiguration“ bietet Zugriff auf die Attribute, die Domänen, die Benutzer, die Gruppen, den Import,
+die [Zuordnungen zwischen Rahmenwerken](crosswalk.de.md), die [Einstellungen](#parameters) und die Logs.
 
 ## Attribute {#tags}
 
@@ -103,15 +102,55 @@ Beim Import können alle anderen Kontrollen und Maßnahmen gelöscht und Testdat
 
 [![Screenshot](images/import.de.png)](images/import.de.png)
 
+## Einstellungen {#parameters}
+
+Die Seite „Einstellungen“, die Administratoren vorbehalten ist, fasst die Einstellungen der Anwendung in Registerkarten
+zusammen:
+
+* **Dokumente**: die [Prüfung der Dokumente und ihre Aufbewahrungsdauer](#documents);
+
+* **Vorlagen**: die [Dokumentvorlagen](#templates);
+
+* **Klassifizierung**: die [Konfiguration der Risikobewertung](risks.de.md#scoring);
+
+* **KI**: die Konfiguration des [KI-Agenten](#ai);
+
+* **Benachrichtigungen**: die an die Benutzer gesendeten [Benachrichtigungen](#notifications).
+
+Jede Registerkarte hat ihre eigenen Schaltflächen. Nach dem Speichern kehrt die Seite zur geänderten Registerkarte
+zurück.
+
+<!-- TODO capture : images/parameters.de.png -->
+
 ## Dokumente {#documents}
 
-Mit dieser Ansicht wird die Konfiguration der in Deming verwendeten Dokumentenverwaltung geändert.
+Die Registerkarte „Dokumente“ der Seite [Einstellungen](#parameters) dient zur Prüfung der in Deming gespeicherten
+Dokumente und zur Konfiguration ihrer Aufbewahrungsdauer.
 
 [![Screenshot](images/documents.de.png)](images/documents.de.png)
 
-### Vorlagen
+### Speicher
 
-In diesem Teil der Ansicht können die Dokumentvorlagen für die Kontrollblätter und den ISMS-Steuerungsbericht geändert werden. Außerdem bietet er einen Überblick über alle Dokumente, die bei der Durchführung der Sicherheitskontrollen als Nachweis verwendet wurden.
+In diesem Teil der Registerkarte kann die Integrität der in der Anwendung gespeicherten Dokumente überprüft werden.
+
+Durch Klicken auf „Prüfen“ startet Deming die Integritätsprüfung der in der Anwendung gespeicherten Dokumente mithilfe eines CRC32.
+
+### Aufbewahrung
+
+In diesem Teil der Registerkarte wird die Aufbewahrungsdauer (in Monaten) der in der Anwendung durchgeführten Kontrollen konfiguriert.
+
+Alle nach Ablauf dieser Dauer durchgeführten Kontrollen werden zusammen mit den zugehörigen Dokumenten und Aktionsplänen gelöscht.
+
+Diese Löschung erfolgt durch Ausführen des Befehls
+
+    php artisan deming:cleanup
+
+über einen Cron-Job.
+
+## Vorlagen {#templates}
+
+Mit der Registerkarte „Vorlagen“ der Seite [Einstellungen](#parameters) werden die Dokumentvorlagen für die
+Kontrollblätter und den ISMS-Steuerungsbericht geändert.
 
 Die Vorlage des Steuerungsberichts ist ein Word-Dokument (.docx), dessen Platzhalter bei der Erzeugung des Berichts
 ersetzt werden. Das neben den Vorlagen angezeigte Feld „Platzhalter der Vorlage“ listet die verfügbaren Platzhalter
@@ -130,27 +169,9 @@ Beispiel:
 
     ${table:actions:reference,name,owners,due_date|where:status=0|order:due_date}
 
-### Speicher
-
-In diesem Teil der Ansicht kann die Integrität der in der Anwendung gespeicherten Dokumente überprüft werden.
-
-Durch Klicken auf „Prüfen“ startet Deming die Integritätsprüfung der in der Anwendung gespeicherten Dokumente mithilfe eines CRC32.
-
-### Aufbewahrung
-
-In diesem Teil der Ansicht wird die Aufbewahrungsdauer (in Monaten) der in der Anwendung durchgeführten Kontrollen konfiguriert.
-
-Alle nach Ablauf dieser Dauer durchgeführten Kontrollen werden zusammen mit den zugehörigen Dokumenten und Aktionsplänen gelöscht.
-
-Diese Löschung erfolgt durch Ausführen des Befehls
-
-    php artisan deming:cleanup
-
-über einen Cron-Job.
-
 ## KI {#ai}
 
-Diese Seite, die Administratoren vorbehalten ist, dient zum Aktivieren und Konfigurieren des [KI-Agenten](ai.de.md),
+Die Registerkarte „KI“ der Seite [Einstellungen](#parameters), die Administratoren vorbehalten ist, dient zum Aktivieren und Konfigurieren des [KI-Agenten](ai.de.md),
 der Sicherheitsmaßnahmen, Kontrollen, Aktionspläne und Risiken analysiert: Aktivierung, URL des Agenten, Modell,
 API-Schlüssel, Prompts, Verbindungstest und Löschen aller Analysen. Die KI ist standardmäßig deaktiviert.
 
@@ -158,7 +179,7 @@ Siehe [Aktivieren und konfigurieren](ai.de.md#config) und vor jeder Aktivierung 
 
 ## Benachrichtigungen {#notifications}
 
-Mit dieser Ansicht werden die Benachrichtigungen konfiguriert, die an die Benutzer gesendet werden, wenn sie Kontrollen durchführen müssen.
+Mit der Registerkarte „Benachrichtigungen“ der Seite [Einstellungen](#parameters) werden die Benachrichtigungen konfiguriert, die an die Benutzer gesendet werden, wenn sie Kontrollen durchführen müssen.
 
 Die Ansicht enthält:
 

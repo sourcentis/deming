@@ -18,7 +18,8 @@ il est possible d'utiliser un autre fournisseur compatible ou un modèle local (
 
 ## Activer et configurer {#config}
 
-L'écran de configuration est accessible par le menu « Configuration → IA ». Il est réservé aux administrateurs.
+La configuration se trouve dans l'onglet « IA » de la page [Paramètres](config.fr.md#parameters) (menu « Configuration →
+Paramètres »). Elle est réservée aux administrateurs.
 
 <!-- TODO capture : images/ai-config.fr.png -->
 
@@ -68,7 +69,7 @@ produire du JSON. Avec un modèle local, aucune donnée ne quitte votre infrastr
 
 ### Supprimer toutes les analyses {#purge}
 
-Le bouton « Supprimer toutes les analyses IA », en bas de l'écran, efface la dernière analyse enregistrée sur
+Le bouton « Supprimer toutes les analyses IA », en bas de l'onglet, efface la dernière analyse enregistrée sur
 chaque mesure de sécurité, contrôle, plan d'action et risque, après confirmation. L'opération est tracée dans les
 [logs](config.fr.md#logs) (utilisateur et date, sans contenu).
 

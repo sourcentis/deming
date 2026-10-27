@@ -139,6 +139,9 @@ Lorsque vous cliquez sur :
 
 ## Configuration du scoring {#scoring}
 
+La configuration du scoring se trouve dans l'onglet « Classification » de la page
+[Paramètres](config.fr.md#parameters), réservée aux administrateurs.
+
 Le scoring des risques est entièrement configurable. Plusieurs configurations peuvent être définies, mais une seule est active à la fois. Le changement de configuration active s'applique immédiatement à l'ensemble du registre.
 
 ### Liste des configurations {#scoring-list}

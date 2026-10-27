@@ -18,7 +18,8 @@ werden.
 
 ## Aktivieren und konfigurieren {#config}
 
-Die Konfigurationsseite ist über das Menü „Konfiguration → KI“ erreichbar. Sie ist Administratoren vorbehalten.
+Die Konfiguration befindet sich in der Registerkarte „KI“ der Seite [Einstellungen](config.de.md#parameters) (Menü
+„Konfiguration → Einstellungen“). Sie ist Administratoren vorbehalten.
 
 <!-- TODO capture : images/ai-config.de.png -->
 
@@ -71,7 +72,7 @@ das Modell muss JSON erzeugen können. Mit einem lokalen Modell verlassen keine 
 
 ### Alle Analysen löschen {#purge}
 
-Die Schaltfläche „Alle KI-Analysen löschen“ unten auf der Seite löscht nach Bestätigung die zuletzt gespeicherte
+Die Schaltfläche „Alle KI-Analysen löschen“ unten in der Registerkarte löscht nach Bestätigung die zuletzt gespeicherte
 Analyse jeder Sicherheitsmaßnahme, jeder Kontrolle, jedes Aktionsplans und jedes Risikos. Der Vorgang wird in den
 [Logs](config.de.md#logs) protokolliert (Benutzer und Datum, ohne Inhalt).
 

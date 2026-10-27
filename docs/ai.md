@@ -16,7 +16,8 @@ any other compatible provider or a local model (Ollama, vLLM, LM Studio…) can 
 
 ## Enable and configure {#config}
 
-The configuration screen is available from the "Configuration → AI" menu. It is restricted to administrators.
+The configuration is in the "AI" tab of the [Settings](config.md#parameters) page ("Configuration → Settings" menu).
+It is restricted to administrators.
 
 <!-- TODO capture : images/ai-config.png -->
 
@@ -64,7 +65,7 @@ able to produce JSON. With a local model, no data leaves your infrastructure.
 
 ### Delete all analyses {#purge}
 
-The "Delete all AI analyses" button, at the bottom of the screen, erases the last analysis saved on every control,
+The "Delete all AI analyses" button, at the bottom of the tab, erases the last analysis saved on every control,
 measurement, action plan and risk, after confirmation. The operation is recorded in the
 [logs](config.md#logs) (user and date, without content).
 

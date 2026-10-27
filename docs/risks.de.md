@@ -137,6 +137,9 @@ Wenn Sie klicken auf:
 
 ## Konfiguration der Bewertung {#scoring}
 
+Die Konfiguration der Bewertung befindet sich in der Registerkarte „Klassifizierung“ der Seite
+[Einstellungen](config.de.md#parameters), die Administratoren vorbehalten ist.
+
 Die Risikobewertung ist vollständig konfigurierbar. Es können mehrere Konfigurationen definiert werden, aber nur eine ist jeweils aktiv. Ein Wechsel der aktiven Konfiguration gilt sofort für die gesamte Risikoliste.
 
 ### Liste der Konfigurationen {#scoring-list}
