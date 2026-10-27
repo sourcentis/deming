@@ -75,7 +75,7 @@ Les boutons disponibles dépendent du rôle de l'utilisateur :
 - **Historique** — affiche l'[historique des modifications](config.fr.md#logs) (Administrateur uniquement) ;
 - **Annuler** — revient à la [liste des risques](#list).
 
-Lorsque l'[agent IA](ai.fr.md) est activé, l'icône ✦ « Analyse IA », en haut à droite de l'écran sous le bouton
+Lorsque l'[agent IA](ai.fr.md) est activé, l'icône robot « Analyse IA », en haut à droite de l'écran sous le bouton
 d'aide, ouvre un panneau d'analyse du risque par l'IA. Voir [Utiliser l'analyse](ai.fr.md#use).
 
 ## Créer un risque {#create}

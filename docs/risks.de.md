@@ -73,7 +73,7 @@ Die verfügbaren Schaltflächen hängen von der Rolle des Benutzers ab:
 - **Historie** — zeigt die [Änderungshistorie](config.de.md#logs) an (nur Administrator);
 - **Abbruch** — kehrt zur [Liste der Risiken](#list) zurück.
 
-Ist der [KI-Agent](ai.de.md) aktiviert, öffnet das Symbol ✦ „KI-Analyse“ oben rechts unter der Hilfe-Schaltfläche
+Ist der [KI-Agent](ai.de.md) aktiviert, öffnet das Roboter-Symbol „KI-Analyse“ oben rechts unter der Hilfe-Schaltfläche
 ein Fenster mit einer KI-Analyse des Risikos. Siehe [Die Analyse verwenden](ai.de.md#use).
 
 ## Ein Risiko erstellen {#create}

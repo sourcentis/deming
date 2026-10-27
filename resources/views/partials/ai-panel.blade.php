@@ -35,7 +35,7 @@
     ];
 @endphp
 <style>
-    .btn-ai { position: relative; font-size: .85rem; line-height: 1.2; padding: .1rem .45rem; color: #8059C8; background-color: #fff; border: 1px solid #c9b8ea; }
+    .btn-ai { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 1.75rem; height: 1.75rem; padding: 0; font-size: 1rem; line-height: 1; color: #8059C8; background-color: #fff; border: 1px solid #c9b8ea; }
     .btn-ai:hover, .btn-ai:focus { color: #5f3fa3; background-color: #f5f0ff; border-color: #8059C8; }
     .btn-ai.has-analysis::after { content: ""; position: absolute; top: -3px; right: -3px; width: 8px; height: 8px; border-radius: 50%; background: #3AB87A; border: 1px solid #fff; }
 
@@ -50,7 +50,8 @@
     .ai-panel-close { position: absolute; top: .55rem; right: .75rem; border: 0; background: transparent; font-size: 1.25rem; line-height: 1; padding: .25rem; color: inherit; }
     .ai-panel-header .btn-help { position: absolute; top: .7rem; right: 2.75rem; }
     .ai-panel-meta { display: flex; align-items: center; justify-content: space-between; gap: .5rem; margin-top: .5rem; font-size: .8rem; color: var(--bs-secondary-color, #6c757d); }
-    .ai-panel-body { flex: 1; overflow-y: auto; padding: 1rem; font-size: .9rem; }
+    .ai-panel-body { flex: 1; overflow-y: auto; padding: 1rem; font-size: .9rem; scrollbar-width: none; }
+    .ai-panel-body::-webkit-scrollbar { display: none; }
     .ai-panel-body h3 { font-size: .8rem; text-transform: uppercase; letter-spacing: .03em; color: var(--bs-secondary-color, #6c757d); margin: 1.1rem 0 .4rem; }
     .ai-panel-body ul, .ai-panel-body ol { padding-left: 0; list-style: none; margin: 0; }
     .ai-panel-body li { margin-bottom: .5rem; }

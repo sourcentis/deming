@@ -77,7 +77,7 @@ Analyse jeder Sicherheitsmaßnahme, jeder Kontrolle, jedes Aktionsplans und jede
 
 ## Die Analyse verwenden {#use}
 
-Ist die KI aktiviert, erscheint ein Symbol ✦ „KI-Analyse“ oben rechts auf den Anzeigeseiten einer
+Ist die KI aktiviert, erscheint ein Roboter-Symbol „KI-Analyse“ oben rechts auf den Anzeigeseiten einer
 [Sicherheitsmaßnahme](measures.de.md#show), einer [Kontrolle](controls.de.md#show), eines
 [Aktionsplans](actions.de.md#show) und eines [Risikos](risks.de.md#show), unter der Hilfe-Schaltfläche. Ein grüner
 Punkt am Symbol zeigt an, dass bereits eine Analyse gespeichert ist.

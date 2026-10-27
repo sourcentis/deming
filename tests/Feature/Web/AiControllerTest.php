@@ -296,7 +296,7 @@ test('the icon and the panel are shown to an authorized user', function (string 
         ->assertOk()
         ->assertSee('data-ai-type="' . $type . '"', false)
         ->assertSee('data-ai-id="' . $object->id . '"', false)
-        ->assertSee('bi-stars', false)
+        ->assertSee('bi-robot', false)
         ->assertSee('id="ai-panel"', false)
         ->assertSee('aria-label="' . trans('ai.button') . '"', false)
         ->assertSee('oai.endpoints.kepler.ai.cloud.ovh.net');

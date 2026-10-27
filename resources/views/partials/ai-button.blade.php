@@ -8,7 +8,7 @@
         data-ai-type="{{ $type }}"
         data-ai-id="{{ $object->getKey() }}"
         data-ai-title="{{ trans(\App\Services\Ai\AiSubjects::TYPES[$type]['label']) }} {{ \App\Services\Ai\AiSubjects::title($type, $object) }}">
-    <i class="bi bi-stars" aria-hidden="true"></i>
+    <i class="bi bi-robot" aria-hidden="true"></i>
 </button>
 @once
     @include('partials.ai-panel')

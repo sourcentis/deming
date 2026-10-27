@@ -75,7 +75,7 @@ Lorsque vous cliquez sur :
 
 * « Annuler » vous revenez à la [liste des plans d’action](#list)
 
-Lorsque l'[agent IA](ai.fr.md) est activé, l'icône ✦ « Analyse IA », en haut à droite de l'écran sous le bouton
+Lorsque l'[agent IA](ai.fr.md) est activé, l'icône robot « Analyse IA », en haut à droite de l'écran sous le bouton
 d'aide, ouvre un panneau d'analyse du plan d'action par l'IA. Voir [Utiliser l'analyse](ai.fr.md#use).
 
 ## Clôturer un plan d’action {#close}

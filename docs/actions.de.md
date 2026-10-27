@@ -78,7 +78,7 @@ Wenn Sie klicken auf:
 
 * „Abbruch“, kehren Sie zur [Liste der Aktionspläne](#list) zurück
 
-Ist der [KI-Agent](ai.de.md) aktiviert, öffnet das Symbol ✦ „KI-Analyse“ oben rechts unter der Hilfe-Schaltfläche
+Ist der [KI-Agent](ai.de.md) aktiviert, öffnet das Roboter-Symbol „KI-Analyse“ oben rechts unter der Hilfe-Schaltfläche
 ein Fenster mit einer KI-Analyse des Aktionsplans. Siehe [Die Analyse verwenden](ai.de.md#use).
 
 ## Einen Aktionsplan schließen {#close}

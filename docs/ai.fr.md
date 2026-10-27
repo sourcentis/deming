@@ -74,7 +74,7 @@ chaque mesure de sécurité, contrôle, plan d'action et risque, après confirma
 
 ## Utiliser l'analyse {#use}
 
-Lorsque l'IA est activée, une icône ✦ « Analyse IA » apparaît en haut à droite des écrans d'affichage d'une
+Lorsque l'IA est activée, une icône robot « Analyse IA » apparaît en haut à droite des écrans d'affichage d'une
 [mesure de sécurité](measures.fr.md#show), d'un [contrôle](controls.fr.md#show), d'un
 [plan d'action](actions.fr.md#show) et d'un [risque](risks.fr.md#show), sous le bouton d'aide. Un point vert sur
 l'icône indique qu'une analyse est déjà enregistrée.

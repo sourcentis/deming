@@ -63,7 +63,7 @@ Lorsque vous cliquez sur :
 
 * « Annuler » : vous renvoie vers la [liste des mesures de sécurité](#list)
 
-Lorsque l'[agent IA](ai.fr.md) est activé, l'icône ✦ « Analyse IA », en haut à droite de l'écran sous le bouton
+Lorsque l'[agent IA](ai.fr.md) est activé, l'icône robot « Analyse IA », en haut à droite de l'écran sous le bouton
 d'aide, ouvre un panneau d'analyse de la mesure de sécurité par l'IA. Voir [Utiliser l'analyse](ai.fr.md#use).
 
 ## Créer une mesure de sécurité {#create}

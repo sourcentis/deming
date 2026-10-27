@@ -70,7 +70,7 @@ measurement, action plan and risk, after confirmation. The operation is recorded
 
 ## Use the analysis {#use}
 
-When AI is enabled, an "AI analysis" ✦ icon appears at the top right of the display screens of a
+When AI is enabled, an "AI analysis" robot icon appears at the top right of the display screens of a
 [control](measures.md#show), a [measurement](controls.md#show), an [action plan](actions.md#show) and a
 [risk](risks.md#show), below the help button. A green dot on the icon means that an analysis is already saved.
 
