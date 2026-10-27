@@ -179,25 +179,33 @@ See [Enable and configure](ai.md#config) and, before enabling it, [Data protecti
 
 The "Notifications" tab of the [Settings](#parameters) page is used to configure the notifications sent to users when they have to carry out controls.
 
-The screen contains:
+The tab contains two blocks.
 
-* The subject of the mail sent to the user;
+**SMTP server**: the server used to send the mails.
 
-* The sender of the email;
+* the server and the port;
 
-* The periodicity of sending notifications;
+* the encryption (none, SSL or TLS) and automatic STARTTLS;
 
-* The notification deadlines;
+* the authentication, the user and the password;
 
-* The SMTP server used to send the mails: server, port, encryption (none, SSL or TLS), automatic STARTTLS,
-  authentication, user and password, and the optional DKIM signature (domain, selector, private key path and
-  passphrase).
+* the optional DKIM signature: domain, selector, private key path and passphrase.
 
-The SMTP server settings are stored in the database. The password and the DKIM passphrase are encrypted with the
-application key (`APP_KEY`) and are never displayed again: leaving the field empty keeps the saved value, the "Delete"
-box erases it. When Deming is upgraded, the `MAIL_*` values of the `.env` file are copied once into the database;
-they are no longer used afterwards.
+These settings are stored in the database. The password and the DKIM passphrase are encrypted with the application
+key (`APP_KEY`) and are never displayed again: leaving the field empty keeps the saved value, the "Delete" box erases
+it. If the `APP_KEY` changes, they must be entered again.
 
+**Notifications**: the content and frequency of the mails.
+
+* the sender of the mail;
+
+* the subject and content of the mail sent to the user;
+
+* the periodicity of sending notifications;
+
+* the delay: the controls due within this delay are notified.
+
+<!-- TODO capture : refaire images/config.png (onglet Notifications avec le serveur SMTP) -->
 [![Screenshot](images/config.png)](images/config.png)
 
 When you click on:

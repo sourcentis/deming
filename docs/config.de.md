@@ -181,25 +181,33 @@ Siehe [Aktivieren und konfigurieren](ai.de.md#config) und vor jeder Aktivierung 
 
 Mit der Registerkarte „Benachrichtigungen“ der Seite [Einstellungen](#parameters) werden die Benachrichtigungen konfiguriert, die an die Benutzer gesendet werden, wenn sie Kontrollen durchführen müssen.
 
-Die Ansicht enthält:
+Die Registerkarte enthält zwei Blöcke.
 
-* den Betreff der an den Benutzer gesendeten E-Mail;
+**SMTP-Server**: der Server für den Versand der E-Mails.
 
-* den Absender der E-Mail;
+* Server und Port;
+
+* Verschlüsselung (keine, SSL oder TLS) und automatisches STARTTLS;
+
+* Authentifizierung, Benutzer und Passwort;
+
+* die optionale DKIM-Signatur: Domäne, Selektor, Pfad des privaten Schlüssels und Passphrase.
+
+Diese Einstellungen werden in der Datenbank gespeichert. Das Passwort und die DKIM-Passphrase werden mit dem
+Anwendungsschlüssel (`APP_KEY`) verschlüsselt und nie wieder angezeigt: Ein leeres Feld behält den gespeicherten Wert,
+das Kästchen „Löschen“ entfernt ihn. Ändert sich der `APP_KEY`, müssen sie erneut eingegeben werden.
+
+**Benachrichtigungen**: Inhalt und Häufigkeit der E-Mails.
+
+* der Absender der E-Mail;
+
+* Betreff und Inhalt der an den Benutzer gesendeten E-Mail;
 
 * die Periodizität des Versands der Benachrichtigungen;
 
-* die Benachrichtigungsfristen;
+* die Frist: Kontrollen, die innerhalb dieser Frist fällig werden, werden gemeldet.
 
-* den SMTP-Server für den Versand: Server, Port, Verschlüsselung (keine, SSL oder TLS), automatisches STARTTLS,
-  Authentifizierung, Benutzer und Passwort sowie die optionale DKIM-Signatur (Domäne, Selektor, Pfad des privaten
-  Schlüssels und Passphrase).
-
-Die Einstellungen des SMTP-Servers werden in der Datenbank gespeichert. Das Passwort und die DKIM-Passphrase werden mit
-dem Anwendungsschlüssel (`APP_KEY`) verschlüsselt und nie wieder angezeigt: Ein leeres Feld behält den gespeicherten
-Wert, das Kästchen „Löschen“ entfernt ihn. Bei der Aktualisierung von Deming werden die `MAIL_*`-Werte der Datei `.env`
-einmalig in die Datenbank übernommen; danach werden sie nicht mehr verwendet.
-
+<!-- TODO capture : refaire images/config.de.png (onglet Notifications avec le serveur SMTP) -->
 [![Screenshot](images/config.de.png)](images/config.de.png)
 
 Wenn Sie klicken auf:

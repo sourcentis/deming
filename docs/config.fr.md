@@ -179,25 +179,33 @@ Voir [Activer et configurer](ai.fr.md#config) et, avant toute activation, [Prote
 
 L'onglet « Notifications » de la page [Paramètres](#parameters) permet de configurer les notifications envoyées aux utilisateurs lorsqu'ils doivent réaliser des contrôles.
 
-L'écran contient :
+L'onglet contient deux blocs.
 
-* Le sujet du mail envoyé à l'utilisateur ;
+**Serveur SMTP** : le serveur utilisé pour envoyer les mails.
 
-* L'émetteur du mail ;
+* le serveur et le port ;
 
-* La périodicité de l'envoi des notifications ;
+* le chiffrement (aucun, SSL ou TLS) et le STARTTLS automatique ;
 
-* Les délais de notification ;
+* l'authentification, l'utilisateur et le mot de passe ;
 
-* Le serveur SMTP utilisé pour l'envoi : serveur, port, chiffrement (aucun, SSL ou TLS), STARTTLS automatique,
-  authentification, utilisateur et mot de passe, ainsi que la signature DKIM facultative (domaine, sélecteur, chemin
-  de la clé privée et phrase secrète).
+* la signature DKIM, facultative : domaine, sélecteur, chemin de la clé privée et phrase secrète.
 
-Les paramètres du serveur SMTP sont enregistrés dans la base de données. Le mot de passe et la phrase secrète DKIM
-sont chiffrés avec la clé de l'application (`APP_KEY`) et ne sont jamais réaffichés : laisser le champ vide conserve la
-valeur enregistrée, la case « Supprimer » l'efface. Lors de la mise à jour de Deming, les valeurs `MAIL_*` du fichier
-`.env` sont reprises une seule fois dans la base de données ; elles ne sont plus utilisées ensuite.
+Ces paramètres sont enregistrés dans la base de données. Le mot de passe et la phrase secrète DKIM sont chiffrés avec
+la clé de l'application (`APP_KEY`) et ne sont jamais réaffichés : laisser le champ vide conserve la valeur
+enregistrée, la case « Supprimer » l'efface. Si l'`APP_KEY` change, il faut les ressaisir.
 
+**Notifications** : le contenu et la fréquence des mails.
+
+* l'émetteur du mail ;
+
+* le sujet et le contenu du mail envoyé à l'utilisateur ;
+
+* la périodicité de l'envoi des notifications ;
+
+* le délai : les contrôles qui arrivent à échéance dans ce délai sont notifiés.
+
+<!-- TODO capture : refaire images/config.fr.png (onglet Notifications avec le serveur SMTP) -->
 [![Screenshot](images/config.fr.png)](images/config.fr.png)
 
 Lorsque vous cliquez sur :

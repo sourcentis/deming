@@ -170,6 +170,8 @@ DB_USERNAME=deming_user
 DB_PASSWORD=your_password
 
 # ── Mail (optional) ──────────────────────────────────────
+# Only used by the first migration to initialize the SMTP server, which is then
+# managed in Configuration → Settings → Notifications (stored in the database)
 MAIL_HOST=smtp.localhost
 MAIL_PORT=2525
 

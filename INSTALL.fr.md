@@ -286,29 +286,32 @@ Après avoir modifié le(s) fichier(s) php.ini, vous devez redémarrer le servic
 
 ## Configuration du mail
 
-Si vous souhaitez envoyer des e-mails de notification depuis Deming.
-Vous devez configurer l'accès au serveur SMTP dans .env
+Pour envoyer les e-mails de notification, configurez le serveur SMTP dans Deming, en tant qu'administrateur, par le
+menu **Configuration → Paramètres**, onglet **Notifications** :
+
+* serveur et port, chiffrement (aucun, SSL ou TLS) et STARTTLS automatique ;
+* authentification, utilisateur et mot de passe ;
+* signature DKIM facultative : domaine, sélecteur, chemin de la clé privée et phrase secrète.
+
+Ces paramètres sont enregistrés dans la base de données ; le mot de passe et la phrase secrète DKIM sont chiffrés
+avec l'`APP_KEY`. Le bouton « Test » envoie un e-mail de test à l'utilisateur courant avec les valeurs saisies.
+
+Les variables `MAIL_*` du fichier `.env` ne sont lues qu'une seule fois, par `php artisan migrate`, pour initialiser
+ces paramètres (nouvelle installation ou mise à jour depuis une version qui les stockait dans `.env`). Elles peuvent
+ensuite être retirées du `.env` :
 
 ```dotenv
 MAIL_HOST='smtp.localhost'
 MAIL_PORT=2525
-MAIL_AUTH=true
-MAIL_SMTP_SECURE='ssl'
+MAIL_SMTP_AUTH=true
+MAIL_ENCRYPTION='ssl'        # 'ssl', 'tls' ou vide
 MAIL_SMTP_AUTO_TLS=false
 MAIL_USERNAME=
 MAIL_PASSWORD=
 ```
 
-Vous pouvez également configurer DKIM :
-
-```dotenv
-MAIL_DKIM_DOMAIN = 'admin.local';
-MAIL_DKIM_PRIVATE = '/path/to/private/key';
-MAIL_DKIM_SELECTOR = 'default'; // Match your DKIM DNS selector
-MAIL_DKIM_PASSPHRASE = '';      // Only if your key has a passphrase
-```
-
-N'oubliez pas de [configurer](https://sourcentis.github.io/deming/config.fr/#notifications) le contenu et la fréquence d'envoi des mails.
+N'oubliez pas de [configurer](https://sourcentis.github.io/deming/fr/config/#notifications) le contenu et la
+fréquence d'envoi des mails, dans le même onglet.
 
 ## LDAP / LDAPRecord configuration (optional)
 
@@ -483,6 +486,10 @@ Pour mettre à jour Deming, il faut aller dans le répertoire de Deming et récu
 Migrer la base de données
 
     php artisan migrate
+
+Lors d'une mise à jour depuis une version qui stockait le serveur SMTP dans `.env`, cette migration copie les valeurs
+`MAIL_*` dans la base de données. Vérifiez-les dans **Configuration → Paramètres → Notifications** : le chiffrement est
+lu dans `MAIL_ENCRYPTION` (et non `MAIL_SMTP_SECURE`) et l'authentification dans `MAIL_SMTP_AUTH` (et non `MAIL_AUTH`).
 
 Mettre à jour les librairies
 
