@@ -147,3 +147,20 @@ test('ai columns are not selectable in report templates', function (string $tabl
         expect($columns)->not->toContain($column);
     }
 })->with(['controls', 'measures', 'actions', 'risks']);
+
+test('cloning a security measure or a control does not copy the analysis', function (string $class, string $table, string $uri) {
+    $admin = User::factory()->admin()->create();
+    $object = $class::factory()->create();
+    if ($class === Measure::class) {
+        $object->controls()->sync([Control::factory()->create()->id]);
+    }
+    storeFakeAnalysis($table, $object->id);
+
+    $this->actingAs($admin)->get("{$uri}/{$object->id}")
+        ->assertOk()
+        ->assertDontSee(AI_SENTINEL)
+        ->assertDontSee('ai_analysis');
+})->with([
+    'security measure' => [Control::class, 'controls', '/alice/clone'],
+    'control' => [Measure::class, 'measures', '/bob/clone'],
+]);
