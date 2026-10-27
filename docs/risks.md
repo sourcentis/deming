@@ -74,6 +74,9 @@ The available buttons depend on the user's role:
 - **History** — displays the [change history](config.md#logs) (Administrator only);
 - **Cancel** — returns to the [risk list](#list).
 
+When the [AI agent](ai.md) is enabled, the ✦ "AI analysis" icon, at the top right of the screen below the help
+button, opens a panel with an AI analysis of the risk. See [Use the analysis](ai.md#use).
+
 ## Create a Risk {#create}
 
 This screen allows you to create a new risk.

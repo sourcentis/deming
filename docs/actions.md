@@ -75,6 +75,9 @@ When you click:
 
 * "Cancel" you return to the [list of action plans](#list)
 
+When the [AI agent](ai.md) is enabled, the ✦ "AI analysis" icon, at the top right of the screen below the help
+button, opens a panel with an AI analysis of the action plan. See [Use the analysis](ai.md#use).
+
 ## Close an action plan {#close}
 
 This screen is used to close an action plan once the remediation has been carried out, or to reject it.

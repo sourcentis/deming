@@ -69,6 +69,9 @@ Lorsque vous cliquez sur :
 
 * « Annuler », vous êtes envoyé vers la [liste des contrôles](#list)
 
+Lorsque l'[agent IA](ai.fr.md) est activé, l'icône ✦ « Analyse IA », en haut à droite de l'écran sous le bouton
+d'aide, ouvre un panneau d'analyse du contrôle par l'IA. Voir [Utiliser l'analyse](ai.fr.md#use).
+
 ## Créer un contrôle {#create}
 
 Un contrôle peut être créé de trois façons :

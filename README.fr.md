@@ -44,6 +44,7 @@ Selon la norme ISO 27001, chapitre 9.1, il est impératif d'évaluer les perform
 - Planifier les moments de surveillance et de mesure.
 - Identifier les responsables de chaque tâche.
 - Analyser et évaluer les résultats obtenus.
+- Obtenir, avec l'agent IA optionnel, une analyse des mesures, contrôles, plans d'action et risques, compatible OVHcloud AI Endpoints et modèles locaux.
 
 ## :computer: Aperçu des écrans
 

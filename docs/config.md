@@ -39,7 +39,7 @@ There are six different roles:
 * Auditee: Auditees can only carry out and see the measurements that have been assigned to them or that they have
   carried out previously (see [Delegation](delegation.md)).
 
-* Auditor: the auditor has read access to all the information in the application.
+* Auditor: the auditor has read access to all the information in the application. The auditor cannot use the [AI agent](ai.md#access).
 
 * API: account used to access the [API](api.md).
 
@@ -146,6 +146,14 @@ This is done by executing the command
     php artisan deming:cleanup
 
 command via a cron.
+
+## AI {#ai}
+
+This screen, restricted to administrators, is used to enable and configure the [AI agent](ai.md) that analyses
+controls, measurements, action plans and risks: activation, agent URL, model, API key, prompts, connection test and
+deletion of all analyses. AI is disabled by default.
+
+See [Enable and configure](ai.md#config) and, before enabling it, [Data protection](ai.md#privacy).
 
 ## Notifications {#notifications}
 

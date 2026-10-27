@@ -40,7 +40,7 @@ Es gibt sechs verschiedene Rollen:
 * Auditierte: Auditierte können nur die Kontrollen durchführen und sehen, die ihnen zugewiesen sind oder die sie
   zuvor durchgeführt haben (siehe [Delegation](delegation.de.md)).
 
-* Auditor: Der Auditor hat Lesezugriff auf alle Informationen der Anwendung.
+* Auditor: Der Auditor hat Lesezugriff auf alle Informationen der Anwendung. Der Auditor kann den [KI-Agenten](ai.de.md#access) nicht verwenden.
 
 * API: Konto für den Zugriff auf die [API](api.de.md).
 
@@ -147,6 +147,14 @@ Diese Löschung erfolgt durch Ausführen des Befehls
     php artisan deming:cleanup
 
 über einen Cron-Job.
+
+## KI {#ai}
+
+Diese Seite, die Administratoren vorbehalten ist, dient zum Aktivieren und Konfigurieren des [KI-Agenten](ai.de.md),
+der Sicherheitsmaßnahmen, Kontrollen, Aktionspläne und Risiken analysiert: Aktivierung, URL des Agenten, Modell,
+API-Schlüssel, Prompts, Verbindungstest und Löschen aller Analysen. Die KI ist standardmäßig deaktiviert.
+
+Siehe [Aktivieren und konfigurieren](ai.de.md#config) und vor jeder Aktivierung [Datenschutz](ai.de.md#privacy).
 
 ## Benachrichtigungen {#notifications}
 

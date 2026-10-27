@@ -40,7 +40,7 @@ Il existe six rôles différents :
 * Audité : les audités ne peuvent réaliser et voir que les contrôles qui leur sont assignés ou qu'ils ont réalisés
   précédemment (voir [Délégation](delegation.fr.md)).
 
-* Auditeur : l’auditeur a un accès en lecture à l’ensemble des informations de l’application.
+* Auditeur : l’auditeur a un accès en lecture à l’ensemble des informations de l’application. L'auditeur ne peut pas utiliser l'[agent IA](ai.fr.md#access).
 
 * API : compte utilisé pour accéder à l'[API](api.fr.md).
 
@@ -147,6 +147,14 @@ Cette suppression est effectuée en exécutant la commande
     php artisan deming:cleanup
 
 au travers d'un cron.
+
+## IA {#ai}
+
+Cet écran, réservé aux administrateurs, permet d'activer et de configurer l'[agent IA](ai.fr.md) qui analyse les
+mesures de sécurité, les contrôles, les plans d'action et les risques : activation, URL de l'agent, modèle, clé API,
+prompts, test de connexion et suppression de toutes les analyses. L'IA est désactivée par défaut.
+
+Voir [Activer et configurer](ai.fr.md#config) et, avant toute activation, [Protection des données](ai.fr.md#privacy).
 
 ## Notifications {#notifications}
 

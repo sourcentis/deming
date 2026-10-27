@@ -69,6 +69,9 @@ When you click:
 
 * "Cancel", you are sent to the [list of measurements](#list)
 
+When the [AI agent](ai.md) is enabled, the ✦ "AI analysis" icon, at the top right of the screen below the help
+button, opens a panel with an AI analysis of the measurement. See [Use the analysis](ai.md#use).
+
 ## Create a measurement {#create}
 
 A measurement can be created in three ways:

@@ -63,6 +63,8 @@ Wenn Sie klicken auf:
 
 * „Abbruch“: Sie kehren zur [Liste der Sicherheitsmaßnahmen](#list) zurück
 
+Ist der [KI-Agent](ai.de.md) aktiviert, öffnet das Symbol ✦ „KI-Analyse“ oben rechts unter der Hilfe-Schaltfläche
+ein Fenster mit einer KI-Analyse der Sicherheitsmaßnahme. Siehe [Die Analyse verwenden](ai.de.md#use).
 
 ## Eine Sicherheitsmaßnahme erstellen {#create}
 
