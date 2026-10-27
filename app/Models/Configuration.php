@@ -23,7 +23,7 @@ class Configuration extends Model
     protected $fillable = ['name', 'value'];
 
     // Keys encrypted at rest with the application key
-    public const ENCRYPTED = ['ai.api_key'];
+    public const ENCRYPTED = ['ai.api_key', 'mail.password', 'mail.dkim_passphrase'];
 
     // Defaults used when the row is absent
     public const DEFAULTS = [
@@ -62,6 +62,12 @@ class Configuration extends Model
         }
 
         return $default === null ? null : (string) $default;
+    }
+
+    // Whether the key is stored in the table (even with a null value)
+    public static function isStored(string $name): bool
+    {
+        return array_key_exists($name, self::values());
     }
 
     public static function bool(string $name, bool $default = false): bool

@@ -12,5 +12,8 @@ class TrimStrings extends Middleware
     protected $except = [
         'password',
         'password_confirmation',
+        // SMTP secrets of the settings page
+        'smtp_password',
+        'dkim_passphrase',
     ];
 }

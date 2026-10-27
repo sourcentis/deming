@@ -5,6 +5,10 @@
     $mail_content = old('mail_content', $mail_content);
     $frequency = old('frequency', $frequency);
     $expire_delay = old('expire_delay', $expire_delay);
+    // SMTP values entered are kept after a test, except the secrets which are never displayed
+    foreach (['smtp_host', 'smtp_port', 'smtp_encryption', 'smtp_username', 'smtp_auth', 'smtp_auto_tls', 'dkim_domain', 'dkim_private', 'dkim_selector'] as $field) {
+        $smtp[$field] = old($field, $smtp[$field]);
+    }
 @endphp
     @include('partials.help', ['page' => 'notifications'])
     <form method="POST" action="/config/save" enctype="multipart/form-data">
@@ -81,6 +85,63 @@
     		<div class="col-md-12 col-lg-6">
 	        </div>
         </div>
+
+        <fieldset class="border rounded p-2 mb-3">
+            <legend class="float-none w-auto px-2 fs-6 fw-bold"><i class="bi bi-envelope-at"></i> {{ trans('cruds.config.notifications.smtp.title') }}</legend>
+            <p class="text-muted small mb-2">{{ trans('cruds.config.notifications.smtp.help') }}</p>
+
+            <div class="row mb-2">
+                <div class="col-md-3 col-lg-2"><label for="smtp_host"><strong>{{ trans('cruds.config.notifications.smtp.host') }}</strong></label></div>
+                <div class="col-md-5 col-lg-4"><input class="form-control" type="text" name="smtp_host" id="smtp_host" value="{{ $smtp['smtp_host'] }}" maxlength="255"></div>
+                <div class="col-md-1 col-lg-1 text-md-end"><label for="smtp_port"><strong>{{ trans('cruds.config.notifications.smtp.port') }}</strong></label></div>
+                <div class="col-md-3 col-lg-2"><input class="form-control" type="number" name="smtp_port" id="smtp_port" value="{{ $smtp['smtp_port'] }}" min="1" max="65535"></div>
+            </div>
+
+            <div class="row mb-2">
+                <div class="col-md-3 col-lg-2"><label for="smtp_encryption"><strong>{{ trans('cruds.config.notifications.smtp.encryption') }}</strong></label></div>
+                <div class="col-md-4 col-lg-2">
+                    <select class="form-select" name="smtp_encryption" id="smtp_encryption">
+                        <option value="" {{ ($smtp['smtp_encryption'] ?? '') === '' ? 'selected' : '' }}>{{ trans('cruds.config.notifications.smtp.encryption_none') }}</option>
+                        <option value="ssl" {{ $smtp['smtp_encryption'] === 'ssl' ? 'selected' : '' }}>SSL</option>
+                        <option value="tls" {{ $smtp['smtp_encryption'] === 'tls' ? 'selected' : '' }}>TLS</option>
+                    </select>
+                </div>
+                <div class="col-md-5 col-lg-6">
+                    <div class="form-check form-check-inline mt-2">
+                        <input type="hidden" name="smtp_auto_tls" value="0">
+                        <input class="form-check-input" type="checkbox" name="smtp_auto_tls" id="smtp_auto_tls" value="1" {{ filter_var($smtp['smtp_auto_tls'], FILTER_VALIDATE_BOOLEAN) ? 'checked' : '' }}>
+                        <label class="form-check-label" for="smtp_auto_tls">{{ trans('cruds.config.notifications.smtp.auto_tls') }}</label>
+                    </div>
+                    <div class="form-check form-check-inline mt-2">
+                        <input type="hidden" name="smtp_auth" value="0">
+                        <input class="form-check-input" type="checkbox" name="smtp_auth" id="smtp_auth" value="1" {{ filter_var($smtp['smtp_auth'], FILTER_VALIDATE_BOOLEAN) ? 'checked' : '' }}>
+                        <label class="form-check-label" for="smtp_auth">{{ trans('cruds.config.notifications.smtp.auth') }}</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-2">
+                <div class="col-md-3 col-lg-2"><label for="smtp_username"><strong>{{ trans('cruds.config.notifications.smtp.username') }}</strong></label></div>
+                <div class="col-md-5 col-lg-4"><input class="form-control" type="text" name="smtp_username" id="smtp_username" value="{{ $smtp['smtp_username'] }}" maxlength="255" autocomplete="off"></div>
+            </div>
+
+            @include('config._secret_field', ['field' => 'smtp_password', 'label' => trans('cruds.config.notifications.smtp.password'), 'stored' => $smtp['has_smtp_password']])
+
+            <details class="mt-2">
+                <summary class="fw-bold">{{ trans('cruds.config.notifications.smtp.dkim') }}</summary>
+                <div class="row mb-2 mt-2">
+                    <div class="col-md-3 col-lg-2"><label for="dkim_domain"><strong>{{ trans('cruds.config.notifications.smtp.dkim_domain') }}</strong></label></div>
+                    <div class="col-md-5 col-lg-4"><input class="form-control" type="text" name="dkim_domain" id="dkim_domain" value="{{ $smtp['dkim_domain'] }}" maxlength="255"></div>
+                    <div class="col-md-1 col-lg-1 text-md-end"><label for="dkim_selector"><strong>{{ trans('cruds.config.notifications.smtp.dkim_selector') }}</strong></label></div>
+                    <div class="col-md-3 col-lg-2"><input class="form-control" type="text" name="dkim_selector" id="dkim_selector" value="{{ $smtp['dkim_selector'] }}" maxlength="255"></div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-3 col-lg-2"><label for="dkim_private"><strong>{{ trans('cruds.config.notifications.smtp.dkim_private') }}</strong></label></div>
+                    <div class="col-md-9 col-lg-7"><input class="form-control" type="text" name="dkim_private" id="dkim_private" value="{{ $smtp['dkim_private'] }}" maxlength="1024"></div>
+                </div>
+                @include('config._secret_field', ['field' => 'dkim_passphrase', 'label' => trans('cruds.config.notifications.smtp.dkim_passphrase'), 'stored' => $smtp['has_dkim_passphrase']])
+            </details>
+        </fieldset>
 
     	<div class="row">
             <div class="form-group">
