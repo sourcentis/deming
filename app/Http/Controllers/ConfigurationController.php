@@ -51,7 +51,7 @@ class ConfigurationController extends Controller
         ];
     }
 
-    // MAIL_FROM_ADDRESS when set, otherwise deming@ the host of the application
+    // MAIL_FROM_ADDRESS when set, otherwise a sample address to adapt
     private function defaultMailFrom(): string
     {
         $address = config('mail.from.address');
@@ -59,9 +59,7 @@ class ConfigurationController extends Controller
             return $address;
         }
 
-        $host = parse_url((string) config('app.url'), PHP_URL_HOST) ?: request()->getHost();
-
-        return 'deming@' . $host;
+        return 'Deming <deming@domain.local>';
     }
 
     /**
@@ -178,7 +176,7 @@ class ConfigurationController extends Controller
 
                 try {
                     // Recipients
-                    $mail->setFrom($mail_from);
+                    MailSettings::setFrom($mail, (string) $mail_from);
                     $mail->addAddress(Auth::user()->email);         // Add a recipient
 
                     // Content

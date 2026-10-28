@@ -54,6 +54,16 @@ class MailSettings
     }
 
     /**
+     * Sender given as "address" or "Name <address>".
+     */
+    public static function setFrom(PHPMailer $mail, string $from): void
+    {
+        $parsed = PHPMailer::parseAddresses($from, false)[0] ?? null;
+
+        $mail->setFrom($parsed['address'] ?? trim($from), $parsed['name'] ?? '');
+    }
+
+    /**
      * PHPMailer ready to send through the SMTP server.
      *
      * @param  array<string, string|null>|null  $settings  defaults to the saved settings

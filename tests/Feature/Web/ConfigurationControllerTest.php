@@ -195,12 +195,22 @@ test('sender and subject have default values until they are saved', function () 
         ->assertSee('value="' . e(trans('cruds.config.notifications.default_subject')) . '"', false);
 });
 
-test('without MAIL_FROM_ADDRESS the default sender uses the application host', function () {
-    config(['deming.notification.mail-from' => null, 'mail.from.address' => 'hello@example.com', 'app.url' => 'https://deming.example.org']);
+test('without MAIL_FROM_ADDRESS the default sender is a sample address with a name', function () {
+    config(['deming.notification.mail-from' => null, 'mail.from.address' => 'hello@example.com']);
 
     $this->actingAs($this->admin)->get('/config/parameters?tab=notifications')
-        ->assertSee('value="deming@deming.example.org"', false);
+        ->assertSee('value="Deming &lt;deming@domain.local&gt;"', false);
 });
+
+test('the sender may be an address or a name with an address', function (string $from, string $address, string $name) {
+    $mail = \App\Services\MailSettings::mailer();
+    \App\Services\MailSettings::setFrom($mail, $from);
+
+    expect($mail->From)->toBe($address)->and($mail->FromName)->toBe($name);
+})->with([
+    ['Deming <deming@example.org>', 'deming@example.org', 'Deming'],
+    ['deming@example.org', 'deming@example.org', ''],
+]);
 
 test('saved sender and subject are kept', function () {
     config(['deming.notification.mail-from' => 'isms@example.org', 'deming.notification.mail-subject' => 'My subject']);

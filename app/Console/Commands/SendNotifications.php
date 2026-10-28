@@ -110,7 +110,7 @@ class SendNotifications extends Command
                         $mail = MailSettings::mailer();
 
                         // Recipients
-                        $mail->setFrom(config('deming.notification.mail-from'));
+                        MailSettings::setFrom($mail, (string) config('deming.notification.mail-from'));
                         $mail->addAddress($user->email);
                         $mail->Subject = config('deming.notification.mail-subject');
 
