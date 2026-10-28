@@ -59,7 +59,7 @@ class ConfigurationController extends Controller
             return $address;
         }
 
-        return 'Deming <deming@domain.local>';
+        return 'deming@domain.local';
     }
 
     /**
