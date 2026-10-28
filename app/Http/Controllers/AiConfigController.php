@@ -83,13 +83,14 @@ class AiConfigController extends Controller
             return redirect('/config/parameters?tab=ai')->with('messages', [trans('ai.config.restored')]);
         }
 
+        // While AI is off, the settings fields are disabled in the form, hence not submitted: keep them
         $request->validate([
-            'base_url' => ['required', 'url', 'max:2048', function ($attribute, $value, $fail) {
+            'base_url' => ['exclude_unless:enabled,1', 'required', 'url', 'max:2048', function ($attribute, $value, $fail) {
                 if (! AiAgentService::isAllowedUrl($value)) {
                     $fail(trans('ai.config.invalid_url'));
                 }
             }],
-            'model' => 'required|string|max:191',
+            'model' => 'exclude_unless:enabled,1|required|string|max:191',
             'api_key' => 'nullable|string|max:4096',
             'prompts' => 'array',
             'prompts.*' => 'nullable|string|max:100000',
@@ -97,8 +98,12 @@ class AiConfigController extends Controller
 
         // Only changed values are written, so that the audit log stays meaningful
         $this->update('ai.enabled', $request->boolean('enabled') ? '1' : '0');
-        $this->update('ai.base_url', rtrim(trim($request->input('base_url')), '/'));
-        $this->update('ai.model', trim($request->input('model')));
+        if ($request->has('base_url')) {
+            $this->update('ai.base_url', rtrim(trim($request->input('base_url')), '/'));
+        }
+        if ($request->has('model')) {
+            $this->update('ai.model', trim($request->input('model')));
+        }
 
         // An empty key field keeps the current key
         if ($request->boolean('delete_api_key')) {

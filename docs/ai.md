@@ -28,7 +28,8 @@ The screen contains a "Data protection" notice that summarizes what is sent to t
 The fields are:
 
 * **Enable AI**: enables or disables the agent. When disabled, no request is sent to the agent, but the analyses
-  already saved are kept (see [Delete all analyses](#purge));
+  already saved are kept (see [Delete all analyses](#purge)). While AI is disabled, the other fields are greyed out;
+  they keep their values and can be edited again as soon as AI is enabled;
 
 * **AI agent URL**: the base address of the OpenAI-compatible API, without default value. For OVHcloud AI
   Endpoints: `https://oai.endpoints.kepler.ai.cloud.ovh.net/v1`. `https` is required, except for a local model on

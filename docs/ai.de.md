@@ -30,7 +30,8 @@ Die Felder sind:
 
 * **KI aktivieren**: aktiviert oder deaktiviert den Agenten. Im deaktivierten Zustand wird keine Anfrage an den
   Agenten gesendet, die bereits gespeicherten Analysen bleiben jedoch erhalten (siehe
-  [Alle Analysen löschen](#purge));
+  [Alle Analysen löschen](#purge)). Solange die KI deaktiviert ist, sind die übrigen Felder ausgegraut; sie behalten
+  ihre Werte und sind wieder bearbeitbar, sobald die KI aktiviert wird;
 
 * **URL des KI-Agenten**: die Basisadresse der OpenAI-kompatiblen API, ohne Standardwert. Für OVHcloud AI
   Endpoints: `https://oai.endpoints.kepler.ai.cloud.ovh.net/v1`. `https` ist Pflicht, außer für ein lokales Modell unter

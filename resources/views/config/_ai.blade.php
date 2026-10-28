@@ -42,6 +42,8 @@
                 </div>
             </div>
 
+            {{-- Disabled while AI is off (toggled live by the switch); disabled fields are not submitted --}}
+            <fieldset id="ai-settings" class="border-0 p-0 m-0" {{ $enabled ? '' : 'disabled' }}>
             <div class="row mb-2">
                 <div class="col-md-3 col-lg-2">
                     <label for="base_url"><strong>{{ trans('ai.config.base_url') }}</strong></label>
@@ -59,7 +61,7 @@
                 <div class="col-md-9 col-lg-4">
                     {{-- OVHcloud models; another name can be typed (select2-free) --}}
                     @php $currentModel = old('model', $model); @endphp
-                    <select class="form-select select2 select2-free" name="model" id="model" required>
+                    <select class="form-select select2 select2-free" name="model" id="model" required {{ $enabled ? '' : 'disabled' }}>
                         @foreach (array_unique(array_merge($models, [$currentModel])) as $name)
                             <option value="{{ $name }}" {{ $name === $currentModel ? 'selected' : '' }}>{{ $name }}</option>
                         @endforeach
@@ -124,13 +126,14 @@
                     </details>
                 </div>
             </div>
+            </fieldset>
 
             <div class="row mb-3">
                 <div class="form-group">
                     <button type="submit" class="btn btn-success">
                         <span class="bi bi-floppy"></span> {{ trans('ai.config.save') }}
                     </button>
-                    <button type="button" class="btn btn-primary" id="ai-test">
+                    <button type="button" class="btn btn-primary" id="ai-test" {{ $enabled ? '' : 'disabled' }}>
                         <span class="bi bi-plug"></span> {{ trans('ai.config.test') }}
                     </button>
                     <span id="ai-test-result" class="ms-2" role="status" aria-live="polite"></span>
@@ -165,6 +168,18 @@
     ];
 @endphp
 <script>
+(function () {
+    // AI switch: enable or disable the settings without reloading the page
+    const enabled = document.getElementById('enabled');
+    enabled.addEventListener('change', function () {
+        const off = !enabled.checked;
+        document.getElementById('ai-settings').disabled = off;
+        document.getElementById('ai-test').disabled = off;
+        // Select2 follows the "disabled" property of its own select
+        $('#model').prop('disabled', off).trigger('change.select2');
+    });
+})();
+
 (function () {
     const button = document.getElementById('ai-test');
     const result = document.getElementById('ai-test-result');

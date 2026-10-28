@@ -30,7 +30,8 @@ L'écran contient un encart « Protection des données » qui rappelle ce qui es
 Les champs sont les suivants :
 
 * **Activer l'IA** : active ou désactive l'agent. Désactivée, aucune requête ne part vers l'agent, mais les analyses
-  déjà enregistrées sont conservées (voir [Supprimer toutes les analyses](#purge)) ;
+  déjà enregistrées sont conservées (voir [Supprimer toutes les analyses](#purge)). Tant que l'IA est désactivée, les
+  autres champs sont grisés ; ils conservent leurs valeurs et redeviennent modifiables dès que l'IA est activée ;
 
 * **URL de l'agent IA** : l'adresse de base de l'API compatible OpenAI, sans valeur par défaut. Pour OVHcloud AI
   Endpoints : `https://oai.endpoints.kepler.ai.cloud.ovh.net/v1`. Le protocole `https` est obligatoire, sauf pour un modèle local

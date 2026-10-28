@@ -230,3 +230,44 @@ test('a model outside the list is saved and shown selected', function () {
     $this->actingAs($this->admin)->get('/config/parameters?tab=ai')
         ->assertSee('<option value="llama3.1:8b" selected', false);
 });
+
+test('the settings fields are disabled while AI is off', function (bool $enabled) {
+    Configuration::set('ai.enabled', $enabled ? '1' : '0');
+
+    $html = $this->actingAs($this->admin)->get('/config/parameters?tab=ai')->assertOk()->getContent();
+
+    $disabled = fn (string $tag) => (bool) preg_match('#' . $tag . '[^>]*\sdisabled[\s>]#', $html);
+    expect($disabled('<fieldset id="ai-settings"'))->toBe(! $enabled)
+        ->and($disabled('<select class="form-select select2 select2-free" name="model"'))->toBe(! $enabled)
+        ->and($disabled('<button type="button" class="btn btn-primary" id="ai-test"'))->toBe(! $enabled)
+        // The switch itself and the purge stay usable
+        ->and($disabled('<input class="form-check-input" type="checkbox" role="switch" name="enabled"'))->toBeFalse();
+})->with([true, false]);
+
+test('saving with AI off keeps the settings, whose fields are not submitted', function () {
+    Configuration::set('ai.base_url', 'https://agent.example.com/v1');
+    Configuration::set('ai.model', 'mistral-large');
+    Configuration::set('ai.prompt_risk', 'Mon prompt');
+    Configuration::set('ai.api_key', 'sk-kept');
+    Configuration::set('ai.enabled', '1');
+
+    // Disabled fields are absent from the request: only the switch (unchecked) is sent
+    $this->actingAs($this->admin)->post('/config/ai/save', [])
+        ->assertRedirect('/config/parameters?tab=ai')
+        ->assertSessionHasNoErrors();
+
+    Configuration::clearCache();
+    expect(Configuration::bool('ai.enabled'))->toBeFalse()
+        ->and(Configuration::get('ai.base_url'))->toBe('https://agent.example.com/v1')
+        ->and(Configuration::get('ai.model'))->toBe('mistral-large')
+        ->and(Configuration::get('ai.prompt_risk'))->toBe('Mon prompt')
+        ->and(Configuration::get('ai.api_key'))->toBe('sk-kept');
+});
+
+test('turning AI on still requires the agent URL', function () {
+    $this->actingAs($this->admin)->from('/config/parameters?tab=ai')
+        ->post('/config/ai/save', ['enabled' => '1', 'model' => 'gpt-oss-120b'])
+        ->assertSessionHasErrors('base_url');
+
+    expect(Configuration::bool('ai.enabled'))->toBeFalse();
+});
