@@ -31,6 +31,7 @@ beforeEach(function () {
 
 test('the request contains the prompt, the schema and the tagged context', function (string $type) {
     Http::fake(['*' => aiAgentResponse()]);
+    Configuration::set('ai.base_url', 'https://agent.example.com/v1');
     Configuration::set(AiSubjects::get($type)['prompt'], "PROMPT-{$type} en {{langue}}");
     $object = aiCreateSubject($type);
 
@@ -45,7 +46,7 @@ test('the request contains the prompt, the schema and the tagged context', funct
         $system = $request['messages'][0]['content'];
         $user = $request['messages'][1]['content'];
 
-        return $request->url() === 'https://oai.endpoints.kepler.ai.cloud.ovh.net/v1/chat/completions'
+        return $request->url() === 'https://agent.example.com/v1/chat/completions'
             && $request['messages'][0]['role'] === 'system'
             && str_starts_with($system, "PROMPT-{$type} en français")
             && str_contains($system, '"points_de_vue"')
@@ -310,8 +311,9 @@ test('agent errors are mapped and keep the previous analysis', function (string 
 ]);
 
 test('a redirect is not followed', function () {
+    Configuration::set('ai.base_url', 'https://agent.example.com/v1');
     Http::fake([
-        'oai.endpoints.kepler.ai.cloud.ovh.net/*' => Http::response('', 302, ['Location' => 'https://evil.example.com/v1/chat/completions']),
+        'agent.example.com/*' => Http::response('', 302, ['Location' => 'https://evil.example.com/v1/chat/completions']),
         'evil.example.com/*' => aiAgentResponse(),
     ]);
 

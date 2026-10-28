@@ -294,6 +294,7 @@ test('no icon when AI is disabled', function (string $type) {
 })->with(AI_ENDPOINT_TYPES);
 
 test('the icon and the panel are shown to an authorized user', function (string $type) {
+    Configuration::set('ai.base_url', 'https://agent.example.com/v1');
     $object = aiCreateSubject($type);
 
     $this->actingAs($this->admin)->get(aiShowUrl($type, $object->id))
@@ -303,7 +304,7 @@ test('the icon and the panel are shown to an authorized user', function (string 
         ->assertSee('bi-robot', false)
         ->assertSee('id="ai-panel"', false)
         ->assertSee('aria-label="' . trans('ai.button') . '"', false)
-        ->assertSee('oai.endpoints.kepler.ai.cloud.ovh.net');
+        ->assertSee('agent.example.com');
 })->with(AI_ENDPOINT_TYPES);
 
 test('the icon shows a dot when an analysis is saved', function (string $type) {
