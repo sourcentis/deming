@@ -411,6 +411,7 @@ return [
                  'title_short' => 'Benachrichtigungen',
                  'help' => 'Hier können Sie die Benachrichtigungen konfigurieren, die die Benutzer per E-Mail erhalten.',
                  'message_subject' => 'Betreff',
+            'default_subject' => 'Deming - Durchzuführende Kontrollen',
                  'message_content' => 'Nachrichteninhalt',
                  'message_default_content' => '<!DOCTYPE html>
 <html lang="de">

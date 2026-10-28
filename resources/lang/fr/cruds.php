@@ -409,6 +409,7 @@ return [
             'title_short' => 'Notifications',
             'help' => 'Cet écran permet de configurer les notifications envoyées par mail aux utilisateurs.',
             'message_subject' => 'Sujet du message',
+            'default_subject' => 'Deming - Contrôles à réaliser',
             'message_content' => 'Contenu du message',
             'message_default_content' => '<!DOCTYPE html>
 <html lang="fr">

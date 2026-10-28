@@ -40,14 +40,28 @@ class ConfigurationController extends Controller
     public function tabData(): array
     {
         return [
-            'mail_from' => config('deming.notification.mail-from'),
-            'mail_subject' => config('deming.notification.mail-subject'),
+            // Defaults until the notifications are saved for the first time
+            'mail_from' => config('deming.notification.mail-from') ?: $this->defaultMailFrom(),
+            'mail_subject' => config('deming.notification.mail-subject') ?: trans('cruds.config.notifications.default_subject'),
             'mail_content' => config('deming.notification.mail-content'),
             'frequency' => config('deming.notification.frequency'),
             'expire_delay' => config('deming.notification.expire-delay'),
             'reminder' => config('deming.notification.reminder'),
             'smtp' => $this->smtpView(MailSettings::all()),
         ];
+    }
+
+    // MAIL_FROM_ADDRESS when set, otherwise deming@ the host of the application
+    private function defaultMailFrom(): string
+    {
+        $address = config('mail.from.address');
+        if (is_string($address) && $address !== '' && $address !== 'hello@example.com') {
+            return $address;
+        }
+
+        $host = parse_url((string) config('app.url'), PHP_URL_HOST) ?: request()->getHost();
+
+        return 'deming@' . $host;
     }
 
     /**

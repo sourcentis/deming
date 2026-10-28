@@ -24,7 +24,7 @@ return new class extends Migration
     private const ENCRYPTED = ['mail.password', 'mail.dkim_passphrase'];
 
     /**
-     * Copy the SMTP settings currently in effect (from .env) into the configuration table.
+     * Copy the SMTP settings of .env into the configuration table, so that an upgrade keeps them.
      */
     public function up(): void
     {
@@ -33,7 +33,7 @@ return new class extends Migration
                 continue;
             }
 
-            $value = config($path);
+            $value = $this->envValue($name, $path);
             $value = is_bool($value) ? ($value ? '1' : '0') : ($value === null ? null : (string) $value);
             if ($value !== null && $value !== '' && in_array($name, self::ENCRYPTED, true)) {
                 $value = Crypt::encryptString($value);
@@ -46,6 +46,19 @@ return new class extends Migration
                 'updated_at' => now(),
             ]);
         }
+    }
+
+    /**
+     * Value of .env, also accepting the variable names of former installation guides
+     * (MAIL_SMTP_SECURE and MAIL_AUTH), which config/mail.php does not read.
+     */
+    private function envValue(string $name, string $path): mixed
+    {
+        return match ($name) {
+            'mail.encryption' => env('MAIL_ENCRYPTION') ?? env('MAIL_SMTP_SECURE') ?? config($path),
+            'mail.auth' => env('MAIL_SMTP_AUTH') ?? env('MAIL_AUTH') ?? config($path),
+            default => config($path),
+        };
     }
 
     /**

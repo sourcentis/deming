@@ -184,3 +184,47 @@ test('the mailer is configured from the settings', function () {
         ->and($mail->DKIM_domain)->toBe('example.org')
         ->and($mail->DKIM_selector)->toBe('default');
 });
+
+test('sender and subject have default values until they are saved', function () {
+    config(['deming.notification.mail-from' => null, 'deming.notification.mail-subject' => null]);
+    config(['mail.from.address' => 'notifications@example.org']);
+
+    $this->actingAs($this->admin)->get('/config/parameters?tab=notifications')
+        ->assertOk()
+        ->assertSee('value="notifications@example.org"', false)
+        ->assertSee('value="' . e(trans('cruds.config.notifications.default_subject')) . '"', false);
+});
+
+test('without MAIL_FROM_ADDRESS the default sender uses the application host', function () {
+    config(['deming.notification.mail-from' => null, 'mail.from.address' => 'hello@example.com', 'app.url' => 'https://deming.example.org']);
+
+    $this->actingAs($this->admin)->get('/config/parameters?tab=notifications')
+        ->assertSee('value="deming@deming.example.org"', false);
+});
+
+test('saved sender and subject are kept', function () {
+    config(['deming.notification.mail-from' => 'isms@example.org', 'deming.notification.mail-subject' => 'My subject']);
+
+    $this->actingAs($this->admin)->get('/config/parameters?tab=notifications')
+        ->assertSee('value="isms@example.org"', false)
+        ->assertSee('value="My subject"', false);
+});
+
+test('the migration reads the .env names of former installation guides', function () {
+    $migration = require database_path('migrations/2026_10_28_000001_move_mail_settings_to_configuration_table.php');
+    $migration->down();
+    putenv('MAIL_SMTP_SECURE=ssl');
+    putenv('MAIL_AUTH=true');
+    putenv('MAIL_ENCRYPTION');
+    putenv('MAIL_SMTP_AUTH');
+    try {
+        $migration->up();
+    } finally {
+        putenv('MAIL_SMTP_SECURE');
+        putenv('MAIL_AUTH');
+    }
+    \App\Models\Configuration::clearCache();
+
+    expect(\App\Models\Configuration::get('mail.encryption'))->toBe('ssl')
+        ->and(\App\Models\Configuration::bool('mail.auth'))->toBeTrue();
+});

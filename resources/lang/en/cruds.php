@@ -410,6 +410,7 @@ return [
                  'title_short' => 'Notifications',
                  'help' => 'This screen allows you to configure the notifications sent by email to users.',
                  'message_subject' => 'Message subject',
+            'default_subject' => 'Deming - Controls to be performed',
                  'message_content' => 'Message content',
                  'message_default_content' => '<!DOCTYPE html>
 <html lang="en">
