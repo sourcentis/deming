@@ -39,6 +39,8 @@
     /* Center the robot: no margin from ".btn .bi" (custom.css) nor vertical shift from Bootstrap Icons */
     .btn-ai .bi { display: block; line-height: 1; margin: 0; }
     .btn-ai .bi::before { display: block; vertical-align: 0; }
+    /* No blinking text caret on the button nor in the panel (as for the navbar brand in custom.css) */
+    .btn-ai, .ai-panel { caret-color: transparent; }
     .btn-ai:hover, .btn-ai:focus { color: #5f3fa3; background-color: #f5f0ff; border-color: #8059C8; }
     .btn-ai.has-analysis::after { content: ""; position: absolute; top: -3px; right: -3px; width: 8px; height: 8px; border-radius: 50%; background: #3AB87A; border: 1px solid #fff; }
 
