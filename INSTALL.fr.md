@@ -488,8 +488,8 @@ Migrer la base de données
     php artisan migrate
 
 Lors d'une mise à jour depuis une version qui stockait le serveur SMTP dans `.env`, cette migration copie les valeurs
-`MAIL_*` dans la base de données. Vérifiez-les dans **Configuration → Paramètres → Notifications** : le chiffrement est
-lu dans `MAIL_ENCRYPTION` (et non `MAIL_SMTP_SECURE`) et l'authentification dans `MAIL_SMTP_AUTH` (et non `MAIL_AUTH`).
+`MAIL_*` dans la base de données, y compris les anciens noms `MAIL_SMTP_SECURE` et `MAIL_AUTH`. Rien d'autre n'est à
+faire : le serveur SMTP se gère ensuite dans **Configuration → Paramètres → Notifications**.
 
 Mettre à jour les librairies
 

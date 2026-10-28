@@ -488,8 +488,8 @@ Migrate database
     php artisan migrate
 
 When upgrading from a version that stored the SMTP server in `.env`, this migration copies the `MAIL_*` values into
-the database. Check them in **Configuration → Settings → Notifications**: the encryption is read from
-`MAIL_ENCRYPTION` (not `MAIL_SMTP_SECURE`) and the authentication from `MAIL_SMTP_AUTH` (not `MAIL_AUTH`).
+the database, including the former names `MAIL_SMTP_SECURE` and `MAIL_AUTH`. Nothing else is needed: the SMTP server
+is then managed in **Configuration → Settings → Notifications**.
 
 Update libraries
 
