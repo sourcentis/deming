@@ -61,9 +61,12 @@ class AiAgentService
             ];
         }
 
-        if (! self::isAllowedUrl($baseUrl)) {
-            $this->log($type, $id, $model, 0, null, false, AiAgentException::INSECURE_URL);
-            throw new AiAgentException(AiAgentException::INSECURE_URL);
+        // No default agent: the URL must be configured by an administrator
+        $error = $baseUrl === '' ? AiAgentException::NOT_CONFIGURED
+            : (self::isAllowedUrl($baseUrl) ? null : AiAgentException::INSECURE_URL);
+        if ($error !== null) {
+            $this->log($type, $id, $model, 0, null, false, $error);
+            throw new AiAgentException($error);
         }
 
         $start = microtime(true);

@@ -112,7 +112,7 @@ test('a non https URL is refused, except localhost', function (string $url, bool
         expect(Configuration::get('ai.base_url'))->toBe($url);
     } else {
         $response->assertSessionHasErrors('base_url');
-        expect(Configuration::get('ai.base_url'))->toBe(Configuration::DEFAULTS['ai.base_url']);
+        expect(Configuration::get('ai.base_url'))->toBeNull();
     }
 })->with([
     ['http://agent.example.com/v1', false],
@@ -150,6 +150,7 @@ test('submitting an unchanged default prompt stores nothing', function () {
 });
 
 test('the connection test returns status, latency and model without the key', function () {
+    Configuration::set('ai.base_url', 'https://agent.example.com/v1');
     Configuration::set('ai.api_key', 'sk-very-secret');
     Http::fake(['*' => Http::response(['model' => 'gpt-oss-120b', 'choices' => [['message' => ['content' => 'OK']]]], 200)]);
 
@@ -162,6 +163,7 @@ test('the connection test returns status, latency and model without the key', fu
 });
 
 test('the connection test reports failures without the response body', function () {
+    Configuration::set('ai.base_url', 'https://agent.example.com/v1');
     Http::fake(['*' => Http::response(['error' => 'internal secret detail'], 401)]);
 
     $response = $this->actingAs($this->admin)->postJson('/config/ai/test')->assertOk();
@@ -171,12 +173,22 @@ test('the connection test reports failures without the response body', function 
 });
 
 test('the connection test handles an unreachable agent', function () {
+    Configuration::set('ai.base_url', 'https://agent.example.com/v1');
     Http::fake(fn () => throw new ConnectionException('cURL error 7: Failed to connect to host'));
 
     $response = $this->actingAs($this->admin)->postJson('/config/ai/test')->assertOk();
 
     $response->assertJson(['ok' => false, 'status' => null]);
     expect($response->getContent())->not->toContain('cURL');
+});
+
+test('the connection test needs an agent URL', function () {
+    Http::fake();
+
+    $this->actingAs($this->admin)->postJson('/config/ai/test')
+        ->assertOk()
+        ->assertJson(['ok' => false, 'error' => trans('ai.errors.not_configured')]);
+    Http::assertNothingSent();
 });
 
 test('admin purges every analysis with an audit entry without content', function () {

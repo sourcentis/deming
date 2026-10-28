@@ -132,6 +132,7 @@ return [
         'truncated' => 'Abgeschnittene Antwort des KI-Agenten.',
         'invalid_response' => 'Ungültige Antwort des KI-Agenten.',
         'insecure_url' => 'Die URL des KI-Agenten muss https verwenden.',
+        'not_configured' => "Die URL des KI-Agenten ist nicht konfiguriert.",
         'too_many' => 'Zu viele Anfragen, bitte in einer Minute erneut versuchen.',
         'generic' => 'Ein Fehler ist aufgetreten.',
     ],

@@ -22,6 +22,7 @@ beforeEach(function () {
     $this->seed(RiskScoringConfigSeeder::class);
     $this->admin = User::factory()->admin()->create(['language' => 'fr']);
     $this->actingAs($this->admin);
+    Configuration::set('ai.base_url', 'https://agent.example.com/v1');
     $this->service = new AiAgentService();
 });
 
@@ -336,10 +337,18 @@ test('unknown properties of the answer are dropped', function () {
 
 test('a non local http base_url is refused at runtime without any call', function () {
     Http::fake();
-    DB::table('configuration')->insert(['name' => 'ai.base_url', 'value' => 'http://agent.example.com/v1']);
+    DB::table('configuration')->where('name', 'ai.base_url')->update(['value' => 'http://agent.example.com/v1']);
     Configuration::clearCache();
 
     expectAiError(fn () => $this->service->analyze('control', aiCreateSubject('control')), 'insecure_url', 502);
+    Http::assertNothingSent();
+});
+
+test('without an agent URL nothing is sent', function () {
+    Http::fake();
+    Configuration::forget('ai.base_url');
+
+    expectAiError(fn () => $this->service->analyze('control', aiCreateSubject('control')), 'not_configured', 502);
     Http::assertNothingSent();
 });
 

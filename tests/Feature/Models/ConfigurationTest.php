@@ -11,7 +11,8 @@ test('the migration seeds ai.enabled to 0', function () {
 
 test('an absent key returns the code default, then the given default', function () {
     expect(Configuration::get('ai.model'))->toBe('gpt-oss-120b');
-    expect(Configuration::get('ai.base_url'))->toBe(Configuration::DEFAULTS['ai.base_url']);
+    // No default agent URL
+    expect(Configuration::get('ai.base_url'))->toBeNull();
     expect(Configuration::get('ai.model', 'other'))->toBe('gpt-oss-120b');
     expect(Configuration::get('unknown.key'))->toBeNull();
     expect(Configuration::get('unknown.key', 'fallback'))->toBe('fallback');

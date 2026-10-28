@@ -47,7 +47,7 @@
                     <label for="base_url"><strong>{{ trans('ai.config.base_url') }}</strong></label>
                 </div>
                 <div class="col-md-9 col-lg-6">
-                    <input class="form-control" type="url" name="base_url" id="base_url" value="{{ old('base_url', $base_url) }}" required maxlength="2048">
+                    <input class="form-control" type="url" name="base_url" id="base_url" value="{{ old('base_url', $base_url) }}" required maxlength="2048" placeholder="https://…/v1">
                     <small class="text-muted">{{ trans('ai.config.base_url_help') }}</small>
                 </div>
             </div>

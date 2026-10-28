@@ -135,6 +135,9 @@ class AiConfigController extends Controller
         $baseUrl = rtrim((string) Configuration::get('ai.base_url'), '/');
         $model = (string) Configuration::get('ai.model');
 
+        if ($baseUrl === '') {
+            return response()->json(['ok' => false, 'error' => trans('ai.errors.not_configured')]);
+        }
         if (! AiAgentService::isAllowedUrl($baseUrl)) {
             return response()->json(['ok' => false, 'error' => trans('ai.errors.insecure_url')]);
         }

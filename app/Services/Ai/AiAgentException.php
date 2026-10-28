@@ -18,6 +18,7 @@ class AiAgentException extends RuntimeException
     public const TRUNCATED = 'truncated';
     public const INVALID_RESPONSE = 'invalid_response';
     public const INSECURE_URL = 'insecure_url';
+    public const NOT_CONFIGURED = 'not_configured';
 
     public function __construct(public readonly string $reason, public readonly int $status = 502)
     {

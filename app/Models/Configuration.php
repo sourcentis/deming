@@ -28,7 +28,6 @@ class Configuration extends Model
     // Defaults used when the row is absent
     public const DEFAULTS = [
         'ai.enabled' => '0',
-        'ai.base_url' => 'https://oai.endpoints.kepler.ai.cloud.ovh.net/v1',
         'ai.model' => 'gpt-oss-120b',
         'ai.api_key' => null,
     ];

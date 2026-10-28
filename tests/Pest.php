@@ -78,7 +78,9 @@ function aiCreateSubject(string $type): \Illuminate\Database\Eloquent\Model
     return $object->fresh();
 }
 
+// AI enabled with a test agent (there is no default agent URL)
 function aiEnable(): void
 {
     \App\Models\Configuration::set('ai.enabled', '1');
+    \App\Models\Configuration::set('ai.base_url', 'https://agent.example.com/v1');
 }

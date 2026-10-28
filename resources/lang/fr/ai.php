@@ -132,6 +132,7 @@ return [
         'truncated' => "Réponse tronquée de l'agent IA.",
         'invalid_response' => "Réponse invalide de l'agent IA.",
         'insecure_url' => "L'URL de l'agent IA doit utiliser https.",
+        'not_configured' => "L'URL de l'agent IA n'est pas configurée.",
         'too_many' => 'Trop de demandes, réessayez dans une minute.',
         'generic' => 'Une erreur est survenue.',
     ],

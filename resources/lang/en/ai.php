@@ -132,6 +132,7 @@ return [
         'truncated' => 'Truncated answer from the AI agent.',
         'invalid_response' => 'Invalid answer from the AI agent.',
         'insecure_url' => 'The AI agent URL must use https.',
+        'not_configured' => "The AI agent URL is not configured.",
         'too_many' => 'Too many requests, try again in a minute.',
         'generic' => 'An error occurred.',
     ],
