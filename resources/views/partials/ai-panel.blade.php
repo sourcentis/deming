@@ -39,6 +39,9 @@
     /* Center the robot: no margin from ".btn .bi" (custom.css) nor vertical shift from Bootstrap Icons */
     .btn-ai .bi { display: block; line-height: 1; margin: 0; }
     .btn-ai .bi::before { display: block; vertical-align: 0; }
+    /* Out of the flow: a float would shift the Bootstrap rows next to it (negative margins) */
+    .ai-button-anchor { position: relative; height: 0; }
+    .ai-button-anchor .btn-ai { position: absolute; top: 0; right: 0; z-index: 1; }
     /* No blinking text caret on the button nor in the panel (as for the navbar brand in custom.css) */
     .btn-ai, .ai-panel { caret-color: transparent; }
     .btn-ai:hover, .btn-ai:focus { color: #5f3fa3; background-color: #f5f0ff; border-color: #8059C8; }
