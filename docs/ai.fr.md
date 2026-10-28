@@ -12,9 +12,10 @@ validés par un humain.
 L'IA est **désactivée par défaut**. Tant qu'elle n'est pas activée par un administrateur, aucune donnée n'est
 envoyée et l'icône d'analyse n'apparaît pas.
 
-L'agent est un service compatible avec l'API OpenAI (`/v1/chat/completions`). Par défaut, Deming est configuré pour
-[OVHcloud AI Endpoints](https://www.ovhcloud.com/fr/public-cloud/ai-endpoints/) avec le modèle `gpt-oss-120b`, mais
-il est possible d'utiliser un autre fournisseur compatible ou un modèle local (Ollama, vLLM, LM Studio…).
+L'agent est un service compatible avec l'API OpenAI (`/v1/chat/completions`). Aucun agent n'est configuré par défaut :
+l'administrateur choisit le fournisseur, par exemple
+[OVHcloud AI Endpoints](https://www.ovhcloud.com/fr/public-cloud/ai-endpoints/), un autre fournisseur compatible ou un
+modèle local (Ollama, vLLM, LM Studio…).
 
 ## Activer et configurer {#config}
 
@@ -31,8 +32,8 @@ Les champs sont les suivants :
 * **Activer l'IA** : active ou désactive l'agent. Désactivée, aucune requête ne part vers l'agent, mais les analyses
   déjà enregistrées sont conservées (voir [Supprimer toutes les analyses](#purge)) ;
 
-* **URL de l'agent IA** : l'adresse de base de l'API compatible OpenAI, par exemple
-  `https://oai.endpoints.kepler.ai.cloud.ovh.net/v1`. Le protocole `https` est obligatoire, sauf pour un modèle local
+* **URL de l'agent IA** : l'adresse de base de l'API compatible OpenAI, sans valeur par défaut. Pour OVHcloud AI
+  Endpoints : `https://oai.endpoints.kepler.ai.cloud.ovh.net/v1`. Le protocole `https` est obligatoire, sauf pour un modèle local
   sur `http://localhost` ou `http://127.0.0.1` ;
 
 * **Modèle** : le nom du modèle tel que l'attend le fournisseur. La liste propose les modèles de génération de texte

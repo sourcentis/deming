@@ -11,10 +11,10 @@ Menschen geprüft werden.
 Die KI ist **standardmäßig deaktiviert**. Solange ein Administrator sie nicht aktiviert, werden keine Daten gesendet
 und das Analyse-Symbol wird nicht angezeigt.
 
-Der Agent ist ein mit der OpenAI-API kompatibler Dienst (`/v1/chat/completions`). Standardmäßig ist Deming für
-[OVHcloud AI Endpoints](https://www.ovhcloud.com/de/public-cloud/ai-endpoints/) mit dem Modell `gpt-oss-120b`
-konfiguriert; jeder andere kompatible Anbieter oder ein lokales Modell (Ollama, vLLM, LM Studio…) kann verwendet
-werden.
+Der Agent ist ein mit der OpenAI-API kompatibler Dienst (`/v1/chat/completions`). Standardmäßig ist kein Agent
+konfiguriert: Der Administrator wählt den Anbieter, zum Beispiel
+[OVHcloud AI Endpoints](https://www.ovhcloud.com/de/public-cloud/ai-endpoints/), einen anderen kompatiblen Anbieter oder
+ein lokales Modell (Ollama, vLLM, LM Studio…).
 
 ## Aktivieren und konfigurieren {#config}
 
@@ -32,8 +32,8 @@ Die Felder sind:
   Agenten gesendet, die bereits gespeicherten Analysen bleiben jedoch erhalten (siehe
   [Alle Analysen löschen](#purge));
 
-* **URL des KI-Agenten**: die Basisadresse der OpenAI-kompatiblen API, zum Beispiel
-  `https://oai.endpoints.kepler.ai.cloud.ovh.net/v1`. `https` ist Pflicht, außer für ein lokales Modell unter
+* **URL des KI-Agenten**: die Basisadresse der OpenAI-kompatiblen API, ohne Standardwert. Für OVHcloud AI
+  Endpoints: `https://oai.endpoints.kepler.ai.cloud.ovh.net/v1`. `https` ist Pflicht, außer für ein lokales Modell unter
   `http://localhost` oder `http://127.0.0.1`;
 
 * **Modell**: der vom Anbieter erwartete Modellname. Die Liste bietet die Textgenerierungsmodelle von OVHcloud AI

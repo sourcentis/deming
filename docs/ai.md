@@ -10,9 +10,10 @@ The agent is a **decision aid**: it never changes Deming's data. Its results mus
 AI is **disabled by default**. Until an administrator enables it, no data is sent and the analysis icon is not
 displayed.
 
-The agent is a service compatible with the OpenAI API (`/v1/chat/completions`). By default, Deming is configured for
-[OVHcloud AI Endpoints](https://www.ovhcloud.com/en/public-cloud/ai-endpoints/) with the `gpt-oss-120b` model, but
-any other compatible provider or a local model (Ollama, vLLM, LM Studio…) can be used.
+The agent is a service compatible with the OpenAI API (`/v1/chat/completions`). No agent is configured by default:
+the administrator chooses the provider, for example
+[OVHcloud AI Endpoints](https://www.ovhcloud.com/en/public-cloud/ai-endpoints/), another compatible provider or a
+local model (Ollama, vLLM, LM Studio…).
 
 ## Enable and configure {#config}
 
@@ -29,8 +30,8 @@ The fields are:
 * **Enable AI**: enables or disables the agent. When disabled, no request is sent to the agent, but the analyses
   already saved are kept (see [Delete all analyses](#purge));
 
-* **AI agent URL**: the base address of the OpenAI-compatible API, for example
-  `https://oai.endpoints.kepler.ai.cloud.ovh.net/v1`. `https` is required, except for a local model on
+* **AI agent URL**: the base address of the OpenAI-compatible API, without default value. For OVHcloud AI
+  Endpoints: `https://oai.endpoints.kepler.ai.cloud.ovh.net/v1`. `https` is required, except for a local model on
   `http://localhost` or `http://127.0.0.1`;
 
 * **Model**: the model name expected by the provider. The list offers the text generation models of OVHcloud AI
