@@ -16,6 +16,7 @@ return [
         'base_url' => 'AI agent URL',
         'base_url_help' => 'OpenAI-compatible endpoint (/v1). https is required, except http://localhost or http://127.0.0.1 for a local model.',
         'model' => 'Model',
+        'model_help' => "OVHcloud AI Endpoints models; type another name for another provider or a local model.",
         'api_key' => 'API key',
         'api_key_saved' => 'Key saved',
         'api_key_none' => 'No key',

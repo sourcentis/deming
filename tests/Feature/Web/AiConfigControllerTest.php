@@ -211,3 +211,25 @@ test('a non admin cannot purge', function () {
 test('the former URL opens the AI tab of the settings page', function () {
     $this->actingAs($this->admin)->get('/config/ai')->assertRedirect('/config/parameters?tab=ai');
 });
+
+test('the model field lists the OVHcloud text generation models and accepts another one', function () {
+    $html = $this->actingAs($this->admin)->get('/config/parameters?tab=ai')->assertOk()->getContent();
+
+    expect($html)->toContain('class="form-select select2 select2-free" name="model"');
+    foreach (\App\Http\Controllers\AiConfigController::OVH_MODELS as $model) {
+        expect($html)->toContain('<option value="' . $model . '"');
+    }
+    expect($html)->toContain('<option value="gpt-oss-120b" selected')
+        // No speech, text-to-speech, embedding or image model
+        ->not->toContain('value="whisper-large-v3"')
+        ->not->toContain('value="nvr-tts-de-de"')
+        ->not->toContain('value="bge-m3"')
+        ->not->toContain('value="stable-diffusion-xl-base-v10"');
+});
+
+test('a model outside the list is saved and shown selected', function () {
+    $this->actingAs($this->admin)->post('/config/ai/save', aiConfigPayload(['model' => 'llama3.1:8b']));
+
+    $this->actingAs($this->admin)->get('/config/parameters?tab=ai')
+        ->assertSee('<option value="llama3.1:8b" selected', false);
+});

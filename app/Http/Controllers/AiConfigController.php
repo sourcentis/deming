@@ -26,6 +26,23 @@ class AiConfigController extends Controller
     // controls = security measures, measures = controls (UI naming is inverted)
     private const TABLES = ['controls', 'measures', 'actions', 'risks'];
 
+    /**
+     * Text generation models of OVHcloud AI Endpoints, as returned by /v1/models on 2026-10-28.
+     * Speech, text-to-speech, embedding, image and moderation models are left out, as well as
+     * Mistral-Small-3.2-24B-Instruct-2506 and Mistral-Nemo-Instruct-2407 (end of life 2026-11-04).
+     * Any other model name can still be typed in the field.
+     */
+    public const OVH_MODELS = [
+        'gpt-oss-120b',
+        'gpt-oss-20b',
+        'Qwen3.5-397B-A17B',
+        'Qwen3.8-27B',
+        'Qwen3.6-27B',
+        'Qwen3.5-9B',
+        'Qwen2.5-VL-72B-Instruct',
+        'Meta-Llama-3_3-70B-Instruct',
+    ];
+
     // Data of the "AI" tab of the settings page
     public function tabData(): array
     {
@@ -45,6 +62,7 @@ class AiConfigController extends Controller
             'enabled' => Configuration::bool('ai.enabled'),
             'base_url' => Configuration::get('ai.base_url'),
             'model' => Configuration::get('ai.model'),
+            'models' => self::OVH_MODELS,
             // The key itself never reaches the view
             'has_key' => $key !== null && $key !== '',
             'prompts' => $prompts,

@@ -16,6 +16,7 @@ return [
         'base_url' => 'URL des KI-Agenten',
         'base_url_help' => 'OpenAI-kompatibler Endpunkt (/v1). https ist Pflicht, außer http://localhost oder http://127.0.0.1 für ein lokales Modell.',
         'model' => 'Modell',
+        'model_help' => "Modelle von OVHcloud AI Endpoints; geben Sie einen anderen Namen für einen anderen Anbieter oder ein lokales Modell ein.",
         'api_key' => 'API-Schlüssel',
         'api_key_saved' => 'Schlüssel gespeichert',
         'api_key_none' => 'Kein Schlüssel',

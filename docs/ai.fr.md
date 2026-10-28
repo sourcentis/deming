@@ -35,7 +35,9 @@ Les champs sont les suivants :
   `https://oai.endpoints.kepler.ai.cloud.ovh.net/v1`. Le protocole `https` est obligatoire, sauf pour un modèle local
   sur `http://localhost` ou `http://127.0.0.1` ;
 
-* **Modèle** : le nom du modèle tel que l'attend le fournisseur, par exemple `gpt-oss-120b` ;
+* **Modèle** : le nom du modèle tel que l'attend le fournisseur. La liste propose les modèles de génération de texte
+  d'OVHcloud AI Endpoints (`gpt-oss-120b`, `gpt-oss-20b`, Qwen, Llama…) ; pour un autre fournisseur ou un modèle local,
+  saisissez son nom dans la liste puis validez avec Entrée ;
 
 * **Clé API** : la clé d'accès au fournisseur. Elle n'est jamais réaffichée : l'écran indique seulement « Clé
   enregistrée » ou « Aucune clé ». Laisser le champ vide conserve la clé actuelle ; la case « Supprimer la clé » la

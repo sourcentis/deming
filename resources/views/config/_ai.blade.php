@@ -57,7 +57,14 @@
                     <label for="model"><strong>{{ trans('ai.config.model') }}</strong></label>
                 </div>
                 <div class="col-md-9 col-lg-4">
-                    <input class="form-control" type="text" name="model" id="model" value="{{ old('model', $model) }}" required maxlength="191">
+                    {{-- OVHcloud models; another name can be typed (select2-free) --}}
+                    @php $currentModel = old('model', $model); @endphp
+                    <select class="form-select select2 select2-free" name="model" id="model" required>
+                        @foreach (array_unique(array_merge($models, [$currentModel])) as $name)
+                            <option value="{{ $name }}" {{ $name === $currentModel ? 'selected' : '' }}>{{ $name }}</option>
+                        @endforeach
+                    </select>
+                    <small class="text-muted">{{ trans('ai.config.model_help') }}</small>
                 </div>
             </div>
 
