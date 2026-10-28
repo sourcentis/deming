@@ -195,11 +195,11 @@ test('sender and subject have default values until they are saved', function () 
         ->assertSee('value="' . e(trans('cruds.config.notifications.default_subject')) . '"', false);
 });
 
-test('without MAIL_FROM_ADDRESS the default sender is a sample address', function () {
+test('without MAIL_FROM_ADDRESS the default sender is a sample address with a name', function () {
     config(['deming.notification.mail-from' => null, 'mail.from.address' => 'hello@example.com']);
 
     $this->actingAs($this->admin)->get('/config/parameters?tab=notifications')
-        ->assertSee('value="deming@domain.local"', false);
+        ->assertSee('value="Deming &lt;deming@domain.local&gt;"', false);
 });
 
 test('the sender may be an address or a name with an address', function (string $from, string $address, string $name) {
