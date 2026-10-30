@@ -83,4 +83,5 @@ function aiEnable(): void
 {
     \App\Models\Configuration::set('ai.enabled', '1');
     \App\Models\Configuration::set('ai.base_url', 'https://agent.example.com/v1');
+    \App\Models\Configuration::set('ai.model', 'gpt-oss-120b');
 }

@@ -16,7 +16,7 @@ return [
         'base_url' => "URL de l'agent IA",
         'base_url_help' => "Point d'accès compatible OpenAI (/v1). https obligatoire, sauf http://localhost ou http://127.0.0.1 pour un modèle local.",
         'model' => 'Modèle',
-        'model_help' => "Modèles d'OVHcloud AI Endpoints ; saisissez un autre nom pour un autre fournisseur ou un modèle local.",
+        'model_help' => "Modèles de la passerelle IA Sourcentis ; saisissez un autre nom pour un autre fournisseur ou un modèle local.",
         'api_key' => 'Clé API',
         'api_key_saved' => 'Clé enregistrée',
         'api_key_none' => 'Aucune clé',

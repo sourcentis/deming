@@ -23,6 +23,8 @@ beforeEach(function () {
     $this->admin = User::factory()->admin()->create(['language' => 'fr']);
     $this->actingAs($this->admin);
     Configuration::set('ai.base_url', 'https://agent.example.com/v1');
+    // gpt-oss model: the requests also carry reasoning_effort
+    Configuration::set('ai.model', 'gpt-oss-120b');
     $this->service = new AiAgentService();
 });
 

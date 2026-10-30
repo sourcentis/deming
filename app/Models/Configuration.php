@@ -28,7 +28,7 @@ class Configuration extends Model
     // Defaults used when the row is absent
     public const DEFAULTS = [
         'ai.enabled' => '0',
-        'ai.model' => 'gpt-oss-120b',
+        'ai.model' => 'sourcentis-standard',
         'ai.api_key' => null,
     ];
 

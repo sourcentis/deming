@@ -136,7 +136,7 @@ class AiAgentService
                 ['role' => 'user', 'content' => 'Date du jour : ' . Carbon::today()->toDateString()
                     . "\n\n<{$tag}>\n{$context}\n</{$tag}>"],
             ],
-            // Not a strict json_schema: it blocks gpt-oss-120b on OVHcloud AI Endpoints
+            // Not a strict json_schema: some providers reject it with gpt-oss-120b
             'response_format' => ['type' => 'json_object'],
             'max_tokens' => self::MAX_TOKENS,
             'temperature' => self::TEMPERATURE,

@@ -13,9 +13,8 @@ L'IA est **désactivée par défaut**. Tant qu'elle n'est pas activée par un ad
 envoyée et l'icône d'analyse n'apparaît pas.
 
 L'agent est un service compatible avec l'API OpenAI (`/v1/chat/completions`). Aucun agent n'est configuré par défaut :
-l'administrateur choisit le fournisseur, par exemple
-[OVHcloud AI Endpoints](https://www.ovhcloud.com/fr/public-cloud/ai-endpoints/), un autre fournisseur compatible ou un
-modèle local (Ollama, vLLM, LM Studio…).
+l'administrateur choisit le fournisseur, par exemple la passerelle IA Sourcentis, un autre fournisseur compatible ou
+un modèle local (Ollama, vLLM, LM Studio…).
 
 ## Activer et configurer {#config}
 
@@ -33,12 +32,11 @@ Les champs sont les suivants :
   déjà enregistrées sont conservées (voir [Supprimer toutes les analyses](#purge)). Tant que l'IA est désactivée, les
   autres champs sont grisés ; ils conservent leurs valeurs et redeviennent modifiables dès que l'IA est activée ;
 
-* **URL de l'agent IA** : l'adresse de base de l'API compatible OpenAI, sans valeur par défaut. Pour OVHcloud AI
-  Endpoints : `https://oai.endpoints.kepler.ai.cloud.ovh.net/v1`. Le protocole `https` est obligatoire, sauf pour un modèle local
-  sur `http://localhost` ou `http://127.0.0.1` ;
+* **URL de l'agent IA** : l'adresse de base de l'API compatible OpenAI, sans valeur par défaut, par exemple
+  `https://…/v1`. Le protocole `https` est obligatoire, sauf pour un modèle local sur `http://localhost` ou `http://127.0.0.1` ;
 
-* **Modèle** : le nom du modèle tel que l'attend le fournisseur. La liste propose les modèles de génération de texte
-  d'OVHcloud AI Endpoints (`gpt-oss-120b`, `gpt-oss-20b`, Qwen, Llama…) ; pour un autre fournisseur ou un modèle local,
+* **Modèle** : le nom du modèle tel que l'attend le fournisseur. La liste propose les modèles de la passerelle IA
+  Sourcentis, `sourcentis-standard` et `sourcentis-advanced` ; pour un autre fournisseur ou un modèle local,
   saisissez son nom dans la liste puis validez avec Entrée ;
 
 * **Clé API** : la clé d'accès au fournisseur. Elle n'est jamais réaffichée : l'écran indique seulement « Clé
@@ -56,14 +54,11 @@ Les champs sont les suivants :
 Le bouton « Tester la connexion » envoie une requête minimale à l'agent, avec la configuration enregistrée, et
 affiche le statut HTTP, la latence et le modèle. La clé n'est jamais affichée.
 
-### Créer une clé OVHcloud AI Endpoints
+### Obtenir une clé
 
-1. Disposer d'un projet Public Cloud OVHcloud avec un moyen de paiement. Les projets en mode « Discovery » ne
-   fonctionnent pas.
-2. Dans l'espace client, ouvrir « AI & Machine Learning → AI Endpoints », puis « Créer une nouvelle clé API ».
-3. Copier la clé et la coller dans le champ « Clé API » de Deming. La clé n'est affichée qu'une seule fois.
-
-Pour un simple essai, AI Endpoints accepte aussi un accès anonyme, sans clé, limité à 2 requêtes par minute.
+Avec la passerelle IA Sourcentis, l'URL, la clé et le modèle sont communiqués par Sourcentis. La clé n'est transmise
+qu'une seule fois : collez-la dans le champ « Clé API » de Deming. Pour un autre fournisseur, créez une clé dans son
+espace client.
 
 ### Utiliser un modèle local
 
@@ -242,11 +237,9 @@ Les données sont envoyées uniquement à l'hôte configuré dans l'URL de l'age
 suit aucune redirection vers un autre hôte, et le protocole `https` est obligatoire, avec vérification du certificat,
 sauf pour un modèle local.
 
-Avec OVHcloud AI Endpoints, les données sont traitées par OVHcloud dans ses centres de données européens. Pour la
-conservation et la réutilisation éventuelle des requêtes, reportez-vous aux
-[conditions contractuelles d'OVHcloud](https://www.ovhcloud.com/fr/terms-and-conditions/contracts/), en particulier
-aux conditions particulières d'AI Endpoints et au contrat de sous-traitance (DPA). Pour un autre fournisseur,
-reportez-vous à ses propres conditions.
+Avec un fournisseur externe, les données sont traitées par ce fournisseur. Pour la localisation des traitements, la
+conservation et la réutilisation éventuelle des requêtes, reportez-vous à ses conditions contractuelles, en
+particulier au contrat de sous-traitance (DPA).
 
 Avec un modèle local, **aucune donnée ne quitte votre infrastructure**.
 
@@ -286,8 +279,7 @@ Points à vérifier par le responsable de traitement. Ces recommandations ne con
       être transmises.
 - [ ] Disposer d'un contrat de sous-traitance (RGPD, article 28) avec le fournisseur de l'agent, ou utiliser un
       modèle local.
-- [ ] Pour un autre fournisseur qu'OVHcloud, vérifier la localisation des traitements et l'absence de transfert hors
-      de l'Union européenne.
+- [ ] Vérifier la localisation des traitements et l'absence de transfert hors de l'Union européenne.
 - [ ] Évaluer le besoin d'une analyse d'impact (AIPD), en particulier dans les secteurs traitant des données
       sensibles comme la santé.
 - [ ] Informer les utilisateurs de Deming de l'existence de la fonction et de la consigne sur les textes libres.

@@ -44,7 +44,7 @@ According to ISO 27001, chapter 9.1, it is imperative to assess security perform
 - Schedule monitoring and measurement times.
 - Identify who is responsible for each task.
 - Analyze and evaluate results.
-- Get an optional AI agent analysis of controls, measurements, action plans and risks, compatible with OVHcloud AI Endpoints and local models.
+- Get an optional AI agent analysis of controls, measurements, action plans and risks, compatible with OpenAI-type APIs and local models.
 
 ## :computer: Screen overview
 

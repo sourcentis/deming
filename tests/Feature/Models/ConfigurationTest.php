@@ -10,16 +10,16 @@ test('the migration seeds ai.enabled to 0', function () {
 });
 
 test('an absent key returns the code default, then the given default', function () {
-    expect(Configuration::get('ai.model'))->toBe('gpt-oss-120b');
+    expect(Configuration::get('ai.model'))->toBe('sourcentis-standard');
     // No default agent URL
     expect(Configuration::get('ai.base_url'))->toBeNull();
-    expect(Configuration::get('ai.model', 'other'))->toBe('gpt-oss-120b');
+    expect(Configuration::get('ai.model', 'other'))->toBe('sourcentis-standard');
     expect(Configuration::get('unknown.key'))->toBeNull();
     expect(Configuration::get('unknown.key', 'fallback'))->toBe('fallback');
 });
 
 test('set then get returns the new value in the same request', function () {
-    expect(Configuration::get('ai.model'))->toBe('gpt-oss-120b');
+    expect(Configuration::get('ai.model'))->toBe('sourcentis-standard');
 
     Configuration::set('ai.model', 'llama3');
     expect(Configuration::get('ai.model'))->toBe('llama3');

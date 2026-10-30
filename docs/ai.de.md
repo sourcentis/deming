@@ -12,9 +12,8 @@ Die KI ist **standardmäßig deaktiviert**. Solange ein Administrator sie nicht 
 und das Analyse-Symbol wird nicht angezeigt.
 
 Der Agent ist ein mit der OpenAI-API kompatibler Dienst (`/v1/chat/completions`). Standardmäßig ist kein Agent
-konfiguriert: Der Administrator wählt den Anbieter, zum Beispiel
-[OVHcloud AI Endpoints](https://www.ovhcloud.com/de/public-cloud/ai-endpoints/), einen anderen kompatiblen Anbieter oder
-ein lokales Modell (Ollama, vLLM, LM Studio…).
+konfiguriert: Der Administrator wählt den Anbieter, zum Beispiel das Sourcentis-KI-Gateway, einen anderen kompatiblen
+Anbieter oder ein lokales Modell (Ollama, vLLM, LM Studio…).
 
 ## Aktivieren und konfigurieren {#config}
 
@@ -33,12 +32,12 @@ Die Felder sind:
   [Alle Analysen löschen](#purge)). Solange die KI deaktiviert ist, sind die übrigen Felder ausgegraut; sie behalten
   ihre Werte und sind wieder bearbeitbar, sobald die KI aktiviert wird;
 
-* **URL des KI-Agenten**: die Basisadresse der OpenAI-kompatiblen API, ohne Standardwert. Für OVHcloud AI
-  Endpoints: `https://oai.endpoints.kepler.ai.cloud.ovh.net/v1`. `https` ist Pflicht, außer für ein lokales Modell unter
+* **URL des KI-Agenten**: die Basisadresse der OpenAI-kompatiblen API, ohne Standardwert, zum Beispiel
+  `https://…/v1`. `https` ist Pflicht, außer für ein lokales Modell unter
   `http://localhost` oder `http://127.0.0.1`;
 
-* **Modell**: der vom Anbieter erwartete Modellname. Die Liste bietet die Textgenerierungsmodelle von OVHcloud AI
-  Endpoints an (`gpt-oss-120b`, `gpt-oss-20b`, Qwen, Llama…); für einen anderen Anbieter oder ein lokales Modell geben
+* **Modell**: der vom Anbieter erwartete Modellname. Die Liste bietet die Modelle des Sourcentis-KI-Gateways an,
+  `sourcentis-standard` und `sourcentis-advanced`; für einen anderen Anbieter oder ein lokales Modell geben
   Sie seinen Namen in die Liste ein und bestätigen mit der Eingabetaste;
 
 * **API-Schlüssel**: der Zugangsschlüssel des Anbieters. Er wird nie wieder angezeigt: Die Seite zeigt nur
@@ -56,16 +55,11 @@ Die Felder sind:
 Die Schaltfläche „Verbindung testen“ sendet mit der gespeicherten Konfiguration eine minimale Anfrage an den Agenten
 und zeigt den HTTP-Status, die Latenz und das Modell an. Der Schlüssel wird nie angezeigt.
 
-### Einen OVHcloud-AI-Endpoints-Schlüssel erstellen
+### Einen Schlüssel erhalten
 
-1. Ein OVHcloud-Public-Cloud-Projekt mit hinterlegtem Zahlungsmittel bereitstellen. Projekte im Modus „Discovery“
-   funktionieren nicht.
-2. Im Kundencenter „AI & Machine Learning → AI Endpoints“ öffnen, dann „Einen neuen API-Schlüssel erstellen“.
-3. Den Schlüssel kopieren und in das Feld „API-Schlüssel“ von Deming einfügen. Der Schlüssel wird nur einmal
-   angezeigt.
-
-Für einen kurzen Test akzeptiert AI Endpoints auch einen anonymen Zugriff ohne Schlüssel, begrenzt auf 2 Anfragen pro
-Minute.
+Beim Sourcentis-KI-Gateway werden URL, Schlüssel und Modell von Sourcentis mitgeteilt. Der Schlüssel wird nur einmal
+übermittelt: Fügen Sie ihn in das Feld „API-Schlüssel“ von Deming ein. Bei einem anderen Anbieter erstellen Sie einen
+Schlüssel in dessen Kundencenter.
 
 ### Ein lokales Modell verwenden
 
@@ -248,11 +242,9 @@ Die Daten werden ausschließlich an den in der URL des Agenten konfigurierten Ho
 angezeigt wird. Deming folgt keiner Umleitung zu einem anderen Host, und `https` mit Zertifikatsprüfung ist Pflicht,
 außer für ein lokales Modell.
 
-Mit OVHcloud AI Endpoints werden die Daten von OVHcloud in seinen europäischen Rechenzentren verarbeitet. Zur
-Speicherung und möglichen Weiterverwendung der Anfragen siehe die
-[Vertragsbedingungen von OVHcloud](https://www.ovhcloud.com/de/terms-and-conditions/contracts/), insbesondere die
-besonderen Bedingungen von AI Endpoints und den Auftragsverarbeitungsvertrag (AVV). Für einen anderen Anbieter gelten
-dessen eigene Bedingungen.
+Bei einem externen Anbieter werden die Daten von diesem Anbieter verarbeitet. Zum Ort der Verarbeitung, zur
+Speicherung und möglichen Weiterverwendung der Anfragen siehe dessen Vertragsbedingungen, insbesondere den
+Auftragsverarbeitungsvertrag (AVV).
 
 Mit einem lokalen Modell **verlassen keine Daten Ihre Infrastruktur**.
 
@@ -293,8 +285,8 @@ Vom Verantwortlichen zu prüfende Punkte. Diese Empfehlungen stellen keine Recht
       übermittelt werden können.
 - [ ] Einen Auftragsverarbeitungsvertrag (DSGVO, Artikel 28) mit dem Anbieter des Agenten abschließen oder ein lokales
       Modell verwenden.
-- [ ] Bei einem anderen Anbieter als OVHcloud den Ort der Verarbeitung prüfen und sicherstellen, dass keine
-      Übermittlung außerhalb der Europäischen Union erfolgt.
+- [ ] Den Ort der Verarbeitung prüfen und sicherstellen, dass keine Übermittlung außerhalb der Europäischen Union
+      erfolgt.
 - [ ] Den Bedarf einer Datenschutz-Folgenabschätzung (DSFA) prüfen, insbesondere in Branchen mit sensiblen Daten wie
       dem Gesundheitswesen.
 - [ ] Die Deming-Benutzer über die Funktion und die Regel zu Freitexten informieren.

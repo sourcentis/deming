@@ -59,7 +59,7 @@
                     <label for="model"><strong>{{ trans('ai.config.model') }}</strong></label>
                 </div>
                 <div class="col-md-9 col-lg-4">
-                    {{-- OVHcloud models; another name can be typed (select2-free) --}}
+                    {{-- Sourcentis AI gateway models; another name can be typed (select2-free) --}}
                     @php $currentModel = old('model', $model); @endphp
                     <select class="form-select select2 select2-free" name="model" id="model" required {{ $enabled ? '' : 'disabled' }}>
                         @foreach (array_unique(array_merge($models, [$currentModel])) as $name)

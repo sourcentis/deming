@@ -11,8 +11,7 @@ AI is **disabled by default**. Until an administrator enables it, no data is sen
 displayed.
 
 The agent is a service compatible with the OpenAI API (`/v1/chat/completions`). No agent is configured by default:
-the administrator chooses the provider, for example
-[OVHcloud AI Endpoints](https://www.ovhcloud.com/en/public-cloud/ai-endpoints/), another compatible provider or a
+the administrator chooses the provider, for example the Sourcentis AI gateway, another compatible provider or a
 local model (Ollama, vLLM, LM Studio…).
 
 ## Enable and configure {#config}
@@ -31,12 +30,12 @@ The fields are:
   already saved are kept (see [Delete all analyses](#purge)). While AI is disabled, the other fields are greyed out;
   they keep their values and can be edited again as soon as AI is enabled;
 
-* **AI agent URL**: the base address of the OpenAI-compatible API, without default value. For OVHcloud AI
-  Endpoints: `https://oai.endpoints.kepler.ai.cloud.ovh.net/v1`. `https` is required, except for a local model on
+* **AI agent URL**: the base address of the OpenAI-compatible API, without default value, for example
+  `https://…/v1`. `https` is required, except for a local model on
   `http://localhost` or `http://127.0.0.1`;
 
-* **Model**: the model name expected by the provider. The list offers the text generation models of OVHcloud AI
-  Endpoints (`gpt-oss-120b`, `gpt-oss-20b`, Qwen, Llama…); for another provider or a local model, type its name in the
+* **Model**: the model name expected by the provider. The list offers the models of the Sourcentis AI gateway,
+  `sourcentis-standard` and `sourcentis-advanced`; for another provider or a local model, type its name in the
   list and press Enter;
 
 * **API key**: the provider's access key. It is never displayed again: the screen only shows "Key saved" or "No
@@ -53,13 +52,10 @@ The fields are:
 The "Test the connection" button sends a minimal request to the agent, with the saved configuration, and displays
 the HTTP status, the latency and the model. The key is never displayed.
 
-### Create an OVHcloud AI Endpoints key
+### Get a key
 
-1. Have an OVHcloud Public Cloud project with a payment method. Projects in "Discovery" mode do not work.
-2. In the control panel, open "AI & Machine Learning → AI Endpoints", then "Create a new API key".
-3. Copy the key and paste it in Deming's "API key" field. The key is displayed only once.
-
-For a quick trial, AI Endpoints also accepts anonymous access, without a key, limited to 2 requests per minute.
+With the Sourcentis AI gateway, the URL, the key and the model are provided by Sourcentis. The key is sent only once:
+paste it in Deming's "API key" field. For another provider, create a key in its control panel.
 
 ### Use a local model
 
@@ -232,11 +228,9 @@ The data is sent only to the host configured in the agent URL, shown at the bott
 follow any redirection to another host, and `https` is required, with certificate verification, except for a local
 model.
 
-With OVHcloud AI Endpoints, the data is processed by OVHcloud in its European data centres. For the retention and
-possible reuse of requests, refer to
-[OVHcloud's contractual terms](https://www.ovhcloud.com/en/terms-and-conditions/contracts/), in particular the
-specific conditions of AI Endpoints and the data processing agreement (DPA). For another provider, refer to its own
-terms.
+With an external provider, the data is processed by that provider. For where the processing takes place, the
+retention and possible reuse of requests, refer to its contractual terms, in particular the data processing agreement
+(DPA).
 
 With a local model, **no data leaves your infrastructure**.
 
@@ -274,8 +268,7 @@ Points to be checked by the data controller. These recommendations are not legal
 - [ ] Consult the DPO.
 - [ ] Update the record of processing activities (GDPR, article 30) if personal data may be sent.
 - [ ] Have a data processing agreement (GDPR, article 28) with the agent's provider, or use a local model.
-- [ ] For a provider other than OVHcloud, check where the processing takes place and that there is no transfer
-      outside the European Union.
+- [ ] Check where the processing takes place and that there is no transfer outside the European Union.
 - [ ] Assess the need for a data protection impact assessment (DPIA), in particular in sectors handling sensitive
       data such as healthcare.
 - [ ] Inform Deming users that the feature exists and of the rule about free texts.
