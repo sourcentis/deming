@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Configuration;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -20,15 +21,23 @@ class ParameterController extends Controller
     {
         abort_if(! Auth::user()->isAdmin(), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $tab = in_array($request->query('tab'), self::TABS, true) ? $request->query('tab') : self::TABS[0];
+        $tabs = self::tabs();
+        $tab = in_array($request->query('tab'), $tabs, true) ? $request->query('tab') : $tabs[0];
 
         return view('config.parameters', [
             'tab' => $tab,
+            'visible' => $tabs,
             'scoring' => app(RiskScoringConfigController::class)->tabData(),
             'documents' => app(DocumentController::class)->tabData(),
-            'ai' => app(AiConfigController::class)->tabData(),
+            'ai' => Configuration::aiActivated() ? app(AiConfigController::class)->tabData() : [],
             'notifications' => app(ConfigurationController::class)->tabData(),
         ]);
+    }
+
+    // Tabs shown: the AI tab only when AI_ACTIVATED=true
+    public static function tabs(): array
+    {
+        return Configuration::aiActivated() ? self::TABS : array_values(array_diff(self::TABS, ['ai']));
     }
 
     // Former URLs of the settings screens open the matching tab

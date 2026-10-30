@@ -10,6 +10,7 @@
         'ai' => [trans('menu.configuration.ai'), 'bi-robot', 'config._ai', $ai],
         'notifications' => [trans('menu.configuration.notifications'), 'bi-alarm', 'config._notifications', $notifications],
     ];
+    $tabs = array_intersect_key($tabs, array_flip($visible));
 @endphp
 <div class="card">
     <div class="card-header">@include('partials.help', ['page' => 'parameters'])<i class="bi bi-sliders"></i> {{ trans('menu.configuration.parameters') }}</div>

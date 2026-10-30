@@ -271,3 +271,19 @@ test('turning AI on still requires the agent URL', function () {
 
     expect(Configuration::bool('ai.enabled'))->toBeFalse();
 });
+
+test('AI not activated in .env: no AI tab and the AI settings are unreachable', function () {
+    config(['app.ai_activated' => false]);
+    Http::fake();
+
+    $html = $this->actingAs($this->admin)->get('/config/parameters?tab=ai')->assertOk()->getContent();
+    expect($html)->not->toContain('id="tab-ai"')
+        ->not->toContain('action="/config/ai/save"')
+        ->toContain('class="tab-pane fade show active" id="tab-documents"');
+
+    $this->actingAs($this->admin)->post('/config/ai/save', aiConfigPayload())->assertNotFound();
+    $this->actingAs($this->admin)->post('/config/ai/test')->assertNotFound();
+    $this->actingAs($this->admin)->post('/config/ai/purge')->assertNotFound();
+    expect(Configuration::get('ai.enabled'))->toBe('0');
+    Http::assertNothingSent();
+});

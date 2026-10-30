@@ -65,6 +65,7 @@ class AiConfigController extends Controller
     public function save(Request $request): RedirectResponse
     {
         abort_if(! Auth::user()->isAdmin(), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(! Configuration::aiActivated(), Response::HTTP_NOT_FOUND, '404 Not Found');
 
         // "Restore the default prompt" button
         $restore = $request->input('restore');
@@ -128,6 +129,7 @@ class AiConfigController extends Controller
     public function test(): JsonResponse
     {
         abort_if(! Auth::user()->isAdmin(), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(! Configuration::aiActivated(), Response::HTTP_NOT_FOUND, '404 Not Found');
 
         $baseUrl = rtrim((string) Configuration::get('ai.base_url'), '/');
         $model = (string) Configuration::get('ai.model');
@@ -186,6 +188,7 @@ class AiConfigController extends Controller
     public function purge(): RedirectResponse
     {
         abort_if(! Auth::user()->isAdmin(), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(! Configuration::aiActivated(), Response::HTTP_NOT_FOUND, '404 Not Found');
 
         $count = 0;
         foreach (self::TABLES as $table) {

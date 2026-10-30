@@ -48,6 +48,16 @@ test('AI disabled returns 404', function (string $type) {
     Http::assertNothingSent();
 })->with(AI_ENDPOINT_TYPES);
 
+test('AI not activated in .env returns 404, even when enabled in the settings', function (string $type) {
+    config(['app.ai_activated' => false]);
+    Http::fake();
+    $object = aiCreateSubject($type);
+
+    $this->actingAs($this->admin)->postJson("/ai/{$type}/{$object->id}")->assertNotFound();
+    $this->actingAs($this->admin)->postJson("/ai/{$type}/{$object->id}/preview")->assertNotFound();
+    Http::assertNothingSent();
+})->with(AI_ENDPOINT_TYPES);
+
 test('API role gets 403', function (string $type) {
     Http::fake();
     $object = aiCreateSubject($type);

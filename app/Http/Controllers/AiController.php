@@ -43,7 +43,7 @@ class AiController extends Controller
     // Server-side checks, in this order: AI enabled, role, object exists, access rule
     private function subject(string $type, int $id): Model
     {
-        abort_if(! Configuration::bool('ai.enabled'), Response::HTTP_NOT_FOUND, '404 Not Found');
+        abort_if(! Configuration::aiEnabled(), Response::HTTP_NOT_FOUND, '404 Not Found');
 
         $user = Auth::user();
         abort_if($user->isAuditor() || $user->isAPI(), Response::HTTP_FORBIDDEN, '403 Forbidden');

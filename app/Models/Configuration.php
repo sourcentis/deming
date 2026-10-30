@@ -69,6 +69,18 @@ class Configuration extends Model
         return array_key_exists($name, self::values());
     }
 
+    // AI agent available (AI_ACTIVATED in .env) and enabled in the settings
+    public static function aiEnabled(): bool
+    {
+        return self::aiActivated() && self::bool('ai.enabled');
+    }
+
+    // AI agent available in this installation (AI_ACTIVATED in .env)
+    public static function aiActivated(): bool
+    {
+        return (bool) config('app.ai_activated');
+    }
+
     public static function bool(string $name, bool $default = false): bool
     {
         $value = self::get($name);
