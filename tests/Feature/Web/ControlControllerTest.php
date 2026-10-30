@@ -116,3 +116,39 @@ test('admin can export controls', function () {
 test('auditor cannot export controls', function () {
     $this->actingAs($this->auditor)->get('/export/bobs')->assertStatus(403);
 });
+
+test('the note of a control must be numeric', function (string $uri, int $status, $note) {
+    $measure = Measure::factory()->create(['status' => $status]);
+    $measure->controls()->sync([Control::factory()->create()->id]);
+
+    $this->actingAs($this->admin)->post($uri, [
+        'id' => $measure->id,
+        'name' => $measure->name,
+        'objective' => 'objective',
+        'plan_date' => now()->format('Y-m-d'),
+        'periodicity' => 0,
+        'score' => 3,
+        'note' => $note,
+    ])->assertSessionHasErrors('note');
+
+    expect(Measure::find($measure->id)->note)->toBe($measure->note);
+})->with([
+    'make' => ['/bob/make', 0],
+    'draft' => ['/bob/draft', 0],
+    'save' => ['/bob/save', 0],
+    'accept' => ['/bob/accept', 1],
+    'reject' => ['/bob/reject', 1],
+])->with(['abc']);
+
+test('a note above 100 is accepted', function () {
+    $measure = Measure::factory()->create(['status' => 0]);
+    $measure->controls()->sync([Control::factory()->create()->id]);
+
+    $this->actingAs($this->admin)->post('/bob/draft', [
+        'id' => $measure->id,
+        'plan_date' => now()->format('Y-m-d'),
+        'note' => 150.5,
+    ])->assertSessionHasNoErrors()->assertRedirect("/bob/show/{$measure->id}");
+
+    expect((float) Measure::find($measure->id)->note)->toBe(150.5);
+});

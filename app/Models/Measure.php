@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\Auditable;
+use App\Traits\HasAiAnalysis;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -14,7 +15,7 @@ use Illuminate\Support\Facades\File;
 
 class Measure extends Model
 {
-    use HasFactory, Auditable;
+    use HasFactory, Auditable, HasAiAnalysis;
 
     public static $searchable = [
         'name',
@@ -33,6 +34,8 @@ class Measure extends Model
         'updated_at',
         'deleted_at',
     ];
+
+    protected $hidden = self::AI_COLUMNS;
 
     protected $fillable = [
         'name',
@@ -90,6 +93,22 @@ class Measure extends Model
             $this->groups = $this->belongsToMany(UserGroup::class, 'measure_user_group', 'measure_id')->orderBy('name');
         }
         return $this->groups;
+    }
+
+    /**
+     * Access rule of MeasureController@show (control page):
+     * no API account, and unless the user sees all data, the control
+     * must be assigned to the user directly or through one of his groups.
+     */
+    public static function isViewableBy(User $user, int $id): bool
+    {
+        if ($user->isAPI()) {
+            return false;
+        }
+
+        return $user->seesAllData()
+            || self::assignedDirectly($id, $user->id)
+            || self::assignedViaGroup($id, $user->id);
     }
 
     public function canMake(): bool
@@ -197,18 +216,28 @@ class Measure extends Model
 
     private function isDirectlyAssignedToUser($user): bool
     {
-        return DB::table('measure_user')
-            ->where('measure_id', $this->id)
-            ->where('user_id', $user->id)
-            ->exists();
+        return self::assignedDirectly($this->id, $user->id);
     }
 
     private function isAssignedViaGroup($user): bool
     {
+        return self::assignedViaGroup($this->id, $user->id);
+    }
+
+    private static function assignedDirectly(int $measureId, int $userId): bool
+    {
+        return DB::table('measure_user')
+            ->where('measure_id', $measureId)
+            ->where('user_id', $userId)
+            ->exists();
+    }
+
+    private static function assignedViaGroup(int $measureId, int $userId): bool
+    {
         return DB::table('measure_user_group')
             ->join('user_user_group', 'measure_user_group.user_group_id', '=', 'user_user_group.user_group_id')
-            ->where('measure_user_group.measure_id', $this->id)
-            ->where('user_user_group.user_id', $user->id)
+            ->where('measure_user_group.measure_id', $measureId)
+            ->where('user_user_group.user_id', $userId)
             ->exists();
     }
 }

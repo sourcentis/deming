@@ -141,11 +141,11 @@
                     <small class="text-nowrap">{{ (int) $action->progress }}%</small>
                 </div>
             </td>
-            <td >
+            <td class="align-top text-start">
                 <b>{{ $action->name }}</b>
                 {!! \Parsedown::instance()->text($action->cause) !!}
             </td>
-            <td>
+            <td class="align-top text-start">
                 {!! \Parsedown::instance()->text($action->remediation) !!}
             </td>
             <td>

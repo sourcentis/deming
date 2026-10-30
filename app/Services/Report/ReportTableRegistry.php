@@ -26,7 +26,10 @@ use Illuminate\Support\Facades\Schema;
 class ReportTableRegistry
 {
     /** Colonnes jamais exposées, quelle que soit la table. */
-    private const EXCLUDED_COLUMNS = ['password', 'remember_token', 'standard', 'deleted_at'];
+    private const EXCLUDED_COLUMNS = [
+        'password', 'remember_token', 'standard', 'deleted_at',
+        'ai_analysis', 'ai_analysis_at', 'ai_analysis_model', 'ai_analysis_hash',
+    ];
 
     /**
      * @return array<string, array{

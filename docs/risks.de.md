@@ -73,6 +73,9 @@ Die verfügbaren Schaltflächen hängen von der Rolle des Benutzers ab:
 - **Historie** — zeigt die [Änderungshistorie](config.de.md#logs) an (nur Administrator);
 - **Abbruch** — kehrt zur [Liste der Risiken](#list) zurück.
 
+Ist der [KI-Agent](ai.de.md) aktiviert, öffnet das Roboter-Symbol „KI-Analyse“ oben rechts unter der Hilfe-Schaltfläche
+ein Fenster mit einer KI-Analyse des Risikos. Siehe [Die Analyse verwenden](ai.de.md#use).
+
 ## Ein Risiko erstellen {#create}
 
 Mit dieser Ansicht wird ein neues Risiko erstellt.
@@ -133,6 +136,9 @@ Wenn Sie klicken auf:
 - **Abbruch** — Sie kehren ohne Änderung zur [Anzeige des Risikos](#show) zurück.
 
 ## Konfiguration der Bewertung {#scoring}
+
+Die Konfiguration der Bewertung befindet sich in der Registerkarte „Klassifizierung“ der Seite
+[Einstellungen](config.de.md#parameters), die Administratoren vorbehalten ist.
 
 Die Risikobewertung ist vollständig konfigurierbar. Es können mehrere Konfigurationen definiert werden, aber nur eine ist jeweils aktiv. Ein Wechsel der aktiven Konfiguration gilt sofort für die gesamte Risikoliste.
 

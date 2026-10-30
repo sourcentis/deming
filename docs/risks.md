@@ -74,6 +74,9 @@ The available buttons depend on the user's role:
 - **History** — displays the [change history](config.md#logs) (Administrator only);
 - **Cancel** — returns to the [risk list](#list).
 
+When the [AI agent](ai.md) is enabled, the robot "AI analysis" icon, at the top right of the screen below the help
+button, opens a panel with an AI analysis of the risk. See [Use the analysis](ai.md#use).
+
 ## Create a Risk {#create}
 
 This screen allows you to create a new risk.
@@ -134,6 +137,9 @@ When you click:
 - **Cancel** — you return to the [risk view](#show) without changes.
 
 ## Scoring Configuration {#scoring}
+
+The scoring configuration is in the "Scoring" tab of the [Settings](config.md#parameters) page, restricted to
+administrators.
 
 Risk scoring is fully configurable. Multiple configurations can be defined, but only one is active at a time. Changing the active configuration takes effect immediately across the entire register.
 

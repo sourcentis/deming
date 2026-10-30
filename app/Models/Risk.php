@@ -4,11 +4,13 @@ namespace App\Models;
 
 use App\Services\RiskScoringService;
 use App\Traits\Auditable;
+use App\Traits\HasAiAnalysis;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Risque de sécurité de l'information.
@@ -42,7 +44,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Risk extends Model
 {
-    use HasFactory, SoftDeletes, Auditable;
+    use HasFactory, SoftDeletes, Auditable, HasAiAnalysis;
 
     // -------------------------------------------------------------------------
     // Constantes de statut
@@ -93,6 +95,8 @@ class Risk extends Model
     // Fillable / Casts
     // -------------------------------------------------------------------------
 
+    protected $hidden = self::AI_COLUMNS;
+
     protected $fillable = [
         'name', 'description', 'owner_id',
         'probability', 'probability_comment',
@@ -115,17 +119,33 @@ class Risk extends Model
     // Relations
     // -------------------------------------------------------------------------
 
+    /**
+     * Access rule of RiskController@show: an auditor only sees the risks he owns.
+     * Every other authenticated role sees all risks.
+     */
+    public static function isViewableBy(User $user, int $id): bool
+    {
+        if ($user->isAuditor()) {
+            $ownerId = DB::table('risks')->where('id', $id)->value('owner_id');
+            return $ownerId !== null && (int) $ownerId === $user->id;
+        }
+
+        return true;
+    }
+
     /** @return BelongsTo<User, $this> */
     public function owner(): BelongsTo
     {
         return $this->belongsTo(User::class, 'owner_id');
     }
 
+    /** @return BelongsToMany<Control, $this> */
     public function controls(): BelongsToMany
     {
         return $this->belongsToMany(Control::class, 'control_risk');
     }
 
+    /** @return BelongsToMany<Action, $this> */
     public function actions(): BelongsToMany
     {
         return $this->belongsToMany(Action::class, 'action_risk');

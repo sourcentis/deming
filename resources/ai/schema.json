@@ -1,0 +1,50 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["synthese", "statut_evalue", "niveau_risque", "confiance", "constats", "recommandations", "questions_ouvertes", "points_de_vue"],
+  "properties": {
+    "synthese": { "type": "string", "description": "Synthèse de l'analyse en 2 à 4 phrases." },
+    "statut_evalue": { "type": "string", "enum": ["conforme", "partiellement_conforme", "non_conforme", "non_evaluable"] },
+    "niveau_risque": { "type": "string", "enum": ["faible", "moyen", "eleve", "critique"] },
+    "confiance": { "type": "string", "enum": ["faible", "moyenne", "elevee"] },
+    "constats": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["type", "description"],
+        "properties": {
+          "type": { "type": "string", "enum": ["force", "faiblesse", "manque_preuve", "incoherence"] },
+          "description": { "type": "string" }
+        }
+      }
+    },
+    "recommandations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["priorite", "action", "justification", "echeance_suggeree", "reference"],
+        "properties": {
+          "priorite": { "type": "string", "enum": ["haute", "moyenne", "basse"] },
+          "action": { "type": "string" },
+          "justification": { "type": "string" },
+          "echeance_suggeree": { "type": "string" },
+          "reference": { "type": "string", "description": "Référence ISO, ou chaîne vide si aucune." }
+        }
+      }
+    },
+    "questions_ouvertes": { "type": "array", "items": { "type": "string" } },
+    "points_de_vue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ceo", "rssi", "dpo", "auditeur"],
+      "properties": {
+        "ceo": { "type": "string" },
+        "rssi": { "type": "string" },
+        "dpo": { "type": "string" },
+        "auditeur": { "type": "string" }
+      }
+    }
+  }
+}

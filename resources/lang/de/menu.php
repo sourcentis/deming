@@ -25,7 +25,10 @@ return [
         'import' => "Import",
         'documents' => 'Dokumente',
         'models' => 'Models',
-        'notifications' => 'Benachrichtigungen'
+        'notifications' => 'Benachrichtigungen',
+        'ai' => 'KI',
+        'parameters' => 'Einstellungen',
+        'templates' => 'Vorlagen'
     ],
     'test' => 'Sie befinden sich in einer Test-Umgebung - Die Daten sind fiktiv',
     'logout' => 'Logout',

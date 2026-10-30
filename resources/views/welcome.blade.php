@@ -395,12 +395,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
     var ctx2 = document.getElementById('canvas-doughnut').getContext('2d');
 
+    @php($show_to_validate = $can_validate && $controls_to_validate > 0)
     var marksData = {
         labels: [
             "{{ trans('common.fail') }}",
             "{{ trans('common.alert') }}",
             "{{ trans('common.success') }}",
-            @if ($can_validate)
+            @if ($show_to_validate)
             "{{ trans('common.to_validate') }}",
             @endif
             "{{ trans('common.unknown') }}"
@@ -408,7 +409,7 @@ document.addEventListener("DOMContentLoaded", function () {
         datasets: [
             {
                 backgroundColor: [
-                    '#D94F45', '#E8731A', '#3AB87A', @if ($can_validate) '#7EC8F0', @endif 'gray'
+                    '#D94F45', '#E8731A', '#3AB87A', @if ($show_to_validate) '#7EC8F0', @endif 'gray'
                 ],
                 borderWidth: 0,
                 data: [
@@ -427,7 +428,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         <?php if ($c->score=="3") { $count++; } ?>
                     @endforeach
                     {{ $count }},
-                    @if ($can_validate)
+                    @if ($show_to_validate)
                     {{ $controls_to_validate }},
                     @endif
                     {{ $controls_never_made }}

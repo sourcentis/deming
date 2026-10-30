@@ -12,7 +12,7 @@
                 <div class="col-md-4 col-lg-3 col-xl-2">
                     <strong>{{ trans("cruds.domain.fields.framework") }}</strong>
                     <select class="form-select select2" name="framework" id="framework">
-                        <option value='none'></option>
+                        <option value=""></option>
                         @foreach ($frameworks as $framework)
                         <option
                             @if (Session::get("framework")==$framework->title)
@@ -26,7 +26,7 @@
                 <div class="col-md-4 col-lg-3 col-xl-2">
                     <strong>{{ trans("cruds.measure.fields.scope") }}</strong>
                     <select class="form-select select2" name="scope" id="scope">
-                        <option value='none'></option>
+                        <option value=""></option>
                         @foreach ($scopes as $key => $value)
                         <option
                             @if (Session::get("scope")==$value->scope)
@@ -228,7 +228,8 @@ document.addEventListener("DOMContentLoaded", function () {
             var select = document.getElementById(id);
             if (select) {
                 select.addEventListener('change', function() {
-                    window.location = '/radar/domains?' + id + '=' + this.value;
+                    // Cleared field: "none" removes the filter kept in session
+                    window.location = '/radar/domains?' + id + '=' + encodeURIComponent(this.value || 'none');
                 }, false);
             }
         });

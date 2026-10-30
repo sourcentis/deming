@@ -27,7 +27,10 @@ return [
         'import' => "Import",
         'documents' => 'Documents',
         'models' => 'Models',
-        'notifications' => 'Notifications'
+        'notifications' => 'Notifications',
+        'ai' => 'AI',
+        'parameters' => 'Settings',
+        'templates' => 'Templates'
     ],
     'test' => 'You are in a test environment - The data is fictitious',
     'logout' => 'Logout',

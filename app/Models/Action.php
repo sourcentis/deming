@@ -3,13 +3,14 @@
 namespace App\Models;
 
 use App\Traits\Auditable;
+use App\Traits\HasAiAnalysis;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Action extends Model
 {
-    use HasFactory, Auditable;
+    use HasFactory, Auditable, HasAiAnalysis;
 
     public static $searchable = [
         'reference',
@@ -25,6 +26,8 @@ class Action extends Model
         'due_date',
         'close_date',
     ];
+
+    protected $hidden = self::AI_COLUMNS;
 
     protected $fillable = [
         'reference',
@@ -51,16 +54,26 @@ class Action extends Model
     // 3 - Observation - yellow
     // 4 - Opportunity - green
 
+    /**
+     * Access rule of ActionController@show: administrators, users and auditors.
+     */
+    public static function isViewableBy(User $user, int $id): bool
+    {
+        return in_array($user->role, [User::ROLE_ADMIN, User::ROLE_USER, User::ROLE_AUDITOR], true);
+    }
+
     public function owners() : BelongsToMany
     {
         return $this->belongsToMany(User::class, 'action_user', 'action_id')->orderBy('name');
     }
 
+    /** @return BelongsToMany<Control, $this> */
     public function controls() : BelongsToMany
     {
         return $this->belongsToMany(Control::class, 'action_control', 'action_id', 'control_id');
     }
 
+    /** @return BelongsToMany<Risk, $this> */
     public function risks() : BelongsToMany
     {
         return $this->belongsToMany(Risk::class, 'action_risk')->orderBy('name');

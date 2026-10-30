@@ -139,9 +139,8 @@ test('a template with invalid table tags is rejected on upload', function () {
     $file = new UploadedFile(makeTemplate(['${table:actions:nope}']), 'pilotage.docx', null, null, true);
 
     $this->actingAs($admin)
-        ->from('/doc')
         ->post('/doc/template', ['template2' => $file])
-        ->assertRedirect('/doc')
+        ->assertRedirect('/config/parameters?tab=templates')
         ->assertSessionHasErrors('template2');
 
     Storage::disk('local')->assertMissing('models/pilotage_.docx');
@@ -153,18 +152,17 @@ test('a valid template is stored on upload', function () {
     $file = new UploadedFile(makeTemplate(['${table:actions:reference,name}']), 'pilotage.docx', null, null, true);
 
     $this->actingAs($admin)
-        ->from('/doc')
         ->post('/doc/template', ['template2' => $file])
-        ->assertRedirect('/doc')
+        ->assertRedirect('/config/parameters?tab=templates')
         ->assertSessionHasNoErrors();
 
     Storage::disk('local')->assertExists('models/pilotage_.docx');
 });
 
-test('the documents page lists the available tables and columns', function () {
+test('the templates tab lists the available tables and columns', function () {
     $admin = User::factory()->admin()->create();
 
-    $this->actingAs($admin)->get('/doc')
+    $this->actingAs($admin)->get('/config/parameters?tab=templates')
         ->assertOk()
         ->assertSee('${table:', false)
         ->assertSee('report-table-actions', false)

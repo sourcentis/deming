@@ -1,8 +1,7 @@
 # Configuration
 
-Le menu « Configuration » donne accès aux attributs, aux domaines, aux utilisateurs, aux groupes, à la
-[classification des risques](risks.fr.md#scoring), à l'importation, aux [correspondances entre référentiels](crosswalk.fr.md),
-aux documents, aux notifications et aux logs.
+Le menu « Configuration » donne accès aux attributs, aux domaines, aux utilisateurs, aux groupes, à l'importation,
+aux [correspondances entre référentiels](crosswalk.fr.md), aux [paramètres](#parameters) et aux logs.
 
 ## Attributs {#tags}
 
@@ -40,7 +39,7 @@ Il existe six rôles différents :
 * Audité : les audités ne peuvent réaliser et voir que les contrôles qui leur sont assignés ou qu'ils ont réalisés
   précédemment (voir [Délégation](delegation.fr.md)).
 
-* Auditeur : l’auditeur a un accès en lecture à l’ensemble des informations de l’application.
+* Auditeur : l’auditeur a un accès en lecture à l’ensemble des informations de l’application. L'auditeur ne peut pas utiliser l'[agent IA](ai.fr.md#access).
 
 * API : compte utilisé pour accéder à l'[API](api.fr.md).
 
@@ -103,15 +102,53 @@ Lors de l'importation, il est possible de supprimer tous les autres contrôles e
 
 [![Screenshot](images/import.fr.png)](images/import.fr.png)
 
+## Paramètres {#parameters}
+
+La page « Paramètres », réservée aux administrateurs, regroupe dans des onglets les réglages de l'application :
+
+* **Documents** : la [vérification des documents et leur durée de conservation](#documents) ;
+
+* **Modèles** : les [modèles de documents](#templates) ;
+
+* **Classification** : la [configuration du scoring des risques](risks.fr.md#scoring) ;
+
+* **IA** : la configuration de l'[agent IA](#ai) ;
+
+* **Notifications** : les [notifications](#notifications) envoyées aux utilisateurs.
+
+Chaque onglet a ses propres boutons. Après un enregistrement, la page revient sur l'onglet modifié.
+
+<!-- TODO capture : images/parameters.fr.png -->
+
 ## Documents {#documents}
 
-Cet écran permet de modifier la configuration de la gestion des documents utilisés dans Deming.
+L'onglet « Documents » de la page [Paramètres](#parameters) permet de vérifier les documents conservés dans Deming et de
+configurer leur durée de conservation.
 
 [![Screenshot](images/documents.fr.png)](images/documents.fr.png)
 
-### Modèles
+### Stockage
 
-Cette partie de l'écran permet de modifier les modèles de document utilisés pour les fiches de contrôle et le rapport de pilotage du SMSI et permet d’avoir une vue sur l’ensemble des documents utilisés comme preuve lors de la réalisation des contrôles de sécurité.
+Cette partie de l'onglet permet de vérifier l'intégrité des documents conservés dans l'application.
+
+En cliquant sur « Vérifier », Deming lance le contrôle d'intégrité des documents conservés dans l'application en utilisant un CRC32.
+
+### Conservation
+
+Cette partie de l'onglet permet de configurer la durée de conservation (en mois) des contrôles réalisés dans l'application.
+
+Tous les contrôles réalisés passé cette date sont supprimés ainsi que les documents et plans d'actions associés.
+
+Cette suppression est effectuée en exécutant la commande
+
+    php artisan deming:cleanup
+
+au travers d'un cron.
+
+## Modèles {#templates}
+
+L'onglet « Modèles » de la page [Paramètres](#parameters) permet de modifier les modèles de document utilisés pour les
+fiches de contrôle et le rapport de pilotage du SMSI.
 
 Le modèle du rapport de pilotage est un document Word (.docx) dont les balises sont remplacées lors de la génération
 du rapport. Le panneau « Balises du modèle », affiché à côté des modèles, liste les balises disponibles ; un clic sur
@@ -130,45 +167,52 @@ Exemple :
 
     ${table:actions:reference,name,owners,due_date|where:status=0|order:due_date}
 
-### Stockage
+## IA {#ai}
 
-Cette partie de l'écran permet de vérifier l'intégrité des documents conservés dans l'application.
+L'onglet « IA » de la page [Paramètres](#parameters), réservée aux administrateurs, permet d'activer et de configurer l'[agent IA](ai.fr.md) qui analyse les
+mesures de sécurité, les contrôles, les plans d'action et les risques : activation, URL de l'agent, modèle, clé API,
+prompts, test de connexion et suppression de toutes les analyses. L'IA est désactivée par défaut.
 
-En cliquant sur « Vérifier », Deming lance le contrôle d'intégrité des documents conservés dans l'application en utilisant un CRC32.
-
-### Conservation
-
-Cette partie de l'écran permet de configurer la durée de conservation (en mois) des contrôles réalisés dans l'application.
-
-Tous les contrôles réalisés passé cette date sont supprimés ainsi que les documents et plans d'actions associés.
-
-Cette suppression est effectuée en exécutant la commande
-
-    php artisan deming:cleanup
-
-au travers d'un cron.
+Voir [Activer et configurer](ai.fr.md#config) et, avant toute activation, [Protection des données](ai.fr.md#privacy).
 
 ## Notifications {#notifications}
 
-Cet écran permet de configurer les notifications envoyées aux utilisateurs lorsqu'ils doivent réaliser des contrôles.
+L'onglet « Notifications » de la page [Paramètres](#parameters) permet de configurer les notifications envoyées aux utilisateurs lorsqu'ils doivent réaliser des contrôles.
 
-L'écran contient :
+L'onglet contient deux blocs.
 
-* Le sujet du mail envoyé à l'utilisateur ;
+**Serveur SMTP** : le serveur utilisé pour envoyer les mails.
 
-* L'émetteur du mail ;
+* le serveur et le port ;
 
-* La périodicité de l'envoi des notifications ;
+* le chiffrement (aucun, SSL ou TLS) et le STARTTLS automatique ;
 
-* Les délais de notification.
+* l'authentification, l'utilisateur et le mot de passe ;
 
+* la signature DKIM, facultative : domaine, sélecteur, chemin de la clé privée et phrase secrète.
+
+Ces paramètres sont enregistrés dans la base de données. Le mot de passe et la phrase secrète DKIM sont chiffrés avec
+la clé de l'application (`APP_KEY`) et ne sont jamais réaffichés : laisser le champ vide conserve la valeur
+enregistrée, la case « Supprimer » l'efface. Si l'`APP_KEY` change, il faut les ressaisir.
+
+**Notifications** : le contenu et la fréquence des mails.
+
+* l'émetteur du mail ;
+
+* le sujet et le contenu du mail envoyé à l'utilisateur ;
+
+* la périodicité de l'envoi des notifications ;
+
+* le délai : les contrôles qui arrivent à échéance dans ce délai sont notifiés.
+
+<!-- TODO capture : refaire images/config.fr.png (onglet Notifications avec le serveur SMTP) -->
 [![Screenshot](images/config.fr.png)](images/config.fr.png)
 
 Lorsque vous cliquez sur :
 
 * « Sauver » - la configuration est sauvée ;
 
-* « Test » - un mail de test est envoyé à l'utilisateur courant ;
+* « Test » - un mail de test est envoyé à l'utilisateur courant, avec les valeurs saisies (elles ne sont pas enregistrées) ;
 
 * « Annuler » - vous revenez à la page principale.
 

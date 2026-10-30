@@ -12,6 +12,7 @@ form, table {
 <div class="card">
     <div class="card-header">@include('partials.help', ['page' => 'actions.show'])<i class="bi bi-list-check"></i> {{ trans('cruds.action.show') }}</div>
     <div class="card-body">
+    @include('partials.ai-button', ['type' => 'action', 'object' => $action])
 
     @include('partials.errors')
 

@@ -4,12 +4,12 @@ namespace App\Console\Commands;
 
 use App\Models\Measure;
 use App\Models\User;
+use App\Services\MailSettings;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 use PHPMailer\PHPMailer\Exception;
-use PHPMailer\PHPMailer\PHPMailer;
 
 class SendNotifications extends Command
 {
@@ -106,28 +106,11 @@ class SendNotifications extends Command
                     }
 
                     try {
-                        // Create a new PHPMailer instance
-                        $mail = new PHPMailer(true);
-
-                        // Server settings
-                        $mail->isSMTP();
-                        // Set the SMTP server
-                        $mail->Host = config('mail.mailers.smtp.host');
-                        // TCP port to connect to
-                        $mail->Port = (int) config('mail.mailers.smtp.port');
-                        // Enable SMTP authentication
-                        $mail->SMTPAuth = (bool) config('mail.mailers.smtp.auth', true);
-                        $mail->Username = config('mail.mailers.smtp.username');
-                        $mail->Password = config('mail.mailers.smtp.password');
-                        // SMTP Security
-                        $mail->SMTPSecure = config('mail.mailers.smtp.encryption'); // 'tls', 'ssl', null/false
-                        $mail->SMTPAutoTLS = (bool) config('mail.mailers.smtp.auto_tls', false);
-                        // Define charset
-                        $mail->CharSet = 'UTF-8';
-                        $mail->Encoding = 'base64';
+                        // PHPMailer configured with the SMTP settings of the configuration table
+                        $mail = MailSettings::mailer();
 
                         // Recipients
-                        $mail->setFrom(config('deming.notification.mail-from'));
+                        MailSettings::setFrom($mail, (string) config('deming.notification.mail-from'));
                         $mail->addAddress($user->email);
                         $mail->Subject = config('deming.notification.mail-subject');
 
@@ -143,13 +126,6 @@ class SendNotifications extends Command
                         // Content
                         $mail->isHTML(true);
                         $mail->Body = $message;
-
-                        // Optional: Add DKIM signing
-                        $mail->DKIM_domain = config('mail.dkim.domain');
-                        $mail->DKIM_private = config('mail.dkim.private');
-                        $mail->DKIM_selector = config('mail.dkim.selector');
-                        $mail->DKIM_passphrase = config('mail.dkim.passphrase');
-                        $mail->DKIM_identity = $mail->From;
 
                         // Send email
                         $mail->send();

@@ -6,6 +6,7 @@
 <div class="card">
     <div class="card-header">@include('partials.help', ['page' => 'controls.show'])<i class="bi bi-book"></i> {{ trans('cruds.control.show') }}</div>
     <div class="card-body">
+    @include('partials.ai-button', ['type' => 'control', 'object' => $control])
 
     @include('partials.errors')
 

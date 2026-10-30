@@ -141,8 +141,6 @@
                     id="note"
                     name="note"
                     value="{{ old('note', $measure->note) }}"
-                    min="0"
-                    max="100"
                     step="0.01"
                     placeholder="0.00"
                 />

@@ -395,23 +395,7 @@ class MeasureController extends Controller
     public function show(int $id)
     {
         abort_if(
-            Auth::user()->isAPI(),
-            Response::HTTP_FORBIDDEN,
-            '403 Forbidden'
-        );
-
-        abort_if(
-            !Auth::user()->seesAllData() &&
-            ! (DB::table('measure_user')
-                    ->where('measure_id', $id)
-                    ->where('user_id', Auth::user()->id)
-                    ->exists()
-                ||
-                DB::table('measure_user_group')
-                    ->join('user_user_group', 'measure_user_group.user_group_id', '=', 'user_user_group.user_group_id')
-                    ->where('measure_user_group.measure_id', $id)
-                    ->where('user_user_group.user_id', Auth::user()->id)
-                    ->exists()),
+            ! Measure::isViewableBy(Auth::user(), $id),
             Response::HTTP_FORBIDDEN,
             '403 Forbidden'
         );
@@ -1229,6 +1213,10 @@ class MeasureController extends Controller
 
         abort_if(! $measure->canMake(), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
+        $this->validate($request, [
+            'note' => 'nullable|numeric',
+        ]);
+
         if ((request('score') === null) || (request('score') === 0)) {
             return back()
                 ->withErrors(['score' => 'score not set'])
@@ -1277,7 +1265,7 @@ class MeasureController extends Controller
             $measure->status = 2;
 
             if (($measure->next_id === null) && ($measure->periodicity !== 0)) {
-                $new_measure = $measure->replicate();
+                $new_measure = $measure->replicate(Measure::AI_COLUMNS);
                 $new_measure->observations    = null;
                 $new_measure->realisation_date = null;
                 $new_measure->note            = null;
@@ -1336,6 +1324,7 @@ class MeasureController extends Controller
                 'objective'   => 'required',
                 'plan_date'   => 'required',
                 'periodicity' => 'required|integer|in:-1,0,1,3,6,12',
+                'note'        => 'nullable|numeric',
             ]
         );
 
@@ -1406,6 +1395,10 @@ class MeasureController extends Controller
                 ->withInput();
         }
 
+        $this->validate($request, [
+            'note' => 'nullable|numeric',
+        ]);
+
         $measure->observations = request('observations');
         $measure->note         = request('note');
         $measure->score        = request('score') === 0 ? null : request('score');
@@ -1444,6 +1437,10 @@ class MeasureController extends Controller
                 ->withInput();
         }
 
+        $this->validate($request, [
+            'note' => 'nullable|numeric',
+        ]);
+
         $measure->observations = request('observations');
         $measure->note         = request('note');
         $measure->score        = request('score');
@@ -1471,6 +1468,10 @@ class MeasureController extends Controller
 
         $id = (int) $request->get('id');
 
+        $this->validate($request, [
+            'note' => 'nullable|numeric',
+        ]);
+
         if ((request('score') === null) || (request('score') === 0)) {
             return back()
                 ->withErrors(['score' => 'score not set'])
@@ -1495,7 +1496,7 @@ class MeasureController extends Controller
         $measure->action_plan      = request('action_plan');
 
         if ($measure->periodicity !== 0) {
-            $new_measure                   = $measure->replicate();
+            $new_measure                   = $measure->replicate(Measure::AI_COLUMNS);
             $new_measure->status           = 0;
             $new_measure->observations     = null;
             $new_measure->realisation_date = null;

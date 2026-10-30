@@ -279,30 +279,31 @@ After modifying php.ini file(s), you need to restart your php-fpm service to use
 
 ## Mail configuration
 
-If you wish to send notification e-mails from Deming.
-You have to configure the SMTP server access in .env
+To send notification e-mails, configure the SMTP server in Deming, as administrator, in the
+**Configuration → Settings** menu, **Notifications** tab:
+
+* server and port, encryption (none, SSL or TLS) and automatic STARTTLS;
+* authentication, user and password;
+* optional DKIM signature: domain, selector, private key path and passphrase.
+
+These settings are stored in the database; the password and the DKIM passphrase are encrypted with the `APP_KEY`.
+The "Test" button sends a test e-mail to the current user with the values entered.
+
+The `MAIL_*` variables of the `.env` file are only read once, by `php artisan migrate`, to initialize these settings
+(fresh install or upgrade from a version that stored them in `.env`). They can be removed from `.env` afterwards:
 
 ```dotenv
 MAIL_HOST='smtp.localhost'
 MAIL_PORT=2525
-MAIL_AUTH=true
-MAIL_SMTP_SECURE='ssl'
+MAIL_SMTP_AUTH=true
+MAIL_ENCRYPTION='ssl'        # 'ssl', 'tls' or empty
 MAIL_SMTP_AUTO_TLS=false
 MAIL_USERNAME=
 MAIL_PASSWORD=
 ```
 
-You may also configure DKIM :
-
-```dotenv
-MAIL_DKIM_DOMAIN = 'admin.local';
-MAIL_DKIM_PRIVATE = '/path/to/private/key';
-MAIL_DKIM_SELECTOR = 'default'; // Match your DKIM DNS selector
-MAIL_DKIM_PASSPHRASE = '';      // Only if your key has a passphrase
-```
-
-Don't forget to [configure](https://sourcentis.github.io/deming/config/#notifications) the content and frequency of your emails.
-
+Don't forget to [configure](https://sourcentis.github.io/deming/config/#notifications) the content and frequency of
+your e-mails, in the same tab.
 
 ## LDAP / LDAPRecord configuration (optional)
 
@@ -485,6 +486,10 @@ To update Deming, go to the Deming directory and retrieve the sources
 Migrate database
 
     php artisan migrate
+
+When upgrading from a version that stored the SMTP server in `.env`, this migration copies the `MAIL_*` values into
+the database, including the former names `MAIL_SMTP_SECURE` and `MAIL_AUTH`. Nothing else is needed: the SMTP server
+is then managed in **Configuration → Settings → Notifications**.
 
 Update libraries
 

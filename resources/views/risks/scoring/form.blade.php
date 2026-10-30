@@ -270,7 +270,7 @@
                         <span class="bi bi-floppy"></span> {{ trans("common.save") }}
                     </button>
                     &nbsp;
-                    <a class="btn btn-light border" href="/risk/scoring" role="button">
+                    <a class="btn btn-light border" href="/config/parameters?tab=scoring" role="button">
                         <span class="bi bi-x-circle"></span> {{ trans("common.cancel") }}
                     </a>
                 </div>

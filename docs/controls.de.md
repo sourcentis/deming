@@ -69,6 +69,9 @@ Wenn Sie klicken auf:
 
 * „Abbruch“, gelangen Sie zur [Liste der Kontrollen](#list)
 
+Ist der [KI-Agent](ai.de.md) aktiviert, öffnet das Roboter-Symbol „KI-Analyse“ oben rechts unter der Hilfe-Schaltfläche
+ein Fenster mit einer KI-Analyse der Kontrolle. Siehe [Die Analyse verwenden](ai.de.md#use).
+
 ## Eine Kontrolle erstellen {#create}
 
 Eine Kontrolle kann auf drei Arten erstellt werden:

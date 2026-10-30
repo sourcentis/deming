@@ -69,7 +69,11 @@ return [
         'users' => 'config/#users',
         'groups' => 'config/#groups',
         'documents' => 'config/#documents',
+        'templates' => 'config/#templates',
         'notifications' => 'config/#notifications',
         'logs' => 'config/#logs',
+        'parameters' => 'config/#parameters',
+        'ai_config' => 'ai/#config',
+        'ai_use' => 'ai/#use',
     ],
 ];

@@ -75,8 +75,7 @@ class DocumentController extends Controller
             // Vérifie les balises de tableau ${table:...} avant d'accepter le modèle
             $errors = (new TemplateTableRenderer())->validate($template->getRealPath());
             if ($errors !== []) {
-                return redirect()
-                    ->back()
+                return redirect('/config/parameters?tab=templates')
                     ->withErrors(['template2' => $errors]);
             }
 
@@ -85,9 +84,8 @@ class DocumentController extends Controller
             $messages->push(trans('report_template.upload_success'));
         }
 
-        return redirect()
-            ->back()
-            ->with('messages', $messages);
+        return redirect('/config/parameters?tab=templates')
+            ->with('messages', $messages->all());
     }
 
     public function get(int $id)
@@ -253,25 +251,15 @@ class DocumentController extends Controller
         return null;
     }
 
-    public function index()
+    // Data of the "Documents" tab of the settings page
+    public function tabData(): array
     {
-        // Only for administrator
-        abort_if(
-            (Auth::user()->role !== 1),
-            Response::HTTP_FORBIDDEN,
-            '403 Forbidden'
-        );
-
-        $count = Document::count();
-        $sum = Document::sum('size');
-
-        $duration = config('deming.cleanup-duration');
-
-        return view('/documents/index')
-            ->with('count', $count)
-            ->with('sum', $sum)
-            ->with('duration', $duration)
-            ->with('reportTables', ReportTableRegistry::describe());
+        return [
+            'count' => Document::count(),
+            'sum' => Document::sum('size'),
+            'duration' => config('deming.cleanup-duration'),
+            'reportTables' => ReportTableRegistry::describe(),
+        ];
     }
 
     public function check()
@@ -361,16 +349,9 @@ class DocumentController extends Controller
             $messages = null;
         }
 
-        // get previous fields
-        $count = Document::count();
-        $sum = Document::sum('size');
-
-        // Redirect
-        return view('/documents/index')
-            ->with('count', $count)
-            ->with('sum', $sum)
-            ->with('duration', $duration)
-            ->with('messages', $messages)
-            ->with('reportTables', ReportTableRegistry::describe());
+        // Back to the "Documents" tab, keeping the selected duration
+        return redirect('/config/parameters?tab=documents')
+            ->withInput()
+            ->with('messages', $messages?->all());
     }
 }

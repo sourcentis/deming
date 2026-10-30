@@ -6,6 +6,7 @@
 <div class="card">
     <div class="card-header">@include('partials.help', ['page' => 'risks.show'])<i class="bi bi-exclamation-triangle"></i> {{ trans("cruds.risk.singular") }}</div>
     <div class="card-body">
+    @include('partials.ai-button', ['type' => 'risk', 'object' => $risk])
 
 <div class="container-fluid px-0">
 
@@ -14,19 +15,9 @@
         <div class="col-lg-1 col-md-2">
             <strong>{{ trans("cruds.risk.fields.name") }}</strong>
         </div>
-        <div class="col-lg-10 col-md-9">
+        <div class="col-lg-11 col-md-10">
             {{ $risk->name }}
         </div>
-
-        <div class="col-lg-1 col-md-1 justify-content-end d-flex">
-            @if (Auth::User()->role === 1 || Auth::User()->role === 2)
-                <button class="btn btn-primary" onclick="location.href='/risk/create'">
-                    <span class="bi bi-plus-lg"></span>
-                    {{ trans('common.new') }}
-                </button>
-            @endif
-        </div>
-
     </div>
 
     {{-- Description --}}
@@ -280,6 +271,10 @@
         <div class="col-12">
 
             @if (Auth::User()->role === 1 || Auth::User()->role === 2)
+                <a href="/risk/create" class="btn btn-success">
+                    <span class="bi bi-plus-lg"></span> {{ trans("common.new") }}
+                </a>
+                &nbsp;
                 <a href="/risk/edit/{{ $risk->id }}" class="btn btn-primary">
                     <span class="bi bi-pencil"></span> {{ trans("common.edit") }}
                 </a>

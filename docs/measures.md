@@ -63,6 +63,8 @@ When you click:
 
 * "Cancel": returns you to the [list of controls](#list)
 
+When the [AI agent](ai.md) is enabled, the robot "AI analysis" icon, at the top right of the screen below the help
+button, opens a panel with an AI analysis of the control. See [Use the analysis](ai.md#use).
 
 ## Create a control {#create}
 

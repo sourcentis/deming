@@ -154,6 +154,17 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | AI agent
+    |--------------------------------------------------------------------------
+    |
+    | Unless AI_ACTIVATED=true, the AI tab of the settings and every AI feature
+    | are hidden, whatever the settings stored in the database.
+    |
+    */
+    'ai_activated' => (bool) env('AI_ACTIVATED', false),
+
+    /*
+    |--------------------------------------------------------------------------
     | Autoloaded Service Providers
     |--------------------------------------------------------------------------
     |

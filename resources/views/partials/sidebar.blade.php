@@ -86,20 +86,15 @@
         <a href="/groups" class="{{ request()->is('group*') ? 'active' : '' }}">
             <i class="bi bi-people"></i><span class="menu-text">{{ trans("menu.configuration.groups") }}</span>
         </a>
-        <a href="/risk/scoring" class="{{ request()->is('risk/scoring*') ? 'active' : '' }}">
-            <i class="bi bi-calculator"></i><span class="menu-text">{{ trans("menu.configuration.scoring") }}</span>
-        </a>
         <a href="/alice/import" class="{{ request()->is('alice/import*') ? 'active' : '' }}">
             <i class="bi bi-box-arrow-in-down"></i><span class="menu-text">{{ trans("menu.configuration.import") }}</span>
         </a>
         <a href="{{ route('crosswalk.index') }}" class="{{ request()->is('crosswalk*') ? 'active' : '' }}">
             <i class="bi bi-shuffle"></i><span class="menu-text">{{ trans('menu.crosswalk') }}</span>
         </a>
-        <a href="/doc" class="{{ request()->is('doc*') ? 'active' : '' }}">
-            <i class="bi bi-file-earmark-text"></i><span class="menu-text">{{ trans("menu.configuration.documents") }}</span>
-        </a>
-        <a href="/config" class="{{ request()->is('config*') ? 'active' : '' }}">
-            <i class="bi bi-alarm"></i><span class="menu-text">{{ trans("menu.configuration.notifications") }}</span>
+        {{-- Documents, templates, classification, AI and notifications, in tabs --}}
+        <a href="/config/parameters" class="{{ request()->is('config*') || request()->is('risk/scoring*') || request()->is('doc/check') ? 'active' : '' }}">
+            <i class="bi bi-sliders"></i><span class="menu-text">{{ trans("menu.configuration.parameters") }}</span>
         </a>
         <a href="/logs" class="{{ request()->is('logs*') ? 'active' : '' }}">
             <i class="bi bi-journal-text"></i><span class="menu-text">Logs</span>

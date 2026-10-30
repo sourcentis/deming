@@ -15,6 +15,7 @@ use App\Http\Controllers\ExceptionController;
 use App\Http\Controllers\ControlMappingController;
 use App\Http\Controllers\RiskController;
 use App\Http\Controllers\RiskScoringConfigController;
+use App\Services\Ai\AiSubjects;
 
 Auth::routes();
 
@@ -92,16 +93,30 @@ Route::namespace('App\\Http\\Controllers')->middleware('auth')->group(function (
     Route::get('/doc/delete/{id}', 'DocumentController@delete');
     Route::get('/doc/show/{id}', 'DocumentController@get');
 
-    Route::get('/doc', 'DocumentController@index');
+    Route::get('/doc', 'ParameterController@legacy')->defaults('tab', 'documents');
     Route::get('/doc/check', 'DocumentController@check');
     Route::get('/doc/template', 'DocumentController@getTemplate');
     Route::post('/doc/template', 'DocumentController@saveTemplate');
     Route::post('/doc/config', 'DocumentController@saveConfig');
-    Route::get('/doc/config', 'DocumentController@index');
+    Route::get('/doc/config', 'ParameterController@legacy')->defaults('tab', 'documents');
 
     /* Configuration */
-    Route::get('/config', 'ConfigurationController@index');
+    /* Settings page: classification, documents, AI and notifications tabs */
+    Route::get('/config/parameters', 'ParameterController@index');
+    Route::get('/config', 'ParameterController@legacy')->defaults('tab', 'notifications');
     Route::post('/config/save', 'ConfigurationController@save');
+
+    /* AI agent configuration */
+    Route::get('/config/ai', 'ParameterController@legacy')->defaults('tab', 'ai');
+    Route::post('/config/ai/save', 'AiConfigController@save');
+    Route::post('/config/ai/test', 'AiConfigController@test')->middleware('throttle:10,1');
+    Route::post('/config/ai/purge', 'AiConfigController@purge')->middleware('throttle:10,1');
+
+    /* AI analysis */
+    Route::post('/ai/{type}/{id}', 'AiController@analyze')
+        ->whereIn('type', AiSubjects::types())->whereNumber('id')->middleware('throttle:10,1');
+    Route::post('/ai/{type}/{id}/preview', 'AiController@preview')
+        ->whereIn('type', AiSubjects::types())->whereNumber('id')->middleware('throttle:10,1');
 
     /* Group view (admin toggle: own data vs all users' data) */
     Route::get('/group/toggle', 'GroupViewController@toggle');
@@ -169,7 +184,7 @@ Route::namespace('App\\Http\\Controllers')->middleware('auth')->group(function (
     Route::get('/risk/export',          [RiskController::class, 'export'])->name('risk.export');
 
     // --- Configuration du scoring (Admin uniquement) ---
-    Route::get('/risk/scoring',                     [RiskScoringConfigController::class, 'index'])->name('risk.scoring.index');
+    Route::get('/risk/scoring',                     'ParameterController@legacy')->defaults('tab', 'scoring')->name('risk.scoring.index');
     Route::get('/risk/scoring/create',              [RiskScoringConfigController::class, 'create'])->name('risk.scoring.create');
     Route::post('/risk/scoring/store',              [RiskScoringConfigController::class, 'store'])->name('risk.scoring.store');
     Route::get('/risk/scoring/{id}/edit',           [RiskScoringConfigController::class, 'edit'])->name('risk.scoring.edit');

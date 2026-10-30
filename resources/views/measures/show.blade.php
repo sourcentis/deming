@@ -6,6 +6,7 @@
 <div class="card">
     <div class="card-header">@include('partials.help', ['page' => 'measures.show'])<i class="bi bi-clipboard-check"></i> {{ trans('cruds.measure.title_singular') }}</div>
     <div class="card-body">
+    @include('partials.ai-button', ['type' => 'measure', 'object' => $measure])
 
 	<div class="container-fluid px-0">
 		<div class="row">
@@ -154,6 +155,12 @@
 			</div>
 			<div class="col-md-4 col-lg-2">
 				{{ fmod($measure->note, 1) == 0 ? intval($measure->note) : $measure->note }}
+				@if (($measure->controls->count()===1) && (Auth::User()->isAdmin() || Auth::User()->isUser()))
+					&nbsp;
+					<a href="/radar/bob?{{ http_build_query(array_filter(['clause' => $measure->controls->first()->clause, 'scope' => $measure->scope], fn ($v) => $v !== null && $v !== '')) }}">
+						<i class="bi bi-graph-up"></i>
+					</a>
+				@endif
 			</div>
 		</div>
 
