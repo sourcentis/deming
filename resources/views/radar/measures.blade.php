@@ -37,12 +37,27 @@
     </div>
 </div>
 
+    @php
+    // One chart per scope, in alphabetical order; controls without scope come last
+    $groups = [];
+    foreach ($controls as $control) {
+        $groups[$control->id] = $control->measures
+            ->groupBy(fn ($measure) => (string) $measure->scope)
+            ->sortKeysUsing(fn ($a, $b) => ($a === '') <=> ($b === '') ?: strnatcasecmp($a, $b))
+            ->values();
+    }
+    @endphp
+
     @foreach($controls as $control)
     <div class="card mt-2">
     <div class="card-header"><i class="bi bi-graph-up"></i> {{ $control->name }}</div>
     <div class="card-body">
+        @foreach($groups[$control->id] as $index => $measures)
+        @if ($groups[$control->id]->count() > 1)
+        <h6 class="fw-bold {{ $loop->first ? '' : 'mt-4' }}">{{ $measures->first()->scope ?? '—' }}</h6>
+        @endif
         <div class="p-7" style="height: 300px;">
-            <canvas id="scoreChart-{{ $control->id }}"></canvas>
+            <canvas id="scoreChart-{{ $control->id }}-{{ $index }}"></canvas>
         </div>
 
         <div>
@@ -51,13 +66,13 @@
                     <tbody>
                         <tr>
                             <td class="fw-bold">{{ trans("cruds.measure.fields.realisation_date") }}</td>
-                            @foreach($control->measures as $measure)
+                            @foreach($measures as $measure)
                             <td><a href="/bob/show/{{ $measure->id }}">{{ $measure->realisation_date }}</a></td>
                             @endforeach
                         </tr>
                         <tr>
                             <td class="fw-bold">{{ trans("cruds.measure.fields.score") }}</td>
-                            @foreach($control->measures as $measure)
+                            @foreach($measures as $measure)
                             <td class="text-center"
                                 {!! $measure->score == 1 ? 'style="background-color: #ce352c;"' : '' !!}
                                 {!! $measure->score == 2 ? 'style="background-color: #fa6800;"' : '' !!}
@@ -70,6 +85,7 @@
                 </table>
             </div>
         </div>
+        @endforeach
     </div>
 </div>
 
@@ -97,18 +113,19 @@ window.addEventListener('DOMContentLoaded', function() {
 
 
 @foreach($controls as $control)
+@foreach($groups[$control->id] as $index => $measures)
+{
+    const labels = @json($measures->pluck('realisation_date'));
+    const data = @json($measures->pluck('note'));
 
-    const labels{{$control->id}} = @json($control->measures->pluck('realisation_date'));
-    const data{{$control->id}} = @json($control->measures->pluck('note'));
+    const ctx = document.getElementById('scoreChart-{{$control->id}}-{{$index}}').getContext('2d');
 
-    const ctx{{$control->id}} = document.getElementById('scoreChart-{{$control->id}}').getContext('2d');
-
-    new Chart(ctx{{$control->id}}, {
+    new Chart(ctx, {
         type: 'line',
         data: {
-            labels: labels{{$control->id}},
+            labels: labels,
             datasets: [{
-                data: data{{$control->id}},
+                data: data,
                 borderColor: 'rgba(0,123,255,1)',
                 backgroundColor: 'rgba(0,123,255,0.1)',
                 fill: true,
@@ -155,6 +172,8 @@ window.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
+}
+@endforeach
 @endforeach
 });
 </script>
