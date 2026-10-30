@@ -1213,6 +1213,10 @@ class MeasureController extends Controller
 
         abort_if(! $measure->canMake(), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
+        $this->validate($request, [
+            'note' => 'nullable|numeric',
+        ]);
+
         if ((request('score') === null) || (request('score') === 0)) {
             return back()
                 ->withErrors(['score' => 'score not set'])
@@ -1320,6 +1324,7 @@ class MeasureController extends Controller
                 'objective'   => 'required',
                 'plan_date'   => 'required',
                 'periodicity' => 'required|integer|in:-1,0,1,3,6,12',
+                'note'        => 'nullable|numeric',
             ]
         );
 
@@ -1390,6 +1395,10 @@ class MeasureController extends Controller
                 ->withInput();
         }
 
+        $this->validate($request, [
+            'note' => 'nullable|numeric',
+        ]);
+
         $measure->observations = request('observations');
         $measure->note         = request('note');
         $measure->score        = request('score') === 0 ? null : request('score');
@@ -1428,6 +1437,10 @@ class MeasureController extends Controller
                 ->withInput();
         }
 
+        $this->validate($request, [
+            'note' => 'nullable|numeric',
+        ]);
+
         $measure->observations = request('observations');
         $measure->note         = request('note');
         $measure->score        = request('score');
@@ -1454,6 +1467,10 @@ class MeasureController extends Controller
         );
 
         $id = (int) $request->get('id');
+
+        $this->validate($request, [
+            'note' => 'nullable|numeric',
+        ]);
 
         if ((request('score') === null) || (request('score') === 0)) {
             return back()
