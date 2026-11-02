@@ -11,9 +11,10 @@ Menschen geprüft werden.
 Die KI ist **standardmäßig deaktiviert**. Solange ein Administrator sie nicht aktiviert, werden keine Daten gesendet
 und das Analyse-Symbol wird nicht angezeigt.
 
-Der Agent ist ein mit der OpenAI-API kompatibler Dienst (`/v1/chat/completions`). Standardmäßig ist kein Agent
-konfiguriert: Der Administrator wählt den Anbieter, zum Beispiel das Sourcentis-KI-Gateway, einen anderen kompatiblen
-Anbieter oder ein lokales Modell (Ollama, vLLM, LM Studio…).
+Der KI-Agent wird vom **Sourcentis-KI-Gateway** bereitgestellt, einem privaten Dienst, der die Prompts, das
+Antwortformat und die Modelle verwaltet. Deming sendet ihm nur die Daten des zu analysierenden Objekts. Die Funktion
+ist daher Sourcentis-Kunden vorbehalten: Standardmäßig ist kein Agent konfiguriert, und Deming kann weder einen anderen
+Anbieter noch ein lokales Modell direkt ansprechen.
 
 ## Aktivieren und konfigurieren {#config}
 
@@ -32,40 +33,28 @@ Die Felder sind:
   [Alle Analysen löschen](#purge)). Solange die KI deaktiviert ist, sind die übrigen Felder ausgegraut; sie behalten
   ihre Werte und sind wieder bearbeitbar, sobald die KI aktiviert wird;
 
-* **URL des KI-Agenten**: die Basisadresse der OpenAI-kompatiblen API, ohne Standardwert, zum Beispiel
-  `https://…/v1`. `https` ist Pflicht, außer für ein lokales Modell unter
-  `http://localhost` oder `http://127.0.0.1`;
+* **URL des KI-Agenten**: die von Sourcentis mitgeteilte Adresse, `https://ai.sourcentis.lu/v1`. Es gibt keinen
+  Standardwert. `https` ist Pflicht, außer `http://localhost` oder `http://127.0.0.1` (Entwicklungs-Gateway);
 
-* **Modell**: der vom Anbieter erwartete Modellname. Die Liste bietet die Modelle des Sourcentis-KI-Gateways an,
-  `sourcentis-standard` und `sourcentis-advanced`; für einen anderen Anbieter oder ein lokales Modell geben
-  Sie seinen Namen in die Liste ein und bestätigen mit der Eingabetaste;
-
-* **API-Schlüssel**: der Zugangsschlüssel des Anbieters. Er wird nie wieder angezeigt: Die Seite zeigt nur
-  „Schlüssel gespeichert“ oder „Kein Schlüssel“. Ein leeres Feld behält den aktuellen Schlüssel; das Kästchen
+* **API-Schlüssel**: der von Sourcentis mitgeteilte Zugangsschlüssel. Er wird nie wieder angezeigt: Die Seite zeigt
+  nur „Schlüssel gespeichert“ oder „Kein Schlüssel“. Ein leeres Feld behält den aktuellen Schlüssel; das Kästchen
   „Schlüssel löschen“ entfernt ihn. Der Schlüssel wird in der Datenbank mit dem Anwendungsschlüssel (`APP_KEY`)
-  verschlüsselt: Ändert sich der `APP_KEY`, muss der Schlüssel erneut eingegeben werden;
+  verschlüsselt: Ändert sich der `APP_KEY`, muss der Schlüssel erneut eingegeben werden.
 
-* **Prompts**: die Anweisungen an den Agenten, eine pro Objekttyp (Sicherheitsmaßnahme, Kontrolle, Aktionsplan und
-  Risiko). `{{langue}}` wird durch die Sprache des Benutzers ersetzt. Die Schaltfläche „Standard-Prompt
-  wiederherstellen“ stellt den mit Deming gelieferten Prompt wieder her;
+Weder Modell noch Prompt sind einzustellen: Sie werden vom Anbieter des Agenten verwaltet und versioniert. Ist die KI
+aktiviert, zeigt die Seite schreibgeschützt die **verfügbaren Aufgaben** des Gateways, eine pro Objekttyp
+(Sicherheitsmaßnahme, Kontrolle, Aktionsplan und Risiko), mit ihrer Version. Ist das Gateway nicht erreichbar oder
+lehnt es den Schlüssel ab, erscheint statt der Liste ein Hinweis.
 
-* **Antwortformat: fest**: das JSON-Schema, das der Agent einhalten muss, gemeinsam für die vier Typen. Es wird
-  automatisch an jeden Prompt angehängt und dient zur Prüfung der Antwort. Es kann nicht geändert werden.
-
-Die Schaltfläche „Verbindung testen“ sendet mit der gespeicherten Konfiguration eine minimale Anfrage an den Agenten
-und zeigt den HTTP-Status, die Latenz und das Modell an. Der Schlüssel wird nie angezeigt.
+Die Schaltfläche „Verbindung testen“ fragt mit der gespeicherten Konfiguration den Aufgabenkatalog des Gateways ab.
+Diese Anfrage ist kostenlos: Sie verbraucht keine Tokens. Sie zeigt den HTTP-Status, die Latenz und die Anzahl der
+gefundenen Deming-Aufgaben an: „4/4 Deming-Aufgaben“ bedeutet, dass alles bereit ist. Der Schlüssel wird nie
+angezeigt.
 
 ### Einen Schlüssel erhalten
 
-Beim Sourcentis-KI-Gateway werden URL, Schlüssel und Modell von Sourcentis mitgeteilt. Der Schlüssel wird nur einmal
-übermittelt: Fügen Sie ihn in das Feld „API-Schlüssel“ von Deming ein. Bei einem anderen Anbieter erstellen Sie einen
-Schlüssel in dessen Kundencenter.
-
-### Ein lokales Modell verwenden
-
-Mit einem lokalen Server wie Ollama, vLLM oder LM Studio geben Sie eine URL wie `http://localhost:11434/v1` und den
-Namen des installierten Modells an. Der Server muss die OpenAI-kompatible API `/chat/completions` bereitstellen, und
-das Modell muss JSON erzeugen können. Mit einem lokalen Modell verlassen keine Daten Ihre Infrastruktur.
+URL und Schlüssel werden von Sourcentis mitgeteilt. Der Schlüssel wird nur einmal übermittelt: Fügen Sie ihn in das
+Feld „API-Schlüssel“ von Deming ein.
 
 ### Alle Analysen löschen {#purge}
 
@@ -114,11 +103,27 @@ Die Bedeutung des Status hängt vom Objekttyp ab:
 
 Die Schaltfläche „Analyse erneut ausführen“ erzwingt eine neue Analyse, auch wenn sich nichts geändert hat. Die
 Fußzeile des Fensters erinnert daran, dass die Analyse von einer KI erstellt wurde und von einem Menschen geprüft
-werden muss, und zeigt das Modell sowie den Host des Agenten, an den die Daten gesendet wurden. Der Link „Gesendete
+werden muss, und zeigt das Modell, das sie erstellt hat, sowie den Host des Agenten, an den die Daten gesendet wurden. Der Link „Gesendete
 Daten“ zeigt den [übermittelten Kontext](#preview).
 
 Nur die letzte Analyse jedes Objekts wird aufbewahrt. Eine neue Analyse wird automatisch ausgeführt, wenn sich das
-Objekt, seine verknüpften Objekte, der Prompt, das Modell oder die Sprache des Benutzers ändern.
+Objekt, seine verknüpften Objekte oder die Sprache des Benutzers ändern, oder wenn der Anbieter eine neue Version der
+Aufgabe veröffentlicht (Prompt, Format oder Modell). Ist das Gateway vorübergehend nicht erreichbar, bleibt die letzte
+Analyse sichtbar.
+
+### Fehlermeldungen {#errors}
+
+Bei einem Fehler zeigt das Fenster eine allgemeine Meldung, nie die Antwort des Gateways, und die vorherige Analyse
+bleibt erhalten. Die wichtigsten Meldungen sind:
+
+| Meldung | Ursache | Was tun |
+|---|---|---|
+| „Zugangsschlüssel des KI-Agenten ungültig, gesperrt oder gekündigt“ | Das Gateway lehnt den Schlüssel ab (HTTP 401) oder erlaubt ihn nicht für diese Analyse (HTTP 403) | Schlüssel in der Konfiguration prüfen, dann Sourcentis kontaktieren |
+| „KI-Monatskontingent erreicht — wenden Sie sich an Ihren Anbieter“ | Das Monatsbudget des Schlüssels ist erschöpft (HTTP 402), bis zum 1. des Folgemonats | Sourcentis kontaktieren |
+| „Zu viele Anfragen, bitte in wenigen Augenblicken erneut versuchen“ | Ratenbegrenzung des Schlüssels oder des Anbieters (HTTP 429) | Etwas später erneut versuchen |
+| „Objekt zu groß für eine Analyse“ | Der Kontext überschreitet die vom Gateway zugelassene Größe (HTTP 413) | Die langen Texte des Objekts kürzen |
+| „KI-Agent nicht kompatibel mit dieser Deming-Version“ | Anfrage abgelehnt oder Aufgabe unbekannt (HTTP 400 oder 404) | Deming aktualisieren oder Sourcentis kontaktieren |
+| „Ungültige Antwort des KI-Agenten“ / „Der KI-Agent hat nicht rechtzeitig geantwortet“ | Ungültige Antwort des Modells (HTTP 502) oder Zeitüberschreitung (HTTP 504) | Analyse erneut ausführen |
 
 ## Wer eine Analyse starten kann {#access}
 
@@ -153,13 +158,16 @@ den Datenschutzbeauftragten.
 
 ### An den Agenten gesendete Daten
 
-Jede Analyse sendet dem Agenten:
+Jede Analyse sendet dem Gateway, an die Aufgabe des Objekttyps:
 
-* den **Prompt** des Objekttyps und das **Antwortschema**;
+* den nachstehend beschriebenen **Kontext** des analysierten Objekts, nach der [Maskierung](#redaction);
 
-* das **heutige Datum**;
+* die **Sprache** des Benutzers (`fr`, `en` oder `de`);
 
-* den nachstehend beschriebenen **Kontext** des analysierten Objekts, nach der [Maskierung](#redaction).
+* das **heutige Datum**.
+
+Sonst wird nichts übermittelt: weder Prompt noch Antwortformat noch Modellname. Prompt und Format fügt das Gateway
+hinzu.
 
 Lange Textfelder des analysierten Objekts sind auf 4.000 Zeichen begrenzt, jene der verknüpften Objekte
 (Beobachtungen, Begründungen…) auf 300 Zeichen.
@@ -231,7 +239,7 @@ Vor dem Senden werden alle Texte des Kontexts gefiltert. Ersetzt werden:
 ### Vorschau der gesendeten Daten {#preview}
 
 Der Link „Gesendete Daten“ unten im Analysefenster zeigt den Kontext genau so, wie er an den Agenten gesendet wird,
-nach Minimierung und Maskierung (ohne Prompt). Diese Vorschau ruft den Agenten nicht auf: Sie kann vor oder nach einer
+nach Minimierung und Maskierung. Diese Vorschau ruft den Agenten nicht auf: Sie kann vor oder nach einer
 Analyse genutzt werden, um zu prüfen, was tatsächlich gesendet wird. Sie unterliegt denselben Rechten wie die Analyse.
 
 <!-- TODO capture : images/ai-preview.de.png -->
@@ -240,13 +248,18 @@ Analyse genutzt werden, um zu prüfen, was tatsächlich gesendet wird. Sie unter
 
 Die Daten werden ausschließlich an den in der URL des Agenten konfigurierten Host gesendet, der unten im Fenster
 angezeigt wird. Deming folgt keiner Umleitung zu einem anderen Host, und `https` mit Zertifikatsprüfung ist Pflicht,
-außer für ein lokales Modell.
+außer für ein Entwicklungs-Gateway auf `localhost`.
 
-Bei einem externen Anbieter werden die Daten von diesem Anbieter verarbeitet. Zum Ort der Verarbeitung, zur
-Speicherung und möglichen Weiterverwendung der Anfragen siehe dessen Vertragsbedingungen, insbesondere den
-Auftragsverarbeitungsvertrag (AVV).
+Der Weg der Daten ist folgender:
 
-Mit einem lokalen Modell **verlassen keine Daten Ihre Infrastruktur**.
+1. **Deming** minimiert und maskiert den Kontext vor jedem Versand;
+2. das **Sourcentis-KI-Gateway** (Auftragsverarbeiter) fügt den Prompt und das Antwortformat hinzu und leitet die
+   Anfrage an das Modell weiter;
+3. **OVHcloud** (Unterauftragsverarbeiter) führt das Modell aus.
+
+Laut seiner Dokumentation speichert und protokolliert das Gateway weder den Kontext noch den Prompt noch die Antwort:
+Für die Abrechnung werden nur tägliche Summen aufbewahrt (Kunde, Modell, Anzahl der Tokens, Kosten und Datum). Die
+Speicherung der Daten bei OVHcloud richtet sich nach dessen Bedingungen und Auftragsverarbeitungsvertrag (AVV).
 
 ### Was Deming speichert
 
@@ -256,8 +269,8 @@ Mit einem lokalen Modell **verlassen keine Daten Ihre Infrastruktur**.
 * Analysen erscheinen weder in der [REST-API](api.de.md) noch in Exporten oder Berichten und werden nicht in den
   [Logs](config.de.md#logs) protokolliert: Eine Analyse ist keine Änderung des Objekts.
 
-* Die Anwendungsprotokolle enthalten nur Metadaten: Typ und Kennung des Objekts, Modell, Dauer, Anzahl der Tokens und
-  Status. Weder Prompt noch Kontext, Antwort oder Schlüssel werden protokolliert.
+* Die Anwendungsprotokolle enthalten nur Metadaten: Typ und Kennung des Objekts, Modell, Version der Aufgabe, Dauer,
+  Anzahl der Tokens und Status. Weder Kontext noch Antwort oder Schlüssel werden protokolliert.
 
 * Der API-Schlüssel wird mit dem `APP_KEY` der Anwendung verschlüsselt; eine Änderung des `APP_KEY` erfordert die
   erneute Eingabe des Schlüssels.
@@ -283,10 +296,10 @@ Vom Verantwortlichen zu prüfende Punkte. Diese Empfehlungen stellen keine Recht
 - [ ] Den Datenschutzbeauftragten konsultieren.
 - [ ] Das Verzeichnis von Verarbeitungstätigkeiten (DSGVO, Artikel 30) aktualisieren, falls personenbezogene Daten
       übermittelt werden können.
-- [ ] Einen Auftragsverarbeitungsvertrag (DSGVO, Artikel 28) mit dem Anbieter des Agenten abschließen oder ein lokales
-      Modell verwenden.
+- [ ] Einen Auftragsverarbeitungsvertrag (AVV, DSGVO Artikel 28) mit Sourcentis abschließen, der OVHcloud als
+      Unterauftragsverarbeiter nennt.
 - [ ] Den Ort der Verarbeitung prüfen und sicherstellen, dass keine Übermittlung außerhalb der Europäischen Union
-      erfolgt.
+      erfolgt, auch bei OVHcloud.
 - [ ] Den Bedarf einer Datenschutz-Folgenabschätzung (DSFA) prüfen, insbesondere in Branchen mit sensiblen Daten wie
       dem Gesundheitswesen.
 - [ ] Die Deming-Benutzer über die Funktion und die Regel zu Freitexten informieren.
@@ -302,5 +315,7 @@ Vom Verantwortlichen zu prüfende Punkte. Diese Empfehlungen stellen keine Recht
 * Die Ergebnisse sind nicht streng reproduzierbar: Zwei Analysen derselben Daten können sich unterscheiden.
 
 * Kosten und Antwortzeit hängen vom Anbieter und vom Modell ab.
+
+* Die Funktion setzt ein Abonnement des Sourcentis-KI-Gateways voraus.
 
 * Die Qualität der Analyse hängt von der Qualität der in Deming erfassten Daten ab.

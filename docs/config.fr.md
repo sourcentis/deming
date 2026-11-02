@@ -170,8 +170,9 @@ Exemple :
 ## IA {#ai}
 
 L'onglet « IA » de la page [Paramètres](#parameters), réservée aux administrateurs, permet d'activer et de configurer l'[agent IA](ai.fr.md) qui analyse les
-mesures de sécurité, les contrôles, les plans d'action et les risques : activation, URL de l'agent, modèle, clé API,
-prompts, test de connexion et suppression de toutes les analyses. L'IA est désactivée par défaut.
+mesures de sécurité, les contrôles, les plans d'action et les risques : activation, URL de l'agent, clé API, liste des
+tâches disponibles, test de connexion et suppression de toutes les analyses. Les prompts et les modèles sont gérés par
+le fournisseur de l'agent, la passerelle IA Sourcentis. L'IA est désactivée par défaut.
 
 Voir [Activer et configurer](ai.fr.md#config) et, avant toute activation, [Protection des données](ai.fr.md#privacy).
 

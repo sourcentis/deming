@@ -170,8 +170,9 @@ Example:
 ## AI {#ai}
 
 The "AI" tab of the [Settings](#parameters) page, restricted to administrators, is used to enable and configure the [AI agent](ai.md) that analyses
-controls, measurements, action plans and risks: activation, agent URL, model, API key, prompts, connection test and
-deletion of all analyses. AI is disabled by default.
+controls, measurements, action plans and risks: activation, agent URL, API key, list of the available tasks,
+connection test and deletion of all analyses. The prompts and the models are managed by the provider of the agent,
+the Sourcentis AI gateway. AI is disabled by default.
 
 See [Enable and configure](ai.md#config) and, before enabling it, [Data protection](ai.md#privacy).
 

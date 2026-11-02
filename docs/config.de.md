@@ -172,8 +172,9 @@ Beispiel:
 ## KI {#ai}
 
 Die Registerkarte „KI“ der Seite [Einstellungen](#parameters), die Administratoren vorbehalten ist, dient zum Aktivieren und Konfigurieren des [KI-Agenten](ai.de.md),
-der Sicherheitsmaßnahmen, Kontrollen, Aktionspläne und Risiken analysiert: Aktivierung, URL des Agenten, Modell,
-API-Schlüssel, Prompts, Verbindungstest und Löschen aller Analysen. Die KI ist standardmäßig deaktiviert.
+der Sicherheitsmaßnahmen, Kontrollen, Aktionspläne und Risiken analysiert: Aktivierung, URL des Agenten,
+API-Schlüssel, Liste der verfügbaren Aufgaben, Verbindungstest und Löschen aller Analysen. Prompts und Modelle werden
+vom Anbieter des Agenten, dem Sourcentis-KI-Gateway, verwaltet. Die KI ist standardmäßig deaktiviert.
 
 Siehe [Aktivieren und konfigurieren](ai.de.md#config) und vor jeder Aktivierung [Datenschutz](ai.de.md#privacy).
 
