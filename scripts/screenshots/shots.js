@@ -96,6 +96,11 @@ async function capture(page, screen, lang, values) {
             if (window.jQuery && jQuery.fn.dataTable) jQuery.fn.dataTable.tables({ api: true }).page.len(10).draw();
         } catch (e) {}
     });
+    // Steps before the capture: click on an element, then wait for another one (e.g. the result of an AI analysis)
+    for (const step of screen.steps || []) {
+        if (step.click) await page.locator(step.click).first().click();
+        if (step.waitFor) await page.locator(step.waitFor).first().waitFor({ timeout: 180000 });
+    }
     await page.waitForTimeout(screen.wait || 1200);
 
     const el = page.locator(screen.selector || 'main#content-home').first();

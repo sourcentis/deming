@@ -74,7 +74,7 @@ Objekte seit der letzten Analyse nicht geändert, wird diese sofort und ohne Auf
 Hinweis „Analyse vom … — seitdem unverändert“. Andernfalls wird eine neue Analyse gestartet; sie kann bis zu einer
 Minute dauern.
 
-<!-- TODO capture : images/ai-panel.de.png -->
+[![Screenshot](images/ai-panel.de.png)](images/ai-panel.de.png)
 
 Das Fenster enthält:
 
@@ -242,7 +242,7 @@ Der Link „Gesendete Daten“ unten im Analysefenster zeigt den Kontext genau s
 nach Minimierung und Maskierung. Diese Vorschau ruft den Agenten nicht auf: Sie kann vor oder nach einer
 Analyse genutzt werden, um zu prüfen, was tatsächlich gesendet wird. Sie unterliegt denselben Rechten wie die Analyse.
 
-<!-- TODO capture : images/ai-preview.de.png -->
+[![Screenshot](images/ai-preview.de.png)](images/ai-preview.de.png)
 
 ### Wohin die Daten gehen
 

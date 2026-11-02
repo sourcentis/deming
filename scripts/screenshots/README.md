@@ -62,6 +62,11 @@ ID_control=18 ID_measure_done=1231 npm run docs:screenshots
     * `until`: stops the capture at the top of this element
     * `maxHeight`: maximum height in pixels
     * `wait`: delay in ms before the capture (default: 1200)
+    * `steps`: actions before the capture, each one with a `click` (element to click) and/or a `waitFor` (element to
+      wait for, up to 3 minutes), e.g. to open the AI panel and wait for the analysis
+
+The AI analysis is written in the language of the administrator account, not in the language of the capture: change
+the language of the account before capturing `ai-panel` in each language.
 
 The language is selected with the `change_language` parameter, so the user's language is not modified.
 The lookups set the filters of the measurement list in the session of the account used.

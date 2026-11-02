@@ -73,7 +73,7 @@ Un clic sur l'icône ouvre un panneau à droite de l'écran. Si l'objet et ses o
 dernière analyse, celle-ci est affichée immédiatement, sans appel à l'agent, avec la mention « Analyse du … —
 inchangée depuis ». Sinon, une nouvelle analyse est lancée ; elle peut prendre jusqu'à une minute.
 
-<!-- TODO capture : images/ai-panel.fr.png -->
+[![Screenshot](images/ai-panel.fr.png)](images/ai-panel.fr.png)
 
 Le panneau contient :
 
@@ -238,7 +238,7 @@ Le lien « Données envoyées », en bas du panneau d'analyse, affiche le contex
 l'agent, après minimisation et masquage. Cet aperçu n'appelle pas l'agent : il peut être consulté
 avant ou après une analyse pour vérifier ce qui part réellement. Il est soumis aux mêmes droits que l'analyse.
 
-<!-- TODO capture : images/ai-preview.fr.png -->
+[![Screenshot](images/ai-preview.fr.png)](images/ai-preview.fr.png)
 
 ### Où vont les données
 
