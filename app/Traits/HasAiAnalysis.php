@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
  */
 trait HasAiAnalysis
 {
-    public const AI_COLUMNS = ['ai_analysis', 'ai_analysis_at', 'ai_analysis_model', 'ai_analysis_hash'];
+    public const AI_COLUMNS = ['ai_analysis', 'ai_analysis_at', 'ai_analysis_model', 'ai_analysis_hash', 'ai_analysis_version'];
 
     public function hasAiAnalysis(): bool
     {

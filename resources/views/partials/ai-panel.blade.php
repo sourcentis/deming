@@ -66,6 +66,7 @@
     .ai-panel-footer { padding: .5rem 1rem; border-top: 1px solid var(--bs-border-color, #dee2e6); font-size: .75rem; color: var(--bs-secondary-color, #6c757d); }
     .ai-badge { display: inline-block; padding: .2rem .5rem; border-radius: .25rem; font-size: .75rem; font-weight: 600; margin: 0 .25rem .25rem 0; }
     .ai-badge-outline { border: 1px solid var(--bs-border-color, #ced4da); color: inherit; font-weight: 400; }
+    .ai-badge-unknown { background-color: #6C757D; color: #fff; }
     .ai-finding { display: flex; gap: .5rem; }
     .ai-finding .bi { flex: none; margin-top: .1rem; }
     .ai-reco { border-left: 3px solid var(--bs-border-color, #dee2e6); padding-left: .6rem; }
@@ -93,7 +94,7 @@
     <div class="ai-panel-body" id="ai-panel-body" aria-busy="false"></div>
     <div class="ai-panel-footer">
         <i class="bi bi-robot" aria-hidden="true"></i> {{ trans('ai.panel.footer') }}
-        · <span id="ai-panel-model">{{ \App\Models\Configuration::get('ai.model') }}</span>
+        · <span id="ai-panel-model"></span>
         · <span>{{ parse_url((string) \App\Models\Configuration::get('ai.base_url'), PHP_URL_HOST) }}</span>
         · <a href="#" id="ai-panel-preview">{{ trans('ai.panel.data_sent') }}</a>
     </div>
@@ -132,16 +133,20 @@
         if (color) { node.style.color = color; }
         return node;
     }
+    // A value unknown to Deming (newer format of the gateway) is shown as is, in grey
     function badge(group, key, label) {
         const node = el('span', 'ai-badge', label);
-        const color = (cfg.palette[group] || {})[key];
-        if (color) {
-            node.style.backgroundColor = color;
+        const palette = cfg.palette[group];
+        if (palette && palette[key]) {
+            node.style.backgroundColor = palette[key];
             node.style.color = cfg.contrast[group][key];
         } else {
-            node.classList.add('ai-badge-outline');
+            node.classList.add(palette ? 'ai-badge-unknown' : 'ai-badge-outline');
         }
         return node;
+    }
+    function label(labels, key) {
+        return (labels && labels[key]) || key;
     }
     function section(label) {
         body.appendChild(el('h3', null, label));
@@ -198,13 +203,18 @@
         lastResult = result;
         body.replaceChildren();
         meta.textContent = result.cached ? L.cached.replace(':date', formatDate(result.analyzed_at)) : L.fresh + ' · ' + formatDate(result.analyzed_at);
-        model.textContent = result.model;
+        model.textContent = result.model || '';
 
+        // Absent optional fields are not displayed (types are checked by AiResponseGuard)
         // 1. Header: assessed status, risk level, confidence
         const header = el('div');
-        header.appendChild(badge('status', data.statut_evalue, cfg.status[current.type][data.statut_evalue]));
-        header.appendChild(badge('risk_level', data.niveau_risque, L.risk_level + L.colon + cfg.risk_level[data.niveau_risque]));
-        header.appendChild(badge('confidence', data.confiance, L.confidence + L.colon + cfg.confidence[data.confiance]));
+        header.appendChild(badge('status', data.statut_evalue, label(cfg.status[current.type], data.statut_evalue)));
+        if (data.niveau_risque) {
+            header.appendChild(badge('risk_level', data.niveau_risque, L.risk_level + L.colon + label(cfg.risk_level, data.niveau_risque)));
+        }
+        if (data.confiance) {
+            header.appendChild(badge('confidence', data.confiance, L.confidence + L.colon + label(cfg.confidence, data.confiance)));
+        }
         body.appendChild(header);
 
         // 2. Summary
@@ -218,17 +228,19 @@
             manque_preuve: ['bi-file-earmark-x', '#D94F45'],
             incoherence: ['bi-question-diamond', '#8059C8'],
         };
-        if (data.constats.length) {
+        if (data.constats && data.constats.length) {
             section(L.findings);
             const list = el('ul');
             data.constats.forEach(function (finding) {
                 const item = el('li', 'ai-finding');
                 const def = findingIcons[finding.type] || ['bi-dot', null];
                 const i = icon(def[0], def[1]);
-                i.title = cfg.finding[finding.type] || finding.type;
-                item.appendChild(i);
                 const text = el('div');
-                text.appendChild(el('strong', null, (cfg.finding[finding.type] || finding.type) + ' — '));
+                if (finding.type) {
+                    i.title = label(cfg.finding, finding.type);
+                    text.appendChild(el('strong', null, label(cfg.finding, finding.type) + ' — '));
+                }
+                item.appendChild(i);
                 text.appendChild(document.createTextNode(finding.description));
                 item.appendChild(text);
                 list.appendChild(item);
@@ -237,13 +249,15 @@
         }
 
         // 4. Recommendations
-        if (data.recommandations.length) {
+        if (data.recommandations && data.recommandations.length) {
             section(L.recommendations);
             const list = el('ol');
             data.recommandations.forEach(function (reco) {
                 const item = el('li', 'ai-reco');
                 const head = el('div');
-                head.appendChild(badge('priority', reco.priorite, cfg.priority[reco.priorite] || reco.priorite));
+                if (reco.priorite) {
+                    head.appendChild(badge('priority', reco.priorite, label(cfg.priority, reco.priorite)));
+                }
                 head.appendChild(el('strong', null, reco.action));
                 item.appendChild(head);
                 if (reco.justification) {
@@ -259,7 +273,7 @@
         }
 
         // 5. Open questions
-        if (data.questions_ouvertes.length) {
+        if (data.questions_ouvertes && data.questions_ouvertes.length) {
             section(L.questions);
             const list = el('ul');
             data.questions_ouvertes.forEach(function (question) {
@@ -272,8 +286,10 @@
         }
 
         // 6. Points of view
-        section(L.viewpoints);
-        ['ceo', 'rssi', 'dpo', 'auditeur'].forEach(function (role) {
+        const viewpoints = data.points_de_vue || {};
+        const roles = ['ceo', 'rssi', 'dpo', 'auditeur'].filter(function (role) { return viewpoints[role]; });
+        if (roles.length) { section(L.viewpoints); }
+        roles.forEach(function (role) {
             const block = el('div', 'ai-viewpoint');
             const avatar = el('span', 'ai-avatar');
             avatar.style.backgroundColor = cfg.palette.roles[role];
@@ -282,7 +298,7 @@
             block.appendChild(avatar);
             const text = el('div');
             text.appendChild(el('strong', 'd-block', cfg.roles[role]));
-            text.appendChild(el('p', null, data.points_de_vue[role]));
+            text.appendChild(el('p', null, viewpoints[role]));
             block.appendChild(text);
             body.appendChild(block);
         });

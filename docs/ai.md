@@ -10,9 +10,10 @@ The agent is a **decision aid**: it never changes Deming's data. Its results mus
 AI is **disabled by default**. Until an administrator enables it, no data is sent and the analysis icon is not
 displayed.
 
-The agent is a service compatible with the OpenAI API (`/v1/chat/completions`). No agent is configured by default:
-the administrator chooses the provider, for example the Sourcentis AI gateway, another compatible provider or a
-local model (Ollama, vLLM, LM Studio…).
+The AI agent is provided by the **Sourcentis AI gateway**, a private service that holds the prompts, the response
+format and the models. Deming only sends it the data of the object to analyse. The feature is therefore reserved for
+Sourcentis customers: no agent is configured by default, and Deming cannot call another provider or a local model
+directly.
 
 ## Enable and configure {#config}
 
@@ -30,38 +31,26 @@ The fields are:
   already saved are kept (see [Delete all analyses](#purge)). While AI is disabled, the other fields are greyed out;
   they keep their values and can be edited again as soon as AI is enabled;
 
-* **AI agent URL**: the base address of the OpenAI-compatible API, without default value, for example
-  `https://…/v1`. `https` is required, except for a local model on
-  `http://localhost` or `http://127.0.0.1`;
+* **AI agent URL**: the address provided by Sourcentis, `https://ai.sourcentis.lu/v1`. There is no default value.
+  `https` is required, except `http://localhost` or `http://127.0.0.1` (development gateway);
 
-* **Model**: the model name expected by the provider. The list offers the models of the Sourcentis AI gateway,
-  `sourcentis-standard` and `sourcentis-advanced`; for another provider or a local model, type its name in the
-  list and press Enter;
+* **API key**: the access key provided by Sourcentis. It is never displayed again: the screen only shows "Key saved"
+  or "No key". Leaving the field empty keeps the current key; the "Delete the key" box removes it. The key is
+  encrypted in the database with the application key (`APP_KEY`): if the `APP_KEY` changes, the key must be entered
+  again.
 
-* **API key**: the provider's access key. It is never displayed again: the screen only shows "Key saved" or "No
-  key". Leaving the field empty keeps the current key; the "Delete the key" box removes it. The key is encrypted in
-  the database with the application key (`APP_KEY`): if the `APP_KEY` changes, the key must be entered again;
+There is no model nor prompt to set: they are managed and versioned by the agent's provider. When AI is enabled, the
+screen shows, read-only, the **available tasks** of the gateway, one per object type (control, measurement, action
+plan and risk), with their version. If the gateway cannot be reached or refuses the key, a message is shown instead
+of the list.
 
-* **Prompts**: the instructions given to the agent, one per object type (control, measurement, action plan and
-  risk). `{{langue}}` is replaced by the user's language. The "Restore the default prompt" button restores the prompt
-  shipped with Deming;
-
-* **Response format: fixed**: the JSON schema the agent must follow, common to the four types. It is appended
-  automatically to every prompt and used to validate the answer. It cannot be changed.
-
-The "Test the connection" button sends a minimal request to the agent, with the saved configuration, and displays
-the HTTP status, the latency and the model. The key is never displayed.
+The "Test the connection" button queries the task catalog of the gateway, with the saved configuration. This request
+is free: it uses no token. It displays the HTTP status, the latency and the number of Deming tasks found: "4/4 Deming
+tasks" means that everything is in place. The key is never displayed.
 
 ### Get a key
 
-With the Sourcentis AI gateway, the URL, the key and the model are provided by Sourcentis. The key is sent only once:
-paste it in Deming's "API key" field. For another provider, create a key in its control panel.
-
-### Use a local model
-
-With a local server such as Ollama, vLLM or LM Studio, enter a URL such as `http://localhost:11434/v1` and the name
-of the installed model. The server must expose the OpenAI-compatible `/chat/completions` API, and the model must be
-able to produce JSON. With a local model, no data leaves your infrastructure.
+The URL and the key are provided by Sourcentis. The key is sent only once: paste it in Deming's "API key" field.
 
 ### Delete all analyses {#purge}
 
@@ -106,11 +95,26 @@ The meaning of the status depends on the object type:
 | `non_evaluable` | Not assessable | Not assessable | Not assessable |
 
 The "Run the analysis again" button forces a new analysis, even if nothing has changed. The footer of the panel
-reminds that the analysis is AI-generated and must be validated by a human, and shows the model and the agent host
-the data was sent to. The "Data sent" link displays the [context sent](#preview).
+reminds that the analysis is AI-generated and must be validated by a human, and shows the model that produced it and
+the agent host the data was sent to. The "Data sent" link displays the [context sent](#preview).
 
 Only the last analysis of each object is kept. A new analysis is run automatically when the object, its related
-objects, the prompt, the model or the user's language change.
+objects or the user's language change, or when the provider publishes a new version of the task (prompt, format or
+model). If the gateway is temporarily unreachable, the last analysis is still displayed.
+
+### Error messages {#errors}
+
+On failure, the panel shows a generic message, never the gateway's answer, and the previous analysis is kept. The
+main messages are:
+
+| Message | Cause | What to do |
+|---|---|---|
+| "AI agent access key invalid, suspended or terminated" | The gateway refuses the key (HTTP 401) or does not allow it for this analysis (HTTP 403) | Check the key in the configuration, then contact Sourcentis |
+| "Monthly AI quota reached — contact your provider" | The monthly budget of the key is exhausted (HTTP 402), until the 1st of the next month | Contact Sourcentis |
+| "Too many requests, try again in a few moments" | Rate limit of the key or of the provider (HTTP 429) | Try again a little later |
+| "Object too large to be analysed" | The context exceeds the size accepted by the gateway (HTTP 413) | Shorten the long texts of the object |
+| "AI agent incompatible with this version of Deming" | Request refused or unknown task (HTTP 400 or 404) | Update Deming, or contact Sourcentis |
+| "Invalid answer from the AI agent" / "The AI agent did not answer in time" | Invalid model answer (HTTP 502) or timeout (HTTP 504) | Run the analysis again |
 
 ## Who can run an analysis {#access}
 
@@ -144,13 +148,16 @@ and the DPO.
 
 ### Data sent to the agent
 
-Every analysis sends the agent:
+Every analysis sends the gateway, on the task of the object type:
 
-* the **prompt** of the object type and the **response schema**;
+* the **context** of the analysed object, described below, after [masking](#redaction);
 
-* **today's date**;
+* the user's **language** (`fr`, `en` or `de`);
 
-* the **context** of the analysed object, described below, after [masking](#redaction).
+* **today's date**.
+
+Nothing else is sent: no prompt, no response format, no model name. The prompt and the format are added by the
+gateway.
 
 Long text fields of the analysed object are limited to 4,000 characters; those of related objects (observations,
 justifications…) to 300 characters.
@@ -217,7 +224,7 @@ Before sending, every text of the context is filtered. The following are replace
 ### Preview of the data sent {#preview}
 
 The "Data sent" link, at the bottom of the analysis panel, displays the context exactly as it is sent to the agent,
-after minimization and masking (without the prompt). This preview does not call the agent: it can be used before or
+after minimization and masking. This preview does not call the agent: it can be used before or
 after an analysis to check what is actually sent. It is subject to the same rights as the analysis.
 
 <!-- TODO capture : images/ai-preview.png -->
@@ -225,14 +232,19 @@ after an analysis to check what is actually sent. It is subject to the same righ
 ### Where the data goes
 
 The data is sent only to the host configured in the agent URL, shown at the bottom of the panel. Deming does not
-follow any redirection to another host, and `https` is required, with certificate verification, except for a local
-model.
+follow any redirection to another host, and `https` is required, with certificate verification, except for a
+development gateway on `localhost`.
 
-With an external provider, the data is processed by that provider. For where the processing takes place, the
-retention and possible reuse of requests, refer to its contractual terms, in particular the data processing agreement
-(DPA).
+The data travels as follows:
 
-With a local model, **no data leaves your infrastructure**.
+1. **Deming** minimizes and masks the context, before anything is sent;
+2. the **Sourcentis AI gateway** (processor) adds the prompt and the response format, then forwards the request to
+   the model;
+3. **OVHcloud** (sub-processor) runs the model.
+
+According to its documentation, the gateway neither stores nor logs the context, the prompt or the answer: only daily
+aggregates are kept for billing (customer, model, number of tokens, cost and date). The retention of data at OVHcloud
+is governed by its terms and its data processing agreement (DPA).
 
 ### What Deming keeps
 
@@ -242,8 +254,8 @@ With a local model, **no data leaves your infrastructure**.
 * Analyses appear neither in the [REST API](api.md), nor in exports, nor in reports, and are not recorded in the
   [logs](config.md#logs): an analysis is not a change of the object.
 
-* Application logs only contain metadata: object type and identifier, model, duration, number of tokens and status.
-  Neither the prompt, nor the context, nor the answer, nor the key are logged.
+* Application logs only contain metadata: object type and identifier, model, task version, duration, number of
+  tokens and status. Neither the context, nor the answer, nor the key are logged.
 
 * The API key is encrypted with the application's `APP_KEY`; changing the `APP_KEY` requires entering the key again.
 
@@ -267,8 +279,9 @@ Points to be checked by the data controller. These recommendations are not legal
 
 - [ ] Consult the DPO.
 - [ ] Update the record of processing activities (GDPR, article 30) if personal data may be sent.
-- [ ] Have a data processing agreement (GDPR, article 28) with the agent's provider, or use a local model.
-- [ ] Check where the processing takes place and that there is no transfer outside the European Union.
+- [ ] Have a data processing agreement (DPA, GDPR article 28) with Sourcentis, listing OVHcloud as sub-processor.
+- [ ] Check where the processing takes place and that there is no transfer outside the European Union, including at
+      OVHcloud.
 - [ ] Assess the need for a data protection impact assessment (DPIA), in particular in sectors handling sensitive
       data such as healthcare.
 - [ ] Inform Deming users that the feature exists and of the rule about free texts.
@@ -284,5 +297,7 @@ Points to be checked by the data controller. These recommendations are not legal
 * Results are not strictly reproducible: two analyses of the same data may differ.
 
 * Cost and response time depend on the provider and the model.
+
+* The feature requires a subscription to the Sourcentis AI gateway.
 
 * The quality of the analysis depends on the quality of the data entered in Deming.

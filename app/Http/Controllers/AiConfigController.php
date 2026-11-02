@@ -4,17 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Models\AuditLog;
 use App\Models\Configuration;
-use App\Services\Ai\AiResponseValidator;
+use App\Models\Control;
+use App\Services\Ai\AiAgentException;
+use App\Services\Ai\AiGateway;
 use App\Services\Ai\AiSubjects;
 use App\Services\AiAgentService;
-use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -26,39 +26,19 @@ class AiConfigController extends Controller
     // controls = security measures, measures = controls (UI naming is inverted)
     private const TABLES = ['controls', 'measures', 'actions', 'risks'];
 
-    /**
-     * Models of the Sourcentis AI gateway offered in the list.
-     * Any other model name can still be typed in the field.
-     */
-    public const MODELS = [
-        'sourcentis-standard',
-        'sourcentis-advanced',
-    ];
-
     // Data of the "AI" tab of the settings page
     public function tabData(): array
     {
-        $prompts = [];
-        foreach (AiSubjects::TYPES as $type => $subject) {
-            $value = (string) Configuration::get($subject['prompt']);
-            $prompts[$type] = [
-                'name' => $subject['prompt'],
-                'value' => $value,
-                'custom' => trim($value) !== trim((string) Configuration::defaultValue($subject['prompt'])),
-            ];
-        }
-
         $key = Configuration::get('ai.api_key');
+        $enabled = Configuration::bool('ai.enabled');
 
         return [
-            'enabled' => Configuration::bool('ai.enabled'),
+            'enabled' => $enabled,
             'base_url' => Configuration::get('ai.base_url'),
-            'model' => Configuration::get('ai.model'),
-            'models' => self::MODELS,
             // The key itself never reaches the view
             'has_key' => $key !== null && $key !== '',
-            'prompts' => $prompts,
-            'schema' => AiResponseValidator::schemaJson(),
+            // Read-only: the prompts, formats and models are managed by the gateway
+            'tasks' => $enabled ? $this->tasks() : null,
         ];
     }
 
@@ -67,35 +47,20 @@ class AiConfigController extends Controller
         abort_if(! Auth::user()->isAdmin(), Response::HTTP_FORBIDDEN, '403 Forbidden');
         abort_if(! Configuration::aiActivated(), Response::HTTP_NOT_FOUND, '404 Not Found');
 
-        // "Restore the default prompt" button
-        $restore = $request->input('restore');
-        if ($restore !== null) {
-            abort_if(! array_key_exists($restore, AiSubjects::TYPES), Response::HTTP_UNPROCESSABLE_ENTITY);
-            Configuration::forget(AiSubjects::TYPES[$restore]['prompt']);
-
-            return redirect('/config/parameters?tab=ai')->with('messages', [trans('ai.config.restored')]);
-        }
-
         // While AI is off, the settings fields are disabled in the form, hence not submitted: keep them
         $request->validate([
             'base_url' => ['exclude_unless:enabled,1', 'required', 'url', 'max:2048', function ($attribute, $value, $fail) {
-                if (! AiAgentService::isAllowedUrl($value)) {
+                if (! AiGateway::isAllowedUrl($value)) {
                     $fail(trans('ai.config.invalid_url'));
                 }
             }],
-            'model' => 'exclude_unless:enabled,1|required|string|max:191',
             'api_key' => 'nullable|string|max:4096',
-            'prompts' => 'array',
-            'prompts.*' => 'nullable|string|max:100000',
         ]);
 
         // Only changed values are written, so that the audit log stays meaningful
         $this->update('ai.enabled', $request->boolean('enabled') ? '1' : '0');
         if ($request->has('base_url')) {
             $this->update('ai.base_url', rtrim(trim($request->input('base_url')), '/'));
-        }
-        if ($request->has('model')) {
-            $this->update('ai.model', trim($request->input('model')));
         }
 
         // An empty key field keeps the current key
@@ -105,83 +70,86 @@ class AiConfigController extends Controller
             Configuration::set('ai.api_key', trim($request->input('api_key')));
         }
 
-        foreach (AiSubjects::TYPES as $type => $subject) {
-            $value = $request->input("prompts.{$type}");
-            if ($value === null) {
-                continue;
-            }
-            $value = str_replace("\r\n", "\n", $value);
-            // Request strings are trimmed by the TrimStrings middleware
-            if (trim($value) === '' || trim($value) === trim((string) Configuration::defaultValue($subject['prompt']))) {
-                Configuration::forget($subject['prompt']);
-            } else {
-                $this->update($subject['prompt'], $value);
-            }
-        }
+        // Another gateway or key may expose other tasks
+        AiGateway::forgetTasks();
 
         return redirect('/config/parameters?tab=ai')->with('messages', [trans('ai.config.saved')]);
     }
 
     /**
-     * Minimal request to the configured agent; returns the HTTP status, the
-     * latency and the model, never the key nor the response body.
+     * Free request to the gateway (GET /tasks): checks the key and the presence
+     * of the Deming tasks. Returns the HTTP status, the latency and the number of
+     * Deming tasks found, never the key nor the response body.
      */
-    public function test(): JsonResponse
+    public function test(AiGateway $gateway): JsonResponse
     {
         abort_if(! Auth::user()->isAdmin(), Response::HTTP_FORBIDDEN, '403 Forbidden');
         abort_if(! Configuration::aiActivated(), Response::HTTP_NOT_FOUND, '404 Not Found');
 
-        $baseUrl = rtrim((string) Configuration::get('ai.base_url'), '/');
-        $model = (string) Configuration::get('ai.model');
-
-        if ($baseUrl === '') {
-            return response()->json(['ok' => false, 'error' => trans('ai.errors.not_configured')]);
-        }
-        if (! AiAgentService::isAllowedUrl($baseUrl)) {
-            return response()->json(['ok' => false, 'error' => trans('ai.errors.insecure_url')]);
-        }
-
-        $payload = [
-            'model' => $model,
-            'messages' => [['role' => 'user', 'content' => 'Réponds OK']],
-            'max_tokens' => 200,
-        ];
-        if (str_starts_with(strtolower($model), 'gpt-oss')) {
-            $payload['reasoning_effort'] = 'low';
-        }
-
-        $request = Http::timeout(30)->connectTimeout(15)->acceptJson()->withoutRedirecting();
-        $key = Configuration::get('ai.api_key');
-        if ($key !== null && $key !== '') {
-            $request = $request->withToken($key);
-        }
-
+        $expected = count(AiSubjects::types());
         $start = microtime(true);
         try {
-            $response = $request->post($baseUrl . '/chat/completions', $payload);
-        } catch (ConnectionException) {
-            Log::info('AI connection test', ['status' => 'unreachable']);
+            $result = $gateway->fetchTasks();
+        } catch (AiAgentException $e) {
+            $latency = (int) round((microtime(true) - $start) * 1000);
+            Log::info('AI connection test', ['status' => $e->upstreamStatus ?? $e->reason, 'duration_ms' => $latency]);
 
             return response()->json([
                 'ok' => false,
-                'status' => null,
-                'latency_ms' => (int) round((microtime(true) - $start) * 1000),
-                'model' => $model,
-                'error' => trans('ai.errors.unreachable'),
+                'status' => $e->upstreamStatus,
+                'latency_ms' => $latency,
+                'tasks_found' => null,
+                'tasks_expected' => $expected,
+                'error' => $e->translatedMessage(),
             ]);
         }
         $latency = (int) round((microtime(true) - $start) * 1000);
-        $ok = $response->successful() && ! $response->redirect();
+        $found = count(AiGateway::demingTasks($result['tasks']));
+        $ok = $found === $expected;
 
-        Log::info('AI connection test', ['status' => $response->status(), 'duration_ms' => $latency]);
+        Log::info('AI connection test', ['status' => $result['response']->status(), 'duration_ms' => $latency, 'tasks' => $found]);
 
         return response()->json([
             'ok' => $ok,
-            'status' => $response->status(),
+            'status' => $result['response']->status(),
             'latency_ms' => $latency,
-            'model' => is_string($response->json('model')) ? $response->json('model') : $model,
-            'error' => $ok ? null : trans('ai.errors.unreachable'),
+            'tasks_found' => $found,
+            'tasks_expected' => $expected,
+            'error' => $ok ? null : trans('ai.errors.incompatible'),
         ]);
+    }
+
+    /**
+     * Deming tasks of the gateway, in the order of AiSubjects, with their
+     * title in the user's language; null when the gateway cannot be reached.
+     *
+     * @return array<int, array{type: string, title: string, version: string}>|null
+     */
+    private function tasks(): ?array
+    {
+        try {
+            AiGateway::checkUrl();
+            $tasks = AiGateway::demingTasks(app(AiGateway::class)->tasks());
+        } catch (AiAgentException) {
+            return null;
+        }
+
+        $language = AiAgentService::language();
+        $result = [];
+        foreach (AiSubjects::TYPES as $type => $subject) {
+            if (! isset($tasks[$type])) {
+                continue;
+            }
+            $titles = $tasks[$type]['title'] ?? null;
+            $title = is_array($titles) ? ($titles[$language] ?? $titles['en'] ?? $titles['fr'] ?? null) : $titles;
+            $result[] = [
+                'type' => $type,
+                'title' => is_string($title) && $title !== '' ? $title : trans($subject['label']),
+                'version' => is_string($tasks[$type]['task_version'] ?? null) ? $tasks[$type]['task_version'] : '',
+            ];
+        }
+
+        return $result;
     }
 
     // Clears the stored analyses of the four tables
@@ -194,7 +162,7 @@ class AiConfigController extends Controller
         foreach (self::TABLES as $table) {
             $count += DB::table($table)
                 ->whereNotNull('ai_analysis')
-                ->update(array_fill_keys(['ai_analysis', 'ai_analysis_at', 'ai_analysis_model', 'ai_analysis_hash'], null));
+                ->update(array_fill_keys(Control::AI_COLUMNS, null));
         }
 
         // Who and when, without any content

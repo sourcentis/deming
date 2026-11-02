@@ -28,16 +28,7 @@ class Configuration extends Model
     // Defaults used when the row is absent
     public const DEFAULTS = [
         'ai.enabled' => '0',
-        'ai.model' => 'sourcentis-standard',
         'ai.api_key' => null,
-    ];
-
-    // Defaults read from versioned files (relative to resources/)
-    public const DEFAULT_FILES = [
-        'ai.prompt_control' => 'ai/prompt_control.md',
-        'ai.prompt_measure' => 'ai/prompt_measure.md',
-        'ai.prompt_action' => 'ai/prompt_action.md',
-        'ai.prompt_risk' => 'ai/prompt_risk.md',
     ];
 
     // Values loaded once per request
@@ -124,14 +115,9 @@ class Configuration extends Model
         }
     }
 
-    // Default value of a key, from DEFAULTS or from its versioned file
+    // Default value of a key, from DEFAULTS
     public static function defaultValue(string $name): ?string
     {
-        if (array_key_exists($name, self::DEFAULT_FILES)) {
-            $path = resource_path(self::DEFAULT_FILES[$name]);
-            return is_readable($path) ? file_get_contents($path) : null;
-        }
-
         return self::DEFAULTS[$name] ?? null;
     }
 
