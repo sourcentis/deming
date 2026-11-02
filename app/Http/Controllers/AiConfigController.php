@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AuditLog;
 use App\Models\Configuration;
+use App\Models\Control;
 use App\Services\Ai\AiResponseValidator;
 use App\Services\Ai\AiSubjects;
 use App\Services\AiAgentService;
@@ -194,7 +195,7 @@ class AiConfigController extends Controller
         foreach (self::TABLES as $table) {
             $count += DB::table($table)
                 ->whereNotNull('ai_analysis')
-                ->update(array_fill_keys(['ai_analysis', 'ai_analysis_at', 'ai_analysis_model', 'ai_analysis_hash'], null));
+                ->update(array_fill_keys(Control::AI_COLUMNS, null));
         }
 
         // Who and when, without any content

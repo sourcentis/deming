@@ -22,6 +22,7 @@ function storeFakeAnalysis(string $table, int $id): void
         'ai_analysis_at' => now(),
         'ai_analysis_model' => 'gpt-oss-120b',
         'ai_analysis_hash' => str_repeat('a', 64),
+        'ai_analysis_version' => 'e04f8bdad356',
     ]);
 }
 

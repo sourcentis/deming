@@ -28,7 +28,7 @@ class ReportTableRegistry
     /** Colonnes jamais exposées, quelle que soit la table. */
     private const EXCLUDED_COLUMNS = [
         'password', 'remember_token', 'standard', 'deleted_at',
-        'ai_analysis', 'ai_analysis_at', 'ai_analysis_model', 'ai_analysis_hash',
+        'ai_analysis', 'ai_analysis_at', 'ai_analysis_model', 'ai_analysis_hash', 'ai_analysis_version',
     ];
 
     /**

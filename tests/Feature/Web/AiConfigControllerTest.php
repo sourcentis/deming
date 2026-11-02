@@ -197,14 +197,14 @@ test('admin purges every analysis with an audit entry without content', function
         $object = aiCreateSubject(['control', 'measure', 'action', 'risk'][$type]);
         DB::table($table)->where('id', $object->id)->update([
             'ai_analysis' => '{"synthese":"secret analysis"}', 'ai_analysis_at' => now(),
-            'ai_analysis_model' => 'm', 'ai_analysis_hash' => str_repeat('a', 64),
+            'ai_analysis_model' => 'm', 'ai_analysis_hash' => str_repeat('a', 64), 'ai_analysis_version' => 'v1',
         ]);
     }
 
     $this->actingAs($this->admin)->post('/config/ai/purge')->assertRedirect('/config/parameters?tab=ai');
 
     foreach ($tables as $table) {
-        expect(DB::table($table)->whereNotNull('ai_analysis')->orWhereNotNull('ai_analysis_hash')->count())->toBe(0);
+        expect(DB::table($table)->whereNotNull('ai_analysis')->orWhereNotNull('ai_analysis_hash')->orWhereNotNull('ai_analysis_version')->count())->toBe(0);
     }
     $log = AuditLog::where('description', 'purge AI analyses')->sole();
     expect($log->user_id)->toBe($this->admin->id)
