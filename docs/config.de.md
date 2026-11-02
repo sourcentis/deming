@@ -152,6 +152,16 @@ Diese Löschung erfolgt durch Ausführen des Befehls
 Mit der Registerkarte „Vorlagen“ der Seite [Einstellungen](#parameters) werden die Dokumentvorlagen für die
 Kontrollblätter und den ISMS-Steuerungsbericht geändert.
 
+Die Registerkarte enthält zwei Blöcke, „Kontrollblatt“ und „Lenkungsbericht“. Jeder Block bietet:
+
+* einen Link zum Herunterladen der Standardvorlage;
+
+* einen Link „Benutzerdefiniertes Modell“ zum Herunterladen der angepassten Vorlage, sofern vorhanden;
+
+* ein Feld zum Hochladen einer neuen Vorlage (.docx), die die angepasste Vorlage ersetzt.
+
+Die hochgeladenen Vorlagen werden mit „Sichern“ gespeichert.
+
 Die Vorlage des Steuerungsberichts ist ein Word-Dokument (.docx), dessen Platzhalter bei der Erzeugung des Berichts
 ersetzt werden. Das neben den Vorlagen angezeigte Feld „Platzhalter der Vorlage“ listet die verfügbaren Platzhalter
 auf; ein Klick auf einen Platzhalter kopiert ihn in die Zwischenablage.

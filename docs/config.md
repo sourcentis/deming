@@ -150,6 +150,16 @@ command via a cron.
 The "Templates" tab of the [Settings](#parameters) page is used to modify the document templates used for control
 sheets and the ISMS management report.
 
+The tab contains two blocks, "Control sheet" and "Steering report". Each block provides:
+
+* a link to download the default template;
+
+* a "Custom model" link to download the custom template, if there is one;
+
+* a field to upload a new template (.docx), which replaces the custom template.
+
+The uploaded templates are saved by clicking on "Save".
+
 The steering report template is a Word document (.docx) whose tags are replaced when the report is generated.
 The "Template tags" panel, displayed next to the templates, lists the available tags; clicking on a tag copies it
 to the clipboard.

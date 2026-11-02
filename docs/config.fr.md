@@ -150,6 +150,16 @@ au travers d'un cron.
 L'onglet « Modèles » de la page [Paramètres](#parameters) permet de modifier les modèles de document utilisés pour les
 fiches de contrôle et le rapport de pilotage du SMSI.
 
+L'onglet contient deux blocs, « Fiche de contrôle » et « Rapport de pilotage ». Chaque bloc propose :
+
+* un lien pour télécharger le modèle par défaut ;
+
+* un lien « Modèle modifié » pour télécharger le modèle personnalisé, s'il en existe un ;
+
+* un champ pour charger un nouveau modèle (.docx), qui remplace le modèle personnalisé.
+
+Les modèles chargés sont enregistrés en cliquant sur « Sauver ».
+
 Le modèle du rapport de pilotage est un document Word (.docx) dont les balises sont remplacées lors de la génération
 du rapport. Le panneau « Balises du modèle », affiché à côté des modèles, liste les balises disponibles ; un clic sur
 une balise la copie dans le presse-papiers.
