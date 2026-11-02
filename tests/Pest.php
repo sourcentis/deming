@@ -8,6 +8,8 @@ pest()->extend(Tests\TestCase::class)
     ->beforeEach(function () {
         \App\Models\RiskScoringConfig::clearCache();
         \App\Models\Configuration::clearCache();
+        // No test may reach a real host (the AI settings page reads the gateway catalog)
+        \Illuminate\Support\Facades\Http::preventStrayRequests();
     })
     ->in('Feature');
 

@@ -19,7 +19,8 @@ use Illuminate\Database\Eloquent\Model;
  *
  * Beware of the inverted naming: the Control model is a "security measure"
  * in the UI, and the Measure model is a "control".
- * Adding a type only needs an entry here, a prompt and an @include in its view.
+ * Adding a type only needs an entry here, a task deming/{type} on the AI gateway
+ * and an @include in its view.
  */
 final class AiSubjects
 {
@@ -27,26 +28,22 @@ final class AiSubjects
         // Security measure ("mesure" in the UI)
         'control' => [
             'model' => Control::class,
-            'prompt' => 'ai.prompt_control',
             'context' => ControlContext::class,
             'label' => 'cruds.control.show',
         ],
         // Control ("contrôle" in the UI)
         'measure' => [
             'model' => Measure::class,
-            'prompt' => 'ai.prompt_measure',
             'context' => MeasureContext::class,
             'label' => 'cruds.measure.title_singular',
         ],
         'action' => [
             'model' => Action::class,
-            'prompt' => 'ai.prompt_action',
             'context' => ActionContext::class,
             'label' => 'cruds.action.show',
         ],
         'risk' => [
             'model' => Risk::class,
-            'prompt' => 'ai.prompt_risk',
             'context' => RiskContext::class,
             'label' => 'cruds.risk.singular',
         ],
@@ -58,7 +55,7 @@ final class AiSubjects
         return array_keys(self::TYPES);
     }
 
-    /** @return array{model: class-string<Control|Measure|Action|Risk>, prompt: string, context: class-string<ContextBuilder>, label: string} */
+    /** @return array{model: class-string<Control|Measure|Action|Risk>, context: class-string<ContextBuilder>, label: string} */
     public static function get(string $type): array
     {
         if (! array_key_exists($type, self::TYPES)) {

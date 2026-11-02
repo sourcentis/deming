@@ -29,8 +29,15 @@ class AiAgentException extends RuntimeException
     // 400 or 404: request refused or task unknown, i.e. Deming and the gateway disagree
     public const INCOMPATIBLE = 'incompatible';
 
-    public function __construct(public readonly string $reason, public readonly int $status = 502)
-    {
+    /**
+     * @param  int  $status  HTTP status returned to the browser
+     * @param  int|null  $upstreamStatus  HTTP status returned by the gateway, for the connection test
+     */
+    public function __construct(
+        public readonly string $reason,
+        public readonly int $status = 502,
+        public readonly ?int $upstreamStatus = null,
+    ) {
         parent::__construct('AI agent error: ' . $reason);
     }
 

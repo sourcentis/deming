@@ -3,8 +3,6 @@
     .ai-config details { border: 1px solid var(--bs-border-color, #dee2e6); border-radius: 4px; padding: .5rem .75rem; margin-bottom: .5rem; }
     .ai-config details > summary { cursor: pointer; font-weight: 600; }
     .ai-config details[open] > summary { margin-bottom: .5rem; }
-    .ai-config pre.ai-schema { max-height: 24rem; overflow: auto; font-size: .8rem; background: var(--bs-light, #f8f9fa); padding: .5rem; }
-    .ai-config textarea { font-family: monospace; font-size: .85rem; }
     .ai-config .ai-privacy ul { margin-bottom: .25rem; }
     .ai-config details.ai-purge > summary { list-style: none; display: inline-block; }
     .ai-config details.ai-purge > summary::-webkit-details-marker { display: none; }
@@ -56,22 +54,6 @@
 
             <div class="row mb-2">
                 <div class="col-md-3 col-lg-2">
-                    <label for="model"><strong>{{ trans('ai.config.model') }}</strong></label>
-                </div>
-                <div class="col-md-9 col-lg-4">
-                    {{-- Sourcentis AI gateway models; another name can be typed (select2-free) --}}
-                    @php $currentModel = old('model', $model); @endphp
-                    <select class="form-select select2 select2-free" name="model" id="model" required {{ $enabled ? '' : 'disabled' }}>
-                        @foreach (array_unique(array_merge($models, [$currentModel])) as $name)
-                            <option value="{{ $name }}" {{ $name === $currentModel ? 'selected' : '' }}>{{ $name }}</option>
-                        @endforeach
-                    </select>
-                    <small class="text-muted">{{ trans('ai.config.model_help') }}</small>
-                </div>
-            </div>
-
-            <div class="row mb-2">
-                <div class="col-md-3 col-lg-2">
                     <label for="api_key"><strong>{{ trans('ai.config.api_key') }}</strong></label>
                 </div>
                 <div class="col-md-9 col-lg-4">
@@ -91,41 +73,32 @@
                 </div>
             </div>
 
+            @if ($enabled)
             <div class="row mb-2">
                 <div class="col-md-3 col-lg-2">
-                    <strong>{{ trans('ai.config.prompts') }}</strong>
+                    <strong>{{ trans('ai.config.tasks') }}</strong>
                 </div>
-                <div class="col-md-9 col-lg-10">
-                    <small class="text-muted d-block mb-1">{{ trans('ai.config.prompt_help') }}</small>
-                    @foreach ($prompts as $type => $prompt)
-                    <details>
-                        <summary>
-                            {{ trans(\App\Services\Ai\AiSubjects::TYPES[$type]['label']) }}
-                            <span class="badge {{ $prompt['custom'] ? 'bg-primary' : 'bg-light text-dark border' }} ms-1">
-                                {{ $prompt['custom'] ? trans('ai.config.prompt_custom') : trans('ai.config.prompt_default') }}
-                            </span>
-                        </summary>
-                        <textarea class="form-control" name="prompts[{{ $type }}]" id="prompt_{{ $type }}" rows="18" maxlength="100000">{{ old('prompts.' . $type, $prompt['value']) }}</textarea>
-                        <button type="submit" class="btn btn-light border mt-1" name="restore" value="{{ $type }}" formnovalidate>
-                            <i class="bi bi-arrow-counterclockwise"></i> {{ trans('ai.config.prompt_restore') }}
-                        </button>
-                    </details>
-                    @endforeach
-                </div>
-            </div>
-
-            <div class="row mb-2">
-                <div class="col-md-3 col-lg-2">
-                    <strong>{{ trans('ai.config.schema') }}</strong>
-                </div>
-                <div class="col-md-9 col-lg-10">
-                    <details>
-                        <summary><i class="bi bi-lock"></i> {{ trans('ai.config.schema') }}</summary>
-                        <small class="text-muted d-block mb-1">{{ trans('ai.config.schema_help') }}</small>
-                        <pre class="ai-schema">{{ $schema }}</pre>
-                    </details>
+                <div class="col-md-9 col-lg-6" id="ai-tasks">
+                    @if ($tasks === null)
+                        <span class="text-muted"><i class="bi bi-exclamation-triangle"></i> {{ trans('ai.config.tasks_unavailable') }}</span>
+                    @elseif ($tasks === [])
+                        <span class="text-muted">{{ trans('ai.config.tasks_none') }}</span>
+                    @else
+                        <table class="table table-sm mb-1">
+                            <tbody>
+                            @foreach ($tasks as $task)
+                                <tr>
+                                    <td>{{ $task['title'] }}</td>
+                                    <td class="text-end"><code>{{ $task['version'] }}</code></td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
+                    @endif
+                    <small class="text-muted">{{ trans('ai.config.tasks_help') }}</small>
                 </div>
             </div>
+            @endif
             </fieldset>
 
             <div class="row mb-3">
@@ -163,7 +136,7 @@
         'failed' => trans('ai.config.test_failed'),
         'status' => trans('ai.config.test_status'),
         'latency' => trans('ai.config.test_latency'),
-        'model' => trans('ai.config.test_model'),
+        'tasks' => trans('ai.config.test_tasks'),
         'error' => trans('ai.errors.generic'),
     ];
 @endphp
@@ -175,8 +148,6 @@
         const off = !enabled.checked;
         document.getElementById('ai-settings').disabled = off;
         document.getElementById('ai-test').disabled = off;
-        // Select2 follows the "disabled" property of its own select
-        $('#model').prop('disabled', off).trigger('change.select2');
     });
 })();
 
@@ -202,7 +173,9 @@
                 const parts = [data.ok ? labels.ok : labels.failed];
                 if (data.status) { parts.push(labels.status + ' ' + data.status); }
                 if (data.latency_ms !== undefined) { parts.push(labels.latency + ' ' + data.latency_ms + ' ms'); }
-                if (data.model) { parts.push(labels.model + ' ' + data.model); }
+                if (data.tasks_found !== null && data.tasks_found !== undefined) {
+                    parts.push(labels.tasks.replace(':found', data.tasks_found).replace(':total', data.tasks_expected));
+                }
                 if (!data.ok && data.error) { parts.push(data.error); }
                 result.className = 'ms-2 ' + (data.ok ? 'text-success' : 'text-danger');
                 result.textContent = parts.join(' · ');

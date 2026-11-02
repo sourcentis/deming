@@ -28,8 +28,10 @@ class AiGateway
     private const TASKS_TTL = 3600;
 
     private const TIMEOUT = 180;
-    private const TASKS_TIMEOUT = 30;
     private const CONNECT_TIMEOUT = 15;
+    // The catalog is also read when the settings page is displayed: shorter delays
+    private const TASKS_TIMEOUT = 10;
+    private const TASKS_CONNECT_TIMEOUT = 5;
 
     public static function baseUrl(): string
     {
@@ -86,7 +88,7 @@ class AiGateway
     public function fetchTasks(): array
     {
         $baseUrl = self::checkUrl();
-        $response = $this->send(fn () => $this->request(self::TASKS_TIMEOUT)->get($baseUrl . '/tasks'));
+        $response = $this->send(fn () => $this->request(self::TASKS_TIMEOUT, self::TASKS_CONNECT_TIMEOUT)->get($baseUrl . '/tasks'));
 
         $tasks = $response->json('data');
         if (! is_array($tasks) || ! array_is_list($tasks)) {
@@ -174,7 +176,7 @@ class AiGateway
 
         // An empty context must stay a JSON object
         $payload['context'] = (object) $payload['context'];
-        $response = $this->send(fn () => $this->request(self::TIMEOUT)->post($url, $payload));
+        $response = $this->send(fn () => $this->request(self::TIMEOUT, self::CONNECT_TIMEOUT)->post($url, $payload));
 
         $body = $response->json();
         if (! is_array($body) || ! is_array($body['data'] ?? null)) {
@@ -184,10 +186,10 @@ class AiGateway
         return $body;
     }
 
-    private function request(int $timeout): PendingRequest
+    private function request(int $timeout, int $connectTimeout): PendingRequest
     {
         $request = Http::timeout($timeout)
-            ->connectTimeout(self::CONNECT_TIMEOUT)
+            ->connectTimeout($connectTimeout)
             ->acceptJson()
             ->withoutRedirecting();
 
@@ -219,21 +221,24 @@ class AiGateway
         }
 
         if ($response->redirect()) {
-            throw new AiAgentException(AiAgentException::UNREACHABLE);
+            throw new AiAgentException(AiAgentException::UNREACHABLE, 502, $response->status());
         }
         if ($response->successful()) {
             return $response;
         }
 
-        throw match ($response->status()) {
-            401, 403 => new AiAgentException(AiAgentException::INVALID_KEY),
-            402 => new AiAgentException(AiAgentException::QUOTA_EXCEEDED),
-            413 => new AiAgentException(AiAgentException::TOO_LARGE),
-            429 => new AiAgentException(AiAgentException::RATE_LIMITED, 429),
-            400, 404 => new AiAgentException(AiAgentException::INCOMPATIBLE),
-            502 => new AiAgentException(AiAgentException::INVALID_RESPONSE),
-            504 => new AiAgentException(AiAgentException::TIMEOUT, 504),
-            default => new AiAgentException(AiAgentException::UNREACHABLE),
+        $status = $response->status();
+        [$reason, $browserStatus] = match ($status) {
+            401, 403 => [AiAgentException::INVALID_KEY, 502],
+            402 => [AiAgentException::QUOTA_EXCEEDED, 502],
+            413 => [AiAgentException::TOO_LARGE, 502],
+            429 => [AiAgentException::RATE_LIMITED, 429],
+            400, 404 => [AiAgentException::INCOMPATIBLE, 502],
+            502 => [AiAgentException::INVALID_RESPONSE, 502],
+            504 => [AiAgentException::TIMEOUT, 504],
+            default => [AiAgentException::UNREACHABLE, 502],
         };
+
+        throw new AiAgentException($reason, $browserStatus, $status);
     }
 }
