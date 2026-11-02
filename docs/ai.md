@@ -20,7 +20,7 @@ directly.
 The configuration is in the "AI" tab of the [Settings](config.md#parameters) page ("Configuration → Settings" menu).
 It is restricted to administrators.
 
-<!-- TODO capture : images/ai-config.png -->
+[![Screenshot](images/ai-config.png)](images/ai-config.png)
 
 The screen contains a "Data protection" notice that summarizes what is sent to the agent; read the
 [Data protection](#privacy) section before enabling AI.

@@ -22,7 +22,7 @@ autre fournisseur ni à un modèle local.
 La configuration se trouve dans l'onglet « IA » de la page [Paramètres](config.fr.md#parameters) (menu « Configuration →
 Paramètres »). Elle est réservée aux administrateurs.
 
-<!-- TODO capture : images/ai-config.fr.png -->
+[![Screenshot](images/ai-config.fr.png)](images/ai-config.fr.png)
 
 L'écran contient un encart « Protection des données » qui rappelle ce qui est envoyé à l'agent ; lisez la section
 [Protection des données](#privacy) avant d'activer l'IA.

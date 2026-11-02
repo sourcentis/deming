@@ -21,7 +21,7 @@ Anbieter noch ein lokales Modell direkt ansprechen.
 Die Konfiguration befindet sich in der Registerkarte „KI“ der Seite [Einstellungen](config.de.md#parameters) (Menü
 „Konfiguration → Einstellungen“). Sie ist Administratoren vorbehalten.
 
-<!-- TODO capture : images/ai-config.de.png -->
+[![Screenshot](images/ai-config.de.png)](images/ai-config.de.png)
 
 Die Seite enthält einen Hinweis „Datenschutz“, der zusammenfasst, was an den Agenten gesendet wird; lesen Sie den
 Abschnitt [Datenschutz](#privacy), bevor Sie die KI aktivieren.
