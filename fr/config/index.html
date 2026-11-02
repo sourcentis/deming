@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://sourcentis.githubs.io/deming/fr/config/">
       
       
-        <link rel="prev" href="../crosswalk/">
+        <link rel="prev" href="../ai/">
       
       
         <link rel="next" href="../api/">
@@ -508,6 +508,26 @@
       
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../ai/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Agent IA
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
     
   
   
@@ -611,6 +631,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Paramètres
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#documents" class="md-nav__link">
     <span class="md-ellipsis">
       Documents
@@ -619,15 +648,6 @@
   
     <nav class="md-nav" aria-label="Documents">
       <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#modeles" class="md-nav__link">
-    <span class="md-ellipsis">
-      Modèles
-    </span>
-  </a>
-  
-</li>
         
           <li class="md-nav__item">
   <a href="#stockage" class="md-nav__link">
@@ -649,6 +669,24 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#templates" class="md-nav__link">
+    <span class="md-ellipsis">
+      Modèles
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ai" class="md-nav__link">
+    <span class="md-ellipsis">
+      IA
+    </span>
+  </a>
   
 </li>
       
@@ -790,9 +828,8 @@
 
 
 <h1 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h1>
-<p>Le menu « Configuration » donne accès aux attributs, aux domaines, aux utilisateurs, aux groupes, à la
-<a href="../risks/#scoring">classification des risques</a>, à l'importation, aux <a href="../crosswalk/">correspondances entre référentiels</a>,
-aux documents, aux notifications et aux logs.</p>
+<p>Le menu « Configuration » donne accès aux attributs, aux domaines, aux utilisateurs, aux groupes, à l'importation,
+aux <a href="../crosswalk/">correspondances entre référentiels</a>, aux <a href="#parameters">paramètres</a> et aux logs.</p>
 <h2 id="tags">Attributs<a class="headerlink" href="#tags" title="Permanent link">&para;</a></h2>
 <p>Cet écran permet de gérer les attributs associés aux mesures de sécurité.
 Il contient la liste des attributs et permet de créer, supprimer ou modifier des listes d’attributs.</p>
@@ -821,7 +858,7 @@ notifications et les documents générés.</p>
   précédemment (voir <a href="../delegation/">Délégation</a>).</p>
 </li>
 <li>
-<p>Auditeur : l’auditeur a un accès en lecture à l’ensemble des informations de l’application.</p>
+<p>Auditeur : l’auditeur a un accès en lecture à l’ensemble des informations de l’application. L'auditeur ne peut pas utiliser l'<a href="../ai/#access">agent IA</a>.</p>
 </li>
 <li>
 <p>API : compte utilisé pour accéder à l'<a href="../api/">API</a>.</p>
@@ -874,11 +911,58 @@ de sécurité, les contrôles, les plans d'action et le registre des risques.</p
 <p>Il est possible d'importer des mesures de sécurité depuis un fichier .XLSX ou depuis la base de données de modèles.</p>
 <p>Lors de l'importation, il est possible de supprimer tous les autres contrôles et mesures et de générer des données de test.</p>
 <p><a href="../images/import.png"><img alt="Screenshot" src="../images/import.png" /></a></p>
+<h2 id="parameters">Paramètres<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h2>
+<p>La page « Paramètres », réservée aux administrateurs, regroupe dans des onglets les réglages de l'application :</p>
+<ul>
+<li>
+<p><strong>Documents</strong> : la <a href="#documents">vérification des documents et leur durée de conservation</a> ;</p>
+</li>
+<li>
+<p><strong>Modèles</strong> : les <a href="#templates">modèles de documents</a> ;</p>
+</li>
+<li>
+<p><strong>Classification</strong> : la <a href="../risks/#scoring">configuration du scoring des risques</a> ;</p>
+</li>
+<li>
+<p><strong>IA</strong> : la configuration de l'<a href="#ai">agent IA</a> ;</p>
+</li>
+<li>
+<p><strong>Notifications</strong> : les <a href="#notifications">notifications</a> envoyées aux utilisateurs.</p>
+</li>
+</ul>
+<p>Chaque onglet a ses propres boutons. Après un enregistrement, la page revient sur l'onglet modifié.</p>
+<!-- TODO capture : images/parameters.fr.png -->
+
 <h2 id="documents">Documents<a class="headerlink" href="#documents" title="Permanent link">&para;</a></h2>
-<p>Cet écran permet de modifier la configuration de la gestion des documents utilisés dans Deming.</p>
+<p>L'onglet « Documents » de la page <a href="#parameters">Paramètres</a> permet de vérifier les documents conservés dans Deming et de
+configurer leur durée de conservation.</p>
 <p><a href="../images/documents.png"><img alt="Screenshot" src="../images/documents.png" /></a></p>
-<h3 id="modeles">Modèles<a class="headerlink" href="#modeles" title="Permanent link">&para;</a></h3>
-<p>Cette partie de l'écran permet de modifier les modèles de document utilisés pour les fiches de contrôle et le rapport de pilotage du SMSI et permet d’avoir une vue sur l’ensemble des documents utilisés comme preuve lors de la réalisation des contrôles de sécurité.</p>
+<h3 id="stockage">Stockage<a class="headerlink" href="#stockage" title="Permanent link">&para;</a></h3>
+<p>Cette partie de l'onglet permet de vérifier l'intégrité des documents conservés dans l'application.</p>
+<p>En cliquant sur « Vérifier », Deming lance le contrôle d'intégrité des documents conservés dans l'application en utilisant un CRC32.</p>
+<h3 id="conservation">Conservation<a class="headerlink" href="#conservation" title="Permanent link">&para;</a></h3>
+<p>Cette partie de l'onglet permet de configurer la durée de conservation (en mois) des contrôles réalisés dans l'application.</p>
+<p>Tous les contrôles réalisés passé cette date sont supprimés ainsi que les documents et plans d'actions associés.</p>
+<p>Cette suppression est effectuée en exécutant la commande</p>
+<div class="highlight"><pre><span></span><code>php artisan deming:cleanup
+</code></pre></div>
+<p>au travers d'un cron.</p>
+<h2 id="templates">Modèles<a class="headerlink" href="#templates" title="Permanent link">&para;</a></h2>
+<p>L'onglet « Modèles » de la page <a href="#parameters">Paramètres</a> permet de modifier les modèles de document utilisés pour les
+fiches de contrôle et le rapport de pilotage du SMSI.</p>
+<p>L'onglet contient deux blocs, « Fiche de contrôle » et « Rapport de pilotage ». Chaque bloc propose :</p>
+<ul>
+<li>
+<p>un lien pour télécharger le modèle par défaut ;</p>
+</li>
+<li>
+<p>un lien « Modèle modifié » pour télécharger le modèle personnalisé, s'il en existe un ;</p>
+</li>
+<li>
+<p>un champ pour charger un nouveau modèle (.docx), qui remplace le modèle personnalisé.</p>
+</li>
+</ul>
+<p>Les modèles chargés sont enregistrés en cliquant sur « Sauver ».</p>
 <p>Le modèle du rapport de pilotage est un document Word (.docx) dont les balises sont remplacées lors de la génération
 du rapport. Le panneau « Balises du modèle », affiché à côté des modèles, liste les balises disponibles ; un clic sur
 une balise la copie dans le presse-papiers.</p>
@@ -898,33 +982,49 @@ une balise la copie dans le presse-papiers.</p>
 <p>Exemple :</p>
 <div class="highlight"><pre><span></span><code>${table:actions:reference,name,owners,due_date|where:status=0|order:due_date}
 </code></pre></div>
-<h3 id="stockage">Stockage<a class="headerlink" href="#stockage" title="Permanent link">&para;</a></h3>
-<p>Cette partie de l'écran permet de vérifier l'intégrité des documents conservés dans l'application.</p>
-<p>En cliquant sur « Vérifier », Deming lance le contrôle d'intégrité des documents conservés dans l'application en utilisant un CRC32.</p>
-<h3 id="conservation">Conservation<a class="headerlink" href="#conservation" title="Permanent link">&para;</a></h3>
-<p>Cette partie de l'écran permet de configurer la durée de conservation (en mois) des contrôles réalisés dans l'application.</p>
-<p>Tous les contrôles réalisés passé cette date sont supprimés ainsi que les documents et plans d'actions associés.</p>
-<p>Cette suppression est effectuée en exécutant la commande</p>
-<div class="highlight"><pre><span></span><code>php artisan deming:cleanup
-</code></pre></div>
-<p>au travers d'un cron.</p>
+<h2 id="ai">IA<a class="headerlink" href="#ai" title="Permanent link">&para;</a></h2>
+<p>L'onglet « IA » de la page <a href="#parameters">Paramètres</a>, réservée aux administrateurs, permet d'activer et de configurer l'<a href="../ai/">agent IA</a> qui analyse les
+mesures de sécurité, les contrôles, les plans d'action et les risques : activation, URL de l'agent, clé API, liste des
+tâches disponibles, test de connexion et suppression de toutes les analyses. Les prompts et les modèles sont gérés par
+le fournisseur de l'agent, la passerelle IA Sourcentis. L'IA est désactivée par défaut.</p>
+<p>Voir <a href="../ai/#config">Activer et configurer</a> et, avant toute activation, <a href="../ai/#privacy">Protection des données</a>.</p>
 <h2 id="notifications">Notifications<a class="headerlink" href="#notifications" title="Permanent link">&para;</a></h2>
-<p>Cet écran permet de configurer les notifications envoyées aux utilisateurs lorsqu'ils doivent réaliser des contrôles.</p>
-<p>L'écran contient :</p>
+<p>L'onglet « Notifications » de la page <a href="#parameters">Paramètres</a> permet de configurer les notifications envoyées aux utilisateurs lorsqu'ils doivent réaliser des contrôles.</p>
+<p>L'onglet contient deux blocs.</p>
+<p><strong>Serveur SMTP</strong> : le serveur utilisé pour envoyer les mails.</p>
 <ul>
 <li>
-<p>Le sujet du mail envoyé à l'utilisateur ;</p>
+<p>le serveur et le port ;</p>
 </li>
 <li>
-<p>L'émetteur du mail ;</p>
+<p>le chiffrement (aucun, SSL ou TLS) et le STARTTLS automatique ;</p>
 </li>
 <li>
-<p>La périodicité de l'envoi des notifications ;</p>
+<p>l'authentification, l'utilisateur et le mot de passe ;</p>
 </li>
 <li>
-<p>Les délais de notification.</p>
+<p>la signature DKIM, facultative : domaine, sélecteur, chemin de la clé privée et phrase secrète.</p>
 </li>
 </ul>
+<p>Ces paramètres sont enregistrés dans la base de données. Le mot de passe et la phrase secrète DKIM sont chiffrés avec
+la clé de l'application (<code>APP_KEY</code>) et ne sont jamais réaffichés : laisser le champ vide conserve la valeur
+enregistrée, la case « Supprimer » l'efface. Si l'<code>APP_KEY</code> change, il faut les ressaisir.</p>
+<p><strong>Notifications</strong> : le contenu et la fréquence des mails.</p>
+<ul>
+<li>
+<p>l'émetteur du mail ;</p>
+</li>
+<li>
+<p>le sujet et le contenu du mail envoyé à l'utilisateur ;</p>
+</li>
+<li>
+<p>la périodicité de l'envoi des notifications ;</p>
+</li>
+<li>
+<p>le délai : les contrôles qui arrivent à échéance dans ce délai sont notifiés.</p>
+</li>
+</ul>
+<!-- TODO capture : refaire images/config.fr.png (onglet Notifications avec le serveur SMTP) -->
 <p><a href="../images/config.png"><img alt="Screenshot" src="../images/config.png" /></a></p>
 <p>Lorsque vous cliquez sur :</p>
 <ul>
@@ -932,7 +1032,7 @@ une balise la copie dans le presse-papiers.</p>
 <p>« Sauver » - la configuration est sauvée ;</p>
 </li>
 <li>
-<p>« Test » - un mail de test est envoyé à l'utilisateur courant ;</p>
+<p>« Test » - un mail de test est envoyé à l'utilisateur courant, avec les valeurs saisies (elles ne sont pas enregistrées) ;</p>
 </li>
 <li>
 <p>« Annuler » - vous revenez à la page principale.</p>

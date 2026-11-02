@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://sourcentis.githubs.io/deming/config/">
       
       
-        <link rel="prev" href="../crosswalk/">
+        <link rel="prev" href="../ai/">
       
       
         <link rel="next" href="../api/">
@@ -508,6 +508,26 @@
       
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../ai/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    AI agent
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
     
   
   
@@ -611,6 +631,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Settings
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#documents" class="md-nav__link">
     <span class="md-ellipsis">
       Documents
@@ -619,15 +648,6 @@
   
     <nav class="md-nav" aria-label="Documents">
       <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#templates" class="md-nav__link">
-    <span class="md-ellipsis">
-      Templates
-    </span>
-  </a>
-  
-</li>
         
           <li class="md-nav__item">
   <a href="#storage" class="md-nav__link">
@@ -649,6 +669,24 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#templates" class="md-nav__link">
+    <span class="md-ellipsis">
+      Templates
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ai" class="md-nav__link">
+    <span class="md-ellipsis">
+      AI
+    </span>
+  </a>
   
 </li>
       
@@ -790,8 +828,8 @@
 
 
 <h1 id="setup">Setup<a class="headerlink" href="#setup" title="Permanent link">&para;</a></h1>
-<p>The "Configuration" menu gives access to the attributes, domains, users, groups, <a href="../risks/#scoring">risk scoring</a>,
-import, <a href="../crosswalk/">framework crosswalks</a>, documents, notifications and logs.</p>
+<p>The "Configuration" menu gives access to the attributes, domains, users, groups, import,
+<a href="../crosswalk/">framework crosswalks</a>, <a href="#parameters">settings</a> and logs.</p>
 <h2 id="tags">Attributes<a class="headerlink" href="#tags" title="Permanent link">&para;</a></h2>
 <p>This screen allows you to manage the attributes associated with the security measures.
 It contains the list of attributes and allows you to create, delete or modify attribute lists.</p>
@@ -820,7 +858,7 @@ documents.</p>
   carried out previously (see <a href="../delegation/">Delegation</a>).</p>
 </li>
 <li>
-<p>Auditor: the auditor has read access to all the information in the application.</p>
+<p>Auditor: the auditor has read access to all the information in the application. The auditor cannot use the <a href="../ai/#access">AI agent</a>.</p>
 </li>
 <li>
 <p>API: account used to access the <a href="../api/">API</a>.</p>
@@ -873,11 +911,58 @@ register to Excel files.</p>
 <p>Measures can be imported from an .XLSX file or from the template database.</p>
 <p>When importing, all other controls and measures can be deleted and test data generated.</p>
 <p><a href="../images/import.png"><img alt="Screenshot" src="../images/import.png" /></a></p>
+<h2 id="parameters">Settings<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h2>
+<p>The "Settings" page, restricted to administrators, groups the application settings in tabs:</p>
+<ul>
+<li>
+<p><strong>Documents</strong>: the <a href="#documents">document check and retention period</a>;</p>
+</li>
+<li>
+<p><strong>Templates</strong>: the <a href="#templates">document templates</a>;</p>
+</li>
+<li>
+<p><strong>Scoring</strong>: the <a href="../risks/#scoring">risk scoring configuration</a>;</p>
+</li>
+<li>
+<p><strong>AI</strong>: the configuration of the <a href="#ai">AI agent</a>;</p>
+</li>
+<li>
+<p><strong>Notifications</strong>: the <a href="#notifications">notifications</a> sent to users.</p>
+</li>
+</ul>
+<p>Each tab has its own buttons. After saving, the page comes back to the tab that was changed.</p>
+<!-- TODO capture : images/parameters.png -->
+
 <h2 id="documents">Documents<a class="headerlink" href="#documents" title="Permanent link">&para;</a></h2>
-<p>This screen lets you modify the document management settings used in Deming.</p>
+<p>The "Documents" tab of the <a href="#parameters">Settings</a> page is used to check the documents stored in Deming and to
+configure their retention period.</p>
 <p><a href="../images/documents.png"><img alt="Screenshot" src="../images/documents.png" /></a></p>
-<h3 id="templates">Templates<a class="headerlink" href="#templates" title="Permanent link">&para;</a></h3>
-<p>This part of the screen lets you modify the document templates used for control sheets and the ISMS management report, and gives you an overview of all the documents used as proof when carrying out security controls.</p>
+<h3 id="storage">Storage<a class="headerlink" href="#storage" title="Permanent link">&para;</a></h3>
+<p>This part of the tab lets you check the integrity of documents stored in the application.</p>
+<p>By clicking on “Check”, Deming launches the integrity check of documents stored in the application, using a CRC32.</p>
+<h3 id="retention">Retention<a class="headerlink" href="#retention" title="Permanent link">&para;</a></h3>
+<p>This part of the tab lets you configure the retention period (in months) for checks carried out in the application.</p>
+<p>All checks carried out after this date are deleted, along with the associated documents and action plans.</p>
+<p>This is done by executing the command</p>
+<div class="highlight"><pre><span></span><code>php artisan deming:cleanup
+</code></pre></div>
+<p>command via a cron.</p>
+<h2 id="templates">Templates<a class="headerlink" href="#templates" title="Permanent link">&para;</a></h2>
+<p>The "Templates" tab of the <a href="#parameters">Settings</a> page is used to modify the document templates used for control
+sheets and the ISMS management report.</p>
+<p>The tab contains two blocks, "Control sheet" and "Steering report". Each block provides:</p>
+<ul>
+<li>
+<p>a link to download the default template;</p>
+</li>
+<li>
+<p>a "Custom model" link to download the custom template, if there is one;</p>
+</li>
+<li>
+<p>a field to upload a new template (.docx), which replaces the custom template.</p>
+</li>
+</ul>
+<p>The uploaded templates are saved by clicking on "Save".</p>
 <p>The steering report template is a Word document (.docx) whose tags are replaced when the report is generated.
 The "Template tags" panel, displayed next to the templates, lists the available tags; clicking on a tag copies it
 to the clipboard.</p>
@@ -897,33 +982,49 @@ to the clipboard.</p>
 <p>Example:</p>
 <div class="highlight"><pre><span></span><code>${table:actions:reference,name,owners,due_date|where:status=0|order:due_date}
 </code></pre></div>
-<h3 id="storage">Storage<a class="headerlink" href="#storage" title="Permanent link">&para;</a></h3>
-<p>This part of the screen lets you check the integrity of documents stored in the application.</p>
-<p>By clicking on “Check”, Deming launches the integrity check of documents stored in the application, using a CRC32.</p>
-<h3 id="retention">Retention<a class="headerlink" href="#retention" title="Permanent link">&para;</a></h3>
-<p>This part of the screen lets you configure the retention period (in months) for checks carried out in the application.</p>
-<p>All checks carried out after this date are deleted, along with the associated documents and action plans.</p>
-<p>This is done by executing the command</p>
-<div class="highlight"><pre><span></span><code>php artisan deming:cleanup
-</code></pre></div>
-<p>command via a cron.</p>
+<h2 id="ai">AI<a class="headerlink" href="#ai" title="Permanent link">&para;</a></h2>
+<p>The "AI" tab of the <a href="#parameters">Settings</a> page, restricted to administrators, is used to enable and configure the <a href="../ai/">AI agent</a> that analyses
+controls, measurements, action plans and risks: activation, agent URL, API key, list of the available tasks,
+connection test and deletion of all analyses. The prompts and the models are managed by the provider of the agent,
+the Sourcentis AI gateway. AI is disabled by default.</p>
+<p>See <a href="../ai/#config">Enable and configure</a> and, before enabling it, <a href="../ai/#privacy">Data protection</a>.</p>
 <h2 id="notifications">Notifications<a class="headerlink" href="#notifications" title="Permanent link">&para;</a></h2>
-<p>This screen is used to configure the notifications sent to users when they have to carry out controls.</p>
-<p>The screen contains:</p>
+<p>The "Notifications" tab of the <a href="#parameters">Settings</a> page is used to configure the notifications sent to users when they have to carry out controls.</p>
+<p>The tab contains two blocks.</p>
+<p><strong>SMTP server</strong>: the server used to send the mails.</p>
 <ul>
 <li>
-<p>The subject of the mail sent to the user;</p>
+<p>the server and the port;</p>
 </li>
 <li>
-<p>The sender of the email;</p>
+<p>the encryption (none, SSL or TLS) and automatic STARTTLS;</p>
 </li>
 <li>
-<p>The periodicity of sending notifications;</p>
+<p>the authentication, the user and the password;</p>
 </li>
 <li>
-<p>The notification deadlines.</p>
+<p>the optional DKIM signature: domain, selector, private key path and passphrase.</p>
 </li>
 </ul>
+<p>These settings are stored in the database. The password and the DKIM passphrase are encrypted with the application
+key (<code>APP_KEY</code>) and are never displayed again: leaving the field empty keeps the saved value, the "Delete" box erases
+it. If the <code>APP_KEY</code> changes, they must be entered again.</p>
+<p><strong>Notifications</strong>: the content and frequency of the mails.</p>
+<ul>
+<li>
+<p>the sender of the mail;</p>
+</li>
+<li>
+<p>the subject and content of the mail sent to the user;</p>
+</li>
+<li>
+<p>the periodicity of sending notifications;</p>
+</li>
+<li>
+<p>the delay: the controls due within this delay are notified.</p>
+</li>
+</ul>
+<!-- TODO capture : refaire images/config.png (onglet Notifications avec le serveur SMTP) -->
 <p><a href="../images/config.png"><img alt="Screenshot" src="../images/config.png" /></a></p>
 <p>When you click on:</p>
 <ul>
@@ -931,7 +1032,7 @@ to the clipboard.</p>
 <p>"Save" - the configuration is saved;</p>
 </li>
 <li>
-<p>"Test" - a test mail is sent to the current user;</p>
+<p>"Test" - a test mail is sent to the current user, with the values entered (they are not saved);</p>
 </li>
 <li>
 <p>"Cancel" - you return to the main page.</p>

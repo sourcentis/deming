@@ -1,0 +1,1355 @@
+
+<!doctype html>
+<html lang="de" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Information System made easy !">
+      
+      
+      
+        <link rel="canonical" href="https://sourcentis.githubs.io/deming/de/ai/">
+      
+      
+        <link rel="prev" href="../crosswalk/">
+      
+      
+        <link rel="next" href="../config/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.31">
+    
+    
+      
+        <title>KI-Agent - Deming</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.3cba04c6.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../css/overrides.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#ki-agent" class="md-skip">
+          Zum Inhalt
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Kopfzeile">
+    <a href="../" title="Deming" class="md-header__button md-logo" aria-label="Deming" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Deming
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              KI-Agent
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3 3.19.09m3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95 2.06.05m-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31Z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5c-.84 0-1.65.15-2.39.42L12 2M3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29L3.34 7m.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14L3.36 17M20.65 7l-1.77 3.79a7.023 7.023 0 0 0-2.38-4.15l4.15.36m-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29L20.64 17M12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44L12 22Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Sprache wechseln">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.52 17.52 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04M18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12m-2.62 7 1.62-4.33L19.12 17h-3.24Z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../ai/" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../../fr/ai/" hreflang="fr" class="md-select__link">
+              Français
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="de" class="md-select__link">
+              Deutsch
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Suche" placeholder="Suche" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Suche">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Zurücksetzen" aria-label="Zurücksetzen" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Suche wird initialisiert
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/sourcentis/deming" title="Zum Repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../" title="Deming" class="md-nav__button md-logo" aria-label="Deming" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    Deming
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/sourcentis/deming" title="Zum Repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Einführung
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../home/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Anwendung
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../measures/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Sicherheitsmaßnahmen
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../controls/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Kontrollen
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../delegation/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Delegation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plan/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Planung
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dashboards/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Dashboards
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../actions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Aktionspläne
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../risks/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Risikoliste
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../exceptions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Ausnahmen
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../crosswalk/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Zuordnungen zwischen Rahmenwerken
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    KI-Agent
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    KI-Agent
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Inhaltsverzeichnis">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Inhaltsverzeichnis
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#config" class="md-nav__link">
+    <span class="md-ellipsis">
+      Aktivieren und konfigurieren
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Aktivieren und konfigurieren">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#einen-schlussel-erhalten" class="md-nav__link">
+    <span class="md-ellipsis">
+      Einen Schlüssel erhalten
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#purge" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alle Analysen löschen
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#use" class="md-nav__link">
+    <span class="md-ellipsis">
+      Die Analyse verwenden
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Die Analyse verwenden">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fehlermeldungen
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#access" class="md-nav__link">
+    <span class="md-ellipsis">
+      Wer eine Analyse starten kann
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#privacy" class="md-nav__link">
+    <span class="md-ellipsis">
+      Datenschutz
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Datenschutz">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#an-den-agenten-gesendete-daten" class="md-nav__link">
+    <span class="md-ellipsis">
+      An den Agenten gesendete Daten
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#niemals-gesendete-daten" class="md-nav__link">
+    <span class="md-ellipsis">
+      Niemals gesendete Daten
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#redaction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Automatische Maskierung
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#preview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Vorschau der gesendeten Daten
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wohin-die-daten-gehen" class="md-nav__link">
+    <span class="md-ellipsis">
+      Wohin die Daten gehen
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#was-deming-speichert" class="md-nav__link">
+    <span class="md-ellipsis">
+      Was Deming speichert
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sicherheit-der-funktion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sicherheit der Funktion
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vor-der-aktivierung-der-ki" class="md-nav__link">
+    <span class="md-ellipsis">
+      Vor der Aktivierung der KI
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#limits" class="md-nav__link">
+    <span class="md-ellipsis">
+      Grenzen
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../config/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Konfiguration
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    API
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../model/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Datenmodell
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../annexe/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Anhang
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../references/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Referenzen
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+    <a href="https://github.com/sourcentis/deming/edit/master/docs/ai.de.md" title="Seite editieren" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4v-2m10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1 2.1 2.1Z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/sourcentis/deming/raw/master/docs/ai.de.md" title="Quellcode der Seite anzeigen" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.15 8.15 0 0 1-1.23-2Z"/></svg>
+    </a>
+  
+
+
+<h1 id="ki-agent">KI-Agent<a class="headerlink" href="#ki-agent" title="Permanent link">&para;</a></h1>
+<p>Deming kann einen KI-Agenten aufrufen, um eine <a href="../measures/#show">Sicherheitsmaßnahme</a>, eine
+<a href="../controls/#show">Kontrolle</a>, einen <a href="../actions/#show">Aktionsplan</a> oder ein <a href="../risks/#show">Risiko</a> zu
+analysieren. Der Agent liefert eine strukturierte Stellungnahme: Zusammenfassung, bewerteter Status, Risikoniveau,
+Feststellungen, Empfehlungen, offene Fragen und vier Standpunkte (CEO, CISO, Datenschutzbeauftragter und Auditor).</p>
+<p>Der Agent ist eine <strong>Entscheidungshilfe</strong>: Er ändert niemals Daten in Deming. Seine Ergebnisse müssen von einem
+Menschen geprüft werden.</p>
+<p>Die KI ist <strong>standardmäßig deaktiviert</strong>. Solange ein Administrator sie nicht aktiviert, werden keine Daten gesendet
+und das Analyse-Symbol wird nicht angezeigt.</p>
+<p>Der KI-Agent wird vom <strong>Sourcentis-KI-Gateway</strong> bereitgestellt, einem privaten Dienst, der die Prompts, das
+Antwortformat und die Modelle verwaltet. Deming sendet ihm nur die Daten des zu analysierenden Objekts. Die Funktion
+ist daher Sourcentis-Kunden vorbehalten: Standardmäßig ist kein Agent konfiguriert, und Deming kann weder einen anderen
+Anbieter noch ein lokales Modell direkt ansprechen.</p>
+<h2 id="config">Aktivieren und konfigurieren<a class="headerlink" href="#config" title="Permanent link">&para;</a></h2>
+<p>Die Konfiguration befindet sich in der Registerkarte „KI“ der Seite <a href="../config/#parameters">Einstellungen</a> (Menü
+„Konfiguration → Einstellungen“). Sie ist Administratoren vorbehalten.</p>
+<!-- TODO capture : images/ai-config.de.png -->
+
+<p>Die Seite enthält einen Hinweis „Datenschutz“, der zusammenfasst, was an den Agenten gesendet wird; lesen Sie den
+Abschnitt <a href="#privacy">Datenschutz</a>, bevor Sie die KI aktivieren.</p>
+<p>Die Felder sind:</p>
+<ul>
+<li>
+<p><strong>KI aktivieren</strong>: aktiviert oder deaktiviert den Agenten. Im deaktivierten Zustand wird keine Anfrage an den
+  Agenten gesendet, die bereits gespeicherten Analysen bleiben jedoch erhalten (siehe
+  <a href="#purge">Alle Analysen löschen</a>). Solange die KI deaktiviert ist, sind die übrigen Felder ausgegraut; sie behalten
+  ihre Werte und sind wieder bearbeitbar, sobald die KI aktiviert wird;</p>
+</li>
+<li>
+<p><strong>URL des KI-Agenten</strong>: die von Sourcentis mitgeteilte Adresse, <code>https://ai.sourcentis.lu/v1</code>. Es gibt keinen
+  Standardwert. <code>https</code> ist Pflicht, außer <code>http://localhost</code> oder <code>http://127.0.0.1</code> (Entwicklungs-Gateway);</p>
+</li>
+<li>
+<p><strong>API-Schlüssel</strong>: der von Sourcentis mitgeteilte Zugangsschlüssel. Er wird nie wieder angezeigt: Die Seite zeigt
+  nur „Schlüssel gespeichert“ oder „Kein Schlüssel“. Ein leeres Feld behält den aktuellen Schlüssel; das Kästchen
+  „Schlüssel löschen“ entfernt ihn. Der Schlüssel wird in der Datenbank mit dem Anwendungsschlüssel (<code>APP_KEY</code>)
+  verschlüsselt: Ändert sich der <code>APP_KEY</code>, muss der Schlüssel erneut eingegeben werden.</p>
+</li>
+</ul>
+<p>Weder Modell noch Prompt sind einzustellen: Sie werden vom Anbieter des Agenten verwaltet und versioniert. Ist die KI
+aktiviert, zeigt die Seite schreibgeschützt die <strong>verfügbaren Aufgaben</strong> des Gateways, eine pro Objekttyp
+(Sicherheitsmaßnahme, Kontrolle, Aktionsplan und Risiko), mit ihrer Version. Ist das Gateway nicht erreichbar oder
+lehnt es den Schlüssel ab, erscheint statt der Liste ein Hinweis.</p>
+<p>Die Schaltfläche „Verbindung testen“ fragt mit der gespeicherten Konfiguration den Aufgabenkatalog des Gateways ab.
+Diese Anfrage ist kostenlos: Sie verbraucht keine Tokens. Sie zeigt den HTTP-Status, die Latenz und die Anzahl der
+gefundenen Deming-Aufgaben an: „4/4 Deming-Aufgaben“ bedeutet, dass alles bereit ist. Der Schlüssel wird nie
+angezeigt.</p>
+<h3 id="einen-schlussel-erhalten">Einen Schlüssel erhalten<a class="headerlink" href="#einen-schlussel-erhalten" title="Permanent link">&para;</a></h3>
+<p>URL und Schlüssel werden von Sourcentis mitgeteilt. Der Schlüssel wird nur einmal übermittelt: Fügen Sie ihn in das
+Feld „API-Schlüssel“ von Deming ein.</p>
+<h3 id="purge">Alle Analysen löschen<a class="headerlink" href="#purge" title="Permanent link">&para;</a></h3>
+<p>Die Schaltfläche „Alle KI-Analysen löschen“ unten in der Registerkarte löscht nach Bestätigung die zuletzt gespeicherte
+Analyse jeder Sicherheitsmaßnahme, jeder Kontrolle, jedes Aktionsplans und jedes Risikos. Der Vorgang wird in den
+<a href="../config/#logs">Logs</a> protokolliert (Benutzer und Datum, ohne Inhalt).</p>
+<h2 id="use">Die Analyse verwenden<a class="headerlink" href="#use" title="Permanent link">&para;</a></h2>
+<p>Ist die KI aktiviert, erscheint ein Roboter-Symbol „KI-Analyse“ oben rechts auf den Anzeigeseiten einer
+<a href="../measures/#show">Sicherheitsmaßnahme</a>, einer <a href="../controls/#show">Kontrolle</a>, eines
+<a href="../actions/#show">Aktionsplans</a> und eines <a href="../risks/#show">Risikos</a>, unter der Hilfe-Schaltfläche. Ein grüner
+Punkt am Symbol zeigt an, dass bereits eine Analyse gespeichert ist.</p>
+<p>Ein Klick auf das Symbol öffnet ein Fenster am rechten Bildschirmrand. Haben sich das Objekt und seine verknüpften
+Objekte seit der letzten Analyse nicht geändert, wird diese sofort und ohne Aufruf des Agenten angezeigt, mit dem
+Hinweis „Analyse vom … — seitdem unverändert“. Andernfalls wird eine neue Analyse gestartet; sie kann bis zu einer
+Minute dauern.</p>
+<!-- TODO capture : images/ai-panel.de.png -->
+
+<p>Das Fenster enthält:</p>
+<ul>
+<li>
+<p>den <strong>bewerteten Status</strong>, das <strong>Risikoniveau</strong> und das <strong>Vertrauen</strong> des Agenten in seine eigene Analyse;</p>
+</li>
+<li>
+<p>die <strong>Zusammenfassung</strong>;</p>
+</li>
+<li>
+<p>die <strong>Feststellungen</strong>: Stärken, Schwächen, fehlende Nachweise und Widersprüche;</p>
+</li>
+<li>
+<p>die <strong>Empfehlungen</strong> mit ihrer Priorität, Begründung, einer vorgeschlagenen Frist und einer Normreferenz;</p>
+</li>
+<li>
+<p>die <strong>offenen Fragen</strong>, falls vorhanden;</p>
+</li>
+<li>
+<p>vier bewusst gegensätzliche <strong>Standpunkte</strong>: der CEO (geschäftliche Aspekte und Kosten), der CISO (Risikobewertung
+  und Prioritäten), der Datenschutzbeauftragte (personenbezogene Daten und DSGVO) und der Auditor (normative
+  Anforderungen und Nachweise).</p>
+</li>
+</ul>
+<p>Die Bedeutung des Status hängt vom Objekttyp ab:</p>
+<table>
+<thead>
+<tr>
+<th>Status</th>
+<th>Sicherheitsmaßnahme / Kontrolle</th>
+<th>Aktionsplan</th>
+<th>Risiko</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>conforme</code></td>
+<td>Konform</td>
+<td>Zielführend und auf Kurs</td>
+<td>Angemessene Behandlung</td>
+</tr>
+<tr>
+<td><code>partiellement_conforme</code></td>
+<td>Teilweise konform</td>
+<td>Zu verstärken</td>
+<td>Teilweise Behandlung</td>
+</tr>
+<tr>
+<td><code>non_conforme</code></td>
+<td>Nicht konform</td>
+<td>Ungeeignet oder ins Stocken geraten</td>
+<td>Unangemessene Behandlung</td>
+</tr>
+<tr>
+<td><code>non_evaluable</code></td>
+<td>Nicht bewertbar</td>
+<td>Nicht bewertbar</td>
+<td>Nicht bewertbar</td>
+</tr>
+</tbody>
+</table>
+<p>Die Schaltfläche „Analyse erneut ausführen“ erzwingt eine neue Analyse, auch wenn sich nichts geändert hat. Die
+Fußzeile des Fensters erinnert daran, dass die Analyse von einer KI erstellt wurde und von einem Menschen geprüft
+werden muss, und zeigt das Modell, das sie erstellt hat, sowie den Host des Agenten, an den die Daten gesendet wurden. Der Link „Gesendete
+Daten“ zeigt den <a href="#preview">übermittelten Kontext</a>.</p>
+<p>Nur die letzte Analyse jedes Objekts wird aufbewahrt. Eine neue Analyse wird automatisch ausgeführt, wenn sich das
+Objekt, seine verknüpften Objekte oder die Sprache des Benutzers ändern, oder wenn der Anbieter eine neue Version der
+Aufgabe veröffentlicht (Prompt, Format oder Modell). Ist das Gateway vorübergehend nicht erreichbar, bleibt die letzte
+Analyse sichtbar.</p>
+<h3 id="errors">Fehlermeldungen<a class="headerlink" href="#errors" title="Permanent link">&para;</a></h3>
+<p>Bei einem Fehler zeigt das Fenster eine allgemeine Meldung, nie die Antwort des Gateways, und die vorherige Analyse
+bleibt erhalten. Die wichtigsten Meldungen sind:</p>
+<table>
+<thead>
+<tr>
+<th>Meldung</th>
+<th>Ursache</th>
+<th>Was tun</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>„Zugangsschlüssel des KI-Agenten ungültig, gesperrt oder gekündigt“</td>
+<td>Das Gateway lehnt den Schlüssel ab (HTTP 401) oder erlaubt ihn nicht für diese Analyse (HTTP 403)</td>
+<td>Schlüssel in der Konfiguration prüfen, dann Sourcentis kontaktieren</td>
+</tr>
+<tr>
+<td>„KI-Monatskontingent erreicht — wenden Sie sich an Ihren Anbieter“</td>
+<td>Das Monatsbudget des Schlüssels ist erschöpft (HTTP 402), bis zum 1. des Folgemonats</td>
+<td>Sourcentis kontaktieren</td>
+</tr>
+<tr>
+<td>„Zu viele Anfragen, bitte in wenigen Augenblicken erneut versuchen“</td>
+<td>Ratenbegrenzung des Schlüssels oder des Anbieters (HTTP 429)</td>
+<td>Etwas später erneut versuchen</td>
+</tr>
+<tr>
+<td>„Objekt zu groß für eine Analyse“</td>
+<td>Der Kontext überschreitet die vom Gateway zugelassene Größe (HTTP 413)</td>
+<td>Die langen Texte des Objekts kürzen</td>
+</tr>
+<tr>
+<td>„KI-Agent nicht kompatibel mit dieser Deming-Version“</td>
+<td>Anfrage abgelehnt oder Aufgabe unbekannt (HTTP 400 oder 404)</td>
+<td>Deming aktualisieren oder Sourcentis kontaktieren</td>
+</tr>
+<tr>
+<td>„Ungültige Antwort des KI-Agenten“ / „Der KI-Agent hat nicht rechtzeitig geantwortet“</td>
+<td>Ungültige Antwort des Modells (HTTP 502) oder Zeitüberschreitung (HTTP 504)</td>
+<td>Analyse erneut ausführen</td>
+</tr>
+</tbody>
+</table>
+<h2 id="access">Wer eine Analyse starten kann<a class="headerlink" href="#access" title="Permanent link">&para;</a></h2>
+<p>Ein Objekt kann analysieren, wer es anzeigen darf, außer mit der Rolle Auditor oder API. Die Rechte werden bei jeder
+Anfrage vom Server geprüft.</p>
+<table>
+<thead>
+<tr>
+<th>Rolle</th>
+<th>Sicherheitsmaßnahme</th>
+<th>Kontrolle</th>
+<th>Aktionsplan</th>
+<th>Risiko</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Administrator</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Benutzer</td>
+<td>✓ (je nach Zuweisung und Gruppenansicht)</td>
+<td>✓ (ebenso)</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Auditierter</td>
+<td>✓ wenn zugewiesen</td>
+<td>✓ wenn zugewiesen</td>
+<td>—</td>
+<td>✓ (alle Risiken)</td>
+</tr>
+<tr>
+<td>Auditor</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>API</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p>Einzelheiten:</p>
+<ul>
+<li>
+<p>in der Gruppenansicht ist eine Sicherheitsmaßnahme nur zugänglich, wenn der Benutzer direkt einer ihrer Kontrollen
+  zugewiesen ist; eine Kontrolle ist zugänglich, wenn der Benutzer ihr direkt oder über eine seiner
+  <a href="../config/#groups">Gruppen</a> zugewiesen ist;</p>
+</li>
+<li>
+<p>der Auditierte hat weder Zugriff auf Aktionspläne noch auf deren Analyse;</p>
+</li>
+<li>
+<p>der Auditierte kann alle Risiken anzeigen und damit analysieren;</p>
+</li>
+<li>
+<p>der Auditor hat weder Zugriff auf das Symbol noch auf das Fenster noch auf gespeicherte Analysen, auch nicht für ein
+  Objekt, das er anzeigen kann.</p>
+</li>
+</ul>
+<h2 id="privacy">Datenschutz<a class="headerlink" href="#privacy" title="Permanent link">&para;</a></h2>
+<p>Dieser Abschnitt beschreibt genau, was Deming bei einer Analyse verlässt. Er richtet sich insbesondere an den CISO und
+den Datenschutzbeauftragten.</p>
+<h3 id="an-den-agenten-gesendete-daten">An den Agenten gesendete Daten<a class="headerlink" href="#an-den-agenten-gesendete-daten" title="Permanent link">&para;</a></h3>
+<p>Jede Analyse sendet dem Gateway, an die Aufgabe des Objekttyps:</p>
+<ul>
+<li>
+<p>den nachstehend beschriebenen <strong>Kontext</strong> des analysierten Objekts, nach der <a href="#redaction">Maskierung</a>;</p>
+</li>
+<li>
+<p>die <strong>Sprache</strong> des Benutzers (<code>fr</code>, <code>en</code> oder <code>de</code>);</p>
+</li>
+<li>
+<p>das <strong>heutige Datum</strong>.</p>
+</li>
+</ul>
+<p>Sonst wird nichts übermittelt: weder Prompt noch Antwortformat noch Modellname. Prompt und Format fügt das Gateway
+hinzu.</p>
+<p>Lange Textfelder des analysierten Objekts sind auf 4.000 Zeichen begrenzt, jene der verknüpften Objekte
+(Beobachtungen, Begründungen…) auf 300 Zeichen.</p>
+<p><strong>Sicherheitsmaßnahme</strong>: Klausel, Name, Domäne (Rahmenwerk und Titel), Ziel, Attribute, Eingabedaten, Modell,
+Indikator, Aktionsplan, Periodizität, die letzten 5 durchgeführten Kontrollen (Datum, Bewertung, zusammengefasste
+Beobachtungen und Aktionsplan), die nächsten 5 geplanten Kontrollen (geplantes Datum, Status, verspätet oder nicht),
+verknüpfte offene Aktionspläne (Referenz, Name, Typ, Kritikalität, Status, Fortschritt, Frist, verspätet oder nicht),
+verknüpfte Risiken (Name, Niveau, Behandlungsstatus), Ausnahmen (Name, Status, Beginn- und Enddatum, abgelaufen oder
+nicht, zusammengefasste Begründung und kompensierende Maßnahmen) und bis zu 10 Zuordnungen zu anderen Rahmenwerken
+(Rahmenwerk, Klausel, Name, Typ und Abdeckung).</p>
+<p><strong>Kontrolle</strong>: Name, Geltungsbereich, abgedeckte Sicherheitsmaßnahmen (Klausel und Name), Ziel, Attribute,
+Eingabedaten, Modell, Indikator, Periodizität, Status, geplantes Datum, Durchführungsdatum, verspätet oder nicht,
+Bewertung, Note, Beobachtungen, Aktionsplan, Dokumente (<strong>nur Anzahl und Dateinamen</strong>), aus der Kontrolle
+hervorgegangene Aktionspläne (Referenz, Name, Typ, Kritikalität, Status, Fortschritt, Frist, verspätet oder nicht) und
+die letzten 5 durchgeführten Kontrollen derselben Sicherheitsmaßnahme (Datum, Bewertung, zusammengefasste
+Beobachtungen und Aktionsplan).</p>
+<p><strong>Aktionsplan</strong>: Referenz, Name, Typ, Kritikalität, Status, Geltungsbereich, Ursache, Abhilfe, Erstellungs-, Fälligkeits-
+und Abschlussdatum, Fortschritt, Begründung, verspätet oder nicht, <strong>Anzahl</strong> der Verantwortlichen, verknüpfte
+Sicherheitsmaßnahmen (Klausel, Name, Datum und Bewertung der letzten Kontrolle), verknüpfte Risiken (Name, Niveau,
+Behandlungsstatus) und die letzten 5 Fortschrittsschritte (Datum und Prozentsatz, ohne Urheber).</p>
+<p><strong>Risiko</strong>: Name, Beschreibung, Wahrscheinlichkeit und Auswirkung (Wert, Bezeichnung und Kommentar), Exposition und
+Verwundbarkeit (Wert und Bezeichnung), Restrisiko, aktive Bewertungsmethode (Name, Formel und Schwellenwerte),
+berechnete Bewertung und berechnetes Niveau, Behandlungsstatus und dessen Kommentar, Überprüfungshäufigkeit, Datum der
+nächsten Überprüfung, Überprüfung überfällig oder nicht, <strong>ob</strong> ein Eigentümer vorhanden ist (ja oder nein), Bedarf an
+Maßnahmen oder Aktionen je nach Status, verknüpfte Sicherheitsmaßnahmen (Klausel, Name, Datum und Bewertung der letzten
+Kontrolle) und verknüpfte Aktionspläne (Referenz, Name, Kritikalität, Fortschritt, Frist, abgeschlossen oder nicht,
+verspätet oder nicht).</p>
+<h3 id="niemals-gesendete-daten">Niemals gesendete Daten<a class="headerlink" href="#niemals-gesendete-daten" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p>Namen, Logins und E-Mail-Adressen der Deming-Benutzer;</p>
+</li>
+<li>
+<p>die Identität der Verantwortlichen eines Aktionsplans und des Eigentümers eines Risikos;</p>
+</li>
+<li>
+<p>der Inhalt von Dokumenten (nur deren Namen werden gesendet);</p>
+</li>
+<li>
+<p>Audit-Protokolle;</p>
+</li>
+<li>
+<p>die Konfiguration von Deming und der API-Schlüssel;</p>
+</li>
+<li>
+<p>Objekte, die nicht mit dem analysierten Objekt verknüpft sind.</p>
+</li>
+</ul>
+<h3 id="redaction">Automatische Maskierung<a class="headerlink" href="#redaction" title="Permanent link">&para;</a></h3>
+<p>Vor dem Senden werden alle Texte des Kontexts gefiltert. Ersetzt werden:</p>
+<ul>
+<li>
+<p>E-Mail-Adressen durch <code>[email]</code>;</p>
+</li>
+<li>
+<p>Telefonnummern (internationale, belgische, luxemburgische, französische und deutsche Formate) durch <code>[téléphone]</code>;</p>
+</li>
+<li>
+<p>IBANs durch <code>[iban]</code>;</p>
+</li>
+<li>
+<p>IP-Adressen (IPv4 und IPv6) durch <code>[ip]</code>;</p>
+</li>
+<li>
+<p>Name, Login und E-Mail-Adresse jedes Deming-Benutzers, als ganze Wörter und ohne Berücksichtigung der
+  Groß-/Kleinschreibung, durch <code>[utilisateur]</code>. Werte mit weniger als drei Zeichen werden ignoriert, um
+  Fehlerkennungen zu vermeiden.</p>
+</li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Wichtige Einschränkung — Freitextfelder</p>
+<p>Die Maskierung ist <strong>keine</strong> Anonymisierung. Sie erkennt nicht alles: Der Name eines Patienten, eines Kunden oder
+eines externen Mitarbeiters in Beobachtungen, einer Beschreibung oder einer Begründung <strong>wird an den Agenten
+übermittelt</strong>. Geben Sie keine personenbezogenen Daten in die Textfelder von Deming ein und erinnern Sie die
+Benutzer an diese Regel.</p>
+</div>
+<h3 id="preview">Vorschau der gesendeten Daten<a class="headerlink" href="#preview" title="Permanent link">&para;</a></h3>
+<p>Der Link „Gesendete Daten“ unten im Analysefenster zeigt den Kontext genau so, wie er an den Agenten gesendet wird,
+nach Minimierung und Maskierung. Diese Vorschau ruft den Agenten nicht auf: Sie kann vor oder nach einer
+Analyse genutzt werden, um zu prüfen, was tatsächlich gesendet wird. Sie unterliegt denselben Rechten wie die Analyse.</p>
+<!-- TODO capture : images/ai-preview.de.png -->
+
+<h3 id="wohin-die-daten-gehen">Wohin die Daten gehen<a class="headerlink" href="#wohin-die-daten-gehen" title="Permanent link">&para;</a></h3>
+<p>Die Daten werden ausschließlich an den in der URL des Agenten konfigurierten Host gesendet, der unten im Fenster
+angezeigt wird. Deming folgt keiner Umleitung zu einem anderen Host, und <code>https</code> mit Zertifikatsprüfung ist Pflicht,
+außer für ein Entwicklungs-Gateway auf <code>localhost</code>.</p>
+<p>Der Weg der Daten ist folgender:</p>
+<ol>
+<li><strong>Deming</strong> minimiert und maskiert den Kontext vor jedem Versand;</li>
+<li>das <strong>Sourcentis-KI-Gateway</strong> (Auftragsverarbeiter) fügt den Prompt und das Antwortformat hinzu und leitet die
+   Anfrage an das Modell weiter;</li>
+<li><strong>OVHcloud</strong> (Unterauftragsverarbeiter) führt das Modell aus.</li>
+</ol>
+<p>Laut seiner Dokumentation speichert und protokolliert das Gateway weder den Kontext noch den Prompt noch die Antwort:
+Für die Abrechnung werden nur tägliche Summen aufbewahrt (Kunde, Modell, Anzahl der Tokens, Kosten und Datum). Die
+Speicherung der Daten bei OVHcloud richtet sich nach dessen Bedingungen und Auftragsverarbeitungsvertrag (AVV).</p>
+<h3 id="was-deming-speichert">Was Deming speichert<a class="headerlink" href="#was-deming-speichert" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p>Nur die <strong>letzte Analyse</strong> jedes Objekts, gespeichert im Objekt selbst. Sie wird mit dem Objekt oder über die
+  Schaltfläche „<a href="#purge">Alle KI-Analysen löschen</a>“ gelöscht.</p>
+</li>
+<li>
+<p>Analysen erscheinen weder in der <a href="../api/">REST-API</a> noch in Exporten oder Berichten und werden nicht in den
+  <a href="../config/#logs">Logs</a> protokolliert: Eine Analyse ist keine Änderung des Objekts.</p>
+</li>
+<li>
+<p>Die Anwendungsprotokolle enthalten nur Metadaten: Typ und Kennung des Objekts, Modell, Version der Aufgabe, Dauer,
+  Anzahl der Tokens und Status. Weder Kontext noch Antwort oder Schlüssel werden protokolliert.</p>
+</li>
+<li>
+<p>Der API-Schlüssel wird mit dem <code>APP_KEY</code> der Anwendung verschlüsselt; eine Änderung des <code>APP_KEY</code> erfordert die
+  erneute Eingabe des Schlüssels.</p>
+</li>
+</ul>
+<h3 id="sicherheit-der-funktion">Sicherheit der Funktion<a class="headerlink" href="#sicherheit-der-funktion" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p>Die Analyse unterliegt denselben Rechten wie die Anzeige des Objekts; die Rollen Auditor und API sind ausgeschlossen
+  (siehe <a href="#access">Wer eine Analyse starten kann</a>).</p>
+</li>
+<li>
+<p>Die Anfragen sind gegen CSRF geschützt und auf 10 pro Minute begrenzt.</p>
+</li>
+<li>
+<p>Die Antworten der KI werden als Text angezeigt, ohne HTML-Interpretation.</p>
+</li>
+<li>
+<p>Die Daten des Objekts werden dem Agenten als Daten, niemals als Anweisungen übergeben: Ein Injektionsversuch in
+  einem Textfeld wird als Widerspruch gemeldet.</p>
+</li>
+<li>
+<p>Die KI kann in Deming nichts ändern.</p>
+</li>
+</ul>
+<h3 id="vor-der-aktivierung-der-ki">Vor der Aktivierung der KI<a class="headerlink" href="#vor-der-aktivierung-der-ki" title="Permanent link">&para;</a></h3>
+<p>Vom Verantwortlichen zu prüfende Punkte. Diese Empfehlungen stellen keine Rechtsberatung dar.</p>
+<ul>
+<li>[ ] Den Datenschutzbeauftragten konsultieren.</li>
+<li>[ ] Das Verzeichnis von Verarbeitungstätigkeiten (DSGVO, Artikel 30) aktualisieren, falls personenbezogene Daten
+      übermittelt werden können.</li>
+<li>[ ] Einen Auftragsverarbeitungsvertrag (AVV, DSGVO Artikel 28) mit Sourcentis abschließen, der OVHcloud als
+      Unterauftragsverarbeiter nennt.</li>
+<li>[ ] Den Ort der Verarbeitung prüfen und sicherstellen, dass keine Übermittlung außerhalb der Europäischen Union
+      erfolgt, auch bei OVHcloud.</li>
+<li>[ ] Den Bedarf einer Datenschutz-Folgenabschätzung (DSFA) prüfen, insbesondere in Branchen mit sensiblen Daten wie
+      dem Gesundheitswesen.</li>
+<li>[ ] Die Deming-Benutzer über die Funktion und die Regel zu Freitexten informieren.</li>
+<li>[ ] Bedenken, dass die Ergebnisse eine von einem Menschen geprüfte Entscheidungshilfe sind: Es wird keine
+      Entscheidung automatisch getroffen, und der Agent behandelt keine Entscheidungen über Personen.</li>
+</ul>
+<h2 id="limits">Grenzen<a class="headerlink" href="#limits" title="Permanent link">&para;</a></h2>
+<ul>
+<li>
+<p>Die KI kann sich irren, Daten falsch interpretieren oder einen wichtigen Punkt übersehen.</p>
+</li>
+<li>
+<p>Die zitierten Normreferenzen müssen überprüft werden.</p>
+</li>
+<li>
+<p>Die Ergebnisse sind nicht streng reproduzierbar: Zwei Analysen derselben Daten können sich unterscheiden.</p>
+</li>
+<li>
+<p>Kosten und Antwortzeit hängen vom Anbieter und vom Modell ab.</p>
+</li>
+<li>
+<p>Die Funktion setzt ein Abonnement des Sourcentis-KI-Gateways voraus.</p>
+</li>
+<li>
+<p>Die Qualität der Analyse hängt von der Qualität der in Deming erfassten Daten ab.</p>
+</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+  Zurück zum Seitenanfang
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright <a href="https://www.gnu.org/licenses/licenses.en.html">GPL</a>.
+    </div>
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.sections", "navigation.expand", "navigation.top", "toc.integrate", "content.code.copy", "content.action.edit", "content.action.view", "palette.toggle"], "search": "../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "In Zwischenablage kopiert", "clipboard.copy": "In Zwischenablage kopieren", "search.result.more.one": "1 weiteres Suchergebnis auf dieser Seite", "search.result.more.other": "# weitere Suchergebnisse auf dieser Seite", "search.result.none": "Keine Suchergebnisse", "search.result.one": "1 Suchergebnis", "search.result.other": "# Suchergebnisse", "search.result.placeholder": "Suchbegriff eingeben", "search.result.term.missing": "Es fehlt", "select.version": "Version ausw\u00e4hlen"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.fe8b6f2b.min.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@11/dist/mermaid.min.js"></script>
+      
+    
+  </body>
+</html>
