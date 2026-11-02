@@ -199,6 +199,8 @@ return [
             'control' => 'Modèle de fiche de contrôle',
             'report' => 'Modèle du rapport de pilotage',
             'custom' => 'Modèle modifié',
+            'control_title' => 'Fiche de contrôle',
+            'report_title' => 'Rapport de pilotage',
         ],
         'count' => 'Nombre de documents',
         'total_size' => 'Taille totale',

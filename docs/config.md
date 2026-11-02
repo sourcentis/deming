@@ -12,6 +12,8 @@ It contains the list of attributes and allows you to create, delete or modify at
 
 Administrators only have access to a "Manage" button, which opens a form to globally replace an existing attribute value with a new one. The replacement is applied everywhere the value is used: in the attribute lists, in the controls, and in measures that have not yet been carried out. Measures that have already been carried out are left untouched, since they are historical records.
 
+[![Screenshot](images/tags.replace.png)](images/tags.replace.png)
+
 ## Domains {#domains}
 
 This screen allows you to create, modify or delete lists of security domains.
@@ -29,6 +31,8 @@ Users are directly defined in the application.
 A user is composed of a login, a name, a title, a role, an email address, a language, a password and the list of
 measurements assigned to them. The language is used for the user interface, the notifications and the generated
 documents.
+
+[![Screenshot](images/users.edit.png)](images/users.edit.png)
 
 There are six different roles:
 
@@ -80,7 +84,7 @@ Statement of Applicability and the data exports.
 [![Screenshot](images/reports.png)](images/reports.png)
 
 **ISMS steering report**: select a framework (optional) and a period, then click "Create". A Word document is
-generated from the [steering report template](#documents).
+generated from the [steering report template](#templates).
 
 Here is the ISMS pilot report:
 
@@ -118,7 +122,7 @@ The "Settings" page, restricted to administrators, groups the application settin
 
 Each tab has its own buttons. After saving, the page comes back to the tab that was changed.
 
-<!-- TODO capture : images/parameters.png -->
+[![Screenshot](images/parameters.png)](images/parameters.png)
 
 ## Documents {#documents}
 
@@ -137,9 +141,17 @@ By clicking on “Check”, Deming launches the integrity check of documents sto
 
 This part of the tab lets you configure the retention period (in months) for checks carried out in the application.
 
-All checks carried out after this date are deleted, along with the associated documents and action plans.
+All checks carried out before this period are deleted, along with the associated documents, action plans and logs.
 
-This is done by executing the command
+When you click on:
+
+* "Save" - the retention period is saved;
+
+* "Test" - Deming displays the number of logs, documents and checks that would be deleted, without deleting them;
+
+* "Delete" - after confirmation, the deletion is carried out immediately.
+
+The deletion is also carried out automatically by executing the command
 
     php artisan deming:cleanup
 
@@ -150,9 +162,22 @@ command via a cron.
 The "Templates" tab of the [Settings](#parameters) page is used to modify the document templates used for control
 sheets and the ISMS management report.
 
+The tab contains two blocks, "Control sheet" and "Steering report". Each block provides:
+
+* a link to download the default template;
+
+* a "Custom model" link to download the custom template, if there is one;
+
+* a field to upload a new template (.docx), which replaces the custom template.
+
+The uploaded templates are saved by clicking on "Save".
+
+[![Screenshot](images/templates.png)](images/templates.png)
+
 The steering report template is a Word document (.docx) whose tags are replaced when the report is generated.
 The "Template tags" panel, displayed next to the templates, lists the available tags; clicking on a tag copies it
-to the clipboard.
+to the clipboard. The "Available columns" part lists, for each table, the columns that can be used in the custom
+tables.
 
 * Variables: `${today}`, `${start_date}`, `${end_date}`, `${framework}`, and the predefined tables
   `${control_table}`, `${kpi_table}`, `${made_control_table}` and `${action_plans_table}`.
@@ -173,6 +198,8 @@ The "AI" tab of the [Settings](#parameters) page, restricted to administrators, 
 controls, measurements, action plans and risks: activation, agent URL, API key, list of the available tasks,
 connection test and deletion of all analyses. The prompts and the models are managed by the provider of the agent,
 the Sourcentis AI gateway. AI is disabled by default.
+
+[![Screenshot](images/ai-config.png)](images/ai-config.png)
 
 See [Enable and configure](ai.md#config) and, before enabling it, [Data protection](ai.md#privacy).
 
@@ -206,7 +233,6 @@ it. If the `APP_KEY` changes, they must be entered again.
 
 * the delay: the controls due within this delay are notified.
 
-<!-- TODO capture : refaire images/config.png (onglet Notifications avec le serveur SMTP) -->
 [![Screenshot](images/config.png)](images/config.png)
 
 When you click on:
@@ -220,8 +246,11 @@ When you click on:
 ## Logs {#logs}
 
 This screen, available from the "Configuration" menu, lists, from the most recent, all the changes made to
-the security measures, the controls, the action plans, the risks and the users: action (creation, modification,
-deletion), type and identifier of the object, user, IP address and date.
+the security measures, the controls, the action plans, the risks, the users and the configuration, as well as the
+logins and logouts: action (creation, modification, deletion, login, logout), type and identifier of the object, user,
+IP address and date.
+
+[![Screenshot](images/logs.png)](images/logs.png)
 
 Clicking on:
 
@@ -231,6 +260,14 @@ Clicking on:
 * the identifier of an object displays this object;
 
 * the "History" button displays the change history of this object.
+
+Here is the detail of a change:
+
+[![Screenshot](images/logs.show.png)](images/logs.show.png)
+
+The change history shows, in columns, the successive values of the object:
+
+[![Screenshot](images/logs.history.png)](images/logs.history.png)
 
 The change history of an object is also accessible through the "History" button of the screens displaying
 a [control](controls.md#show), a [risk](risks.md#show) or a [user](#users).

@@ -12,6 +12,8 @@ Sie enthält die Liste der Attribute und ermöglicht es, Attributlisten zu erste
 
 Nur Administratoren verfügen über eine Schaltfläche „Verwalten“, die ein Formular öffnet, mit dem ein bestehender Attributwert global durch einen neuen Wert ersetzt werden kann. Die Ersetzung gilt überall dort, wo der Wert verwendet wird: in den Attributlisten, in den Sicherheitsmaßnahmen sowie in den noch nicht durchgeführten Kontrollen. Bereits durchgeführte Kontrollen werden nicht geändert, da sie eine Historie darstellen.
 
+[![Screenshot](images/tags.replace.de.png)](images/tags.replace.de.png)
+
 ## Domänen {#domains}
 
 Mit dieser Ansicht können Listen von Sicherheitsdomänen erstellt, geändert oder gelöscht werden.
@@ -29,6 +31,8 @@ Die Benutzer werden direkt in der Anwendung definiert.
 Ein Benutzer besteht aus einem Login, einem Namen, einem Titel, einer Rolle, einer E-Mail-Adresse, einer Sprache,
 einem Passwort und der Liste der ihm zugewiesenen Kontrollen. Die Sprache wird für die Benutzeroberfläche, die
 Benachrichtigungen und die erzeugten Dokumente verwendet.
+
+[![Screenshot](images/users.edit.de.png)](images/users.edit.de.png)
 
 Es gibt sechs verschiedene Rollen:
 
@@ -80,7 +84,7 @@ Erklärung der Anwendbarkeit und die Datenexporte erzeugt.
 [![Screenshot](images/reports.de.png)](images/reports.de.png)
 
 **ISMS-Steuerungsbericht**: Wählen Sie ein Rahmenwerk (optional) und einen Zeitraum und klicken Sie dann auf
-„Erstellen“. Ein Word-Dokument wird auf Grundlage der [Vorlage des Steuerungsberichts](#documents) erzeugt.
+„Erstellen“. Ein Word-Dokument wird auf Grundlage der [Vorlage des Steuerungsberichts](#templates) erzeugt.
 
 Hier ist der ISMS-Steuerungsbericht:
 
@@ -111,7 +115,7 @@ zusammen:
 
 * **Vorlagen**: die [Dokumentvorlagen](#templates);
 
-* **Klassifizierung**: die [Konfiguration der Risikobewertung](risks.de.md#scoring);
+* **Scoring**: die [Konfiguration der Risikobewertung](risks.de.md#scoring);
 
 * **KI**: die Konfiguration des [KI-Agenten](#ai);
 
@@ -120,7 +124,7 @@ zusammen:
 Jede Registerkarte hat ihre eigenen Schaltflächen. Nach dem Speichern kehrt die Seite zur geänderten Registerkarte
 zurück.
 
-<!-- TODO capture : images/parameters.de.png -->
+[![Screenshot](images/parameters.de.png)](images/parameters.de.png)
 
 ## Dokumente {#documents}
 
@@ -139,9 +143,18 @@ Durch Klicken auf „Prüfen“ startet Deming die Integritätsprüfung der in d
 
 In diesem Teil der Registerkarte wird die Aufbewahrungsdauer (in Monaten) der in der Anwendung durchgeführten Kontrollen konfiguriert.
 
-Alle nach Ablauf dieser Dauer durchgeführten Kontrollen werden zusammen mit den zugehörigen Dokumenten und Aktionsplänen gelöscht.
+Alle Kontrollen, die vor dieser Dauer durchgeführt wurden, werden zusammen mit den zugehörigen Dokumenten,
+Aktionsplänen und Logs gelöscht.
 
-Diese Löschung erfolgt durch Ausführen des Befehls
+Wenn Sie klicken auf:
+
+* „Sichern“ – die Aufbewahrungsdauer wird gespeichert;
+
+* „Testen“ – Deming zeigt die Anzahl der Logs, Dokumente und Kontrollen an, die gelöscht würden, ohne sie zu löschen;
+
+* „Löschen“ – nach Bestätigung wird die Löschung sofort durchgeführt.
+
+Die Löschung erfolgt außerdem automatisch durch Ausführen des Befehls
 
     php artisan deming:cleanup
 
@@ -152,9 +165,22 @@ Diese Löschung erfolgt durch Ausführen des Befehls
 Mit der Registerkarte „Vorlagen“ der Seite [Einstellungen](#parameters) werden die Dokumentvorlagen für die
 Kontrollblätter und den ISMS-Steuerungsbericht geändert.
 
+Die Registerkarte enthält zwei Blöcke, „Kontrollblatt“ und „Lenkungsbericht“. Jeder Block bietet:
+
+* einen Link zum Herunterladen der Standardvorlage;
+
+* einen Link „Benutzerdefiniertes Modell“ zum Herunterladen der angepassten Vorlage, sofern vorhanden;
+
+* ein Feld zum Hochladen einer neuen Vorlage (.docx), die die angepasste Vorlage ersetzt.
+
+Die hochgeladenen Vorlagen werden mit „Sichern“ gespeichert.
+
+[![Screenshot](images/templates.de.png)](images/templates.de.png)
+
 Die Vorlage des Steuerungsberichts ist ein Word-Dokument (.docx), dessen Platzhalter bei der Erzeugung des Berichts
 ersetzt werden. Das neben den Vorlagen angezeigte Feld „Platzhalter der Vorlage“ listet die verfügbaren Platzhalter
-auf; ein Klick auf einen Platzhalter kopiert ihn in die Zwischenablage.
+auf; ein Klick auf einen Platzhalter kopiert ihn in die Zwischenablage. Der Teil „Verfügbare Spalten“ listet für jede
+Tabelle die Spalten auf, die in den benutzerdefinierten Tabellen verwendet werden können.
 
 * Variablen: `${today}`, `${start_date}`, `${end_date}`, `${framework}` sowie die vordefinierten Tabellen
   `${control_table}`, `${kpi_table}`, `${made_control_table}` und `${action_plans_table}`.
@@ -175,6 +201,8 @@ Die Registerkarte „KI“ der Seite [Einstellungen](#parameters), die Administr
 der Sicherheitsmaßnahmen, Kontrollen, Aktionspläne und Risiken analysiert: Aktivierung, URL des Agenten,
 API-Schlüssel, Liste der verfügbaren Aufgaben, Verbindungstest und Löschen aller Analysen. Prompts und Modelle werden
 vom Anbieter des Agenten, dem Sourcentis-KI-Gateway, verwaltet. Die KI ist standardmäßig deaktiviert.
+
+[![Screenshot](images/ai-config.de.png)](images/ai-config.de.png)
 
 Siehe [Aktivieren und konfigurieren](ai.de.md#config) und vor jeder Aktivierung [Datenschutz](ai.de.md#privacy).
 
@@ -208,7 +236,6 @@ das Kästchen „Löschen“ entfernt ihn. Ändert sich der `APP_KEY`, müssen s
 
 * die Frist: Kontrollen, die innerhalb dieser Frist fällig werden, werden gemeldet.
 
-<!-- TODO capture : refaire images/config.de.png (onglet Notifications avec le serveur SMTP) -->
 [![Screenshot](images/config.de.png)](images/config.de.png)
 
 Wenn Sie klicken auf:
@@ -222,8 +249,11 @@ Wenn Sie klicken auf:
 ## Logs {#logs}
 
 Diese Ansicht, die über das Menü „Konfiguration“ erreichbar ist, listet – vom neuesten zum ältesten – alle Änderungen
-an den Sicherheitsmaßnahmen, den Kontrollen, den Aktionsplänen, den Risiken und den Benutzern auf: Aktion (Erstellung,
-Änderung, Löschung), Typ und Kennung des Objekts, Benutzer, IP-Adresse und Datum.
+an den Sicherheitsmaßnahmen, den Kontrollen, den Aktionsplänen, den Risiken, den Benutzern und der Konfiguration sowie
+die An- und Abmeldungen auf: Aktion (Erstellung, Änderung, Löschung, Anmeldung, Abmeldung), Typ und Kennung des
+Objekts, Benutzer, IP-Adresse und Datum.
+
+[![Screenshot](images/logs.de.png)](images/logs.de.png)
 
 Wenn Sie klicken auf:
 
@@ -233,6 +263,14 @@ Wenn Sie klicken auf:
 * die Kennung eines Objekts, wird dieses Objekt angezeigt;
 
 * die Schaltfläche „Historie“, wird die Änderungshistorie dieses Objekts angezeigt.
+
+Hier ist das Detail einer Änderung:
+
+[![Screenshot](images/logs.show.de.png)](images/logs.show.de.png)
+
+Die Änderungshistorie zeigt die aufeinanderfolgenden Werte des Objekts in Spalten an:
+
+[![Screenshot](images/logs.history.de.png)](images/logs.history.de.png)
 
 Die Änderungshistorie eines Objekts ist auch über die Schaltfläche „Historie“ der Ansichten einer
 [Kontrolle](controls.de.md#show), eines [Risikos](risks.de.md#show) oder eines [Benutzers](#users) erreichbar.

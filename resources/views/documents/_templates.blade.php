@@ -14,8 +14,9 @@
     <form action="/doc/template" method="POST" role="form" enctype="multipart/form-data">
     @csrf
         <div class="container-fluid px-0">
-            <div class="row">
+            <div class="row mb-5">
                 <div class="col-md-10 col-xl-8">
+                    <h6 class="fw-bold">{{ trans('cruds.document.model.control_title') }}</h6>
                     <a href="/doc/template?id=1" target="_new">{{ trans('cruds.document.model.control') }}</a>
                     @if (file_exists(storage_path('app/models/control_.docx')))
                         / <a href="/doc/template?id=2" target="_new">{{ trans('cruds.document.model.custom') }}</a>
@@ -23,8 +24,9 @@
                     <input class="form-control" type="file" name="template1"/>
                 </div>
             </div>
-            <div class="row">
+            <div class="row mb-5">
                 <div class="col-md-10 col-xl-8">
+                    <h6 class="fw-bold">{{ trans('cruds.document.model.report_title') }}</h6>
                     <a href="/doc/template?id=3" target="_new">{{ trans('cruds.document.model.report') }}</a>
                     @if (file_exists(storage_path('app/models/pilotage_.docx')))
                         / <a href="/doc/template?id=4" target="_new">{{ trans('cruds.document.model.custom') }}</a>

@@ -20,7 +20,7 @@ directly.
 The configuration is in the "AI" tab of the [Settings](config.md#parameters) page ("Configuration → Settings" menu).
 It is restricted to administrators.
 
-<!-- TODO capture : images/ai-config.png -->
+[![Screenshot](images/ai-config.png)](images/ai-config.png)
 
 The screen contains a "Data protection" notice that summarizes what is sent to the agent; read the
 [Data protection](#privacy) section before enabling AI.
@@ -68,7 +68,7 @@ Clicking the icon opens a panel on the right of the screen. If the object and it
 since the last analysis, it is displayed immediately, without calling the agent, with the mention "Analysis of … —
 unchanged since". Otherwise, a new analysis is run; it may take up to a minute.
 
-<!-- TODO capture : images/ai-panel.png -->
+[![Screenshot](images/ai-panel.png)](images/ai-panel.png)
 
 The panel contains:
 
@@ -227,7 +227,7 @@ The "Data sent" link, at the bottom of the analysis panel, displays the context 
 after minimization and masking. This preview does not call the agent: it can be used before or
 after an analysis to check what is actually sent. It is subject to the same rights as the analysis.
 
-<!-- TODO capture : images/ai-preview.png -->
+[![Screenshot](images/ai-preview.png)](images/ai-preview.png)
 
 ### Where the data goes
 

@@ -199,6 +199,8 @@ return [
             'control' => 'Control sheet template',
             'report' => 'Steering report template',
             'custom' => 'Custom model',
+            'control_title' => 'Control sheet',
+            'report_title' => 'Steering report',
          ],
          'count' => 'Number of documents',
          'total_size' => 'Total Size',

@@ -200,6 +200,8 @@ return [
             'control' => 'Vorlage Kontrollblatt',
             'report' => 'Vorlage Lenkungsbericht',
             'custom' => 'Benutzerdefiniertes Modell',
+            'control_title' => 'Kontrollblatt',
+            'report_title' => 'Lenkungsbericht',
         ],
         'count' => 'Anzahl an Dokumenten',
         'total_size' => 'Gesamtgröße',

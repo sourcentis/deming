@@ -12,6 +12,8 @@ Il contient la liste des attributs et permet de créer, supprimer ou modifier de
 
 Les administrateurs disposent d'un bouton « Gérer » qui ouvre un formulaire permettant de remplacer globalement une valeur d'attribut existante par une nouvelle valeur. Le remplacement s'applique partout où la valeur est utilisée : dans les listes d'attributs, dans les mesures de sécurité, ainsi que dans les contrôles qui n'ont pas encore été réalisés. Les contrôles déjà réalisés ne sont pas modifiés, car ils constituent un historique.
 
+[![Screenshot](images/tags.replace.fr.png)](images/tags.replace.fr.png)
+
 ## Domaines {#domains}
 
 Cet écran permet de créer, modifier ou supprimer des listes de domaines de sécurité.
@@ -29,6 +31,8 @@ Les utilisateurs sont définis dans l’application.
 Un utilisateur est composé d'un identifiant, d'un nom, d'un titre, d'un rôle, d'une adresse mail, d'une langue,
 d'un mot de passe et de la liste des contrôles qui lui sont assignés. La langue est utilisée pour l'interface, les
 notifications et les documents générés.
+
+[![Screenshot](images/users.edit.fr.png)](images/users.edit.fr.png)
 
 Il existe six rôles différents :
 
@@ -80,7 +84,7 @@ SMSI, la déclaration d'applicabilité et les exports de données.
 [![Screenshot](images/reports.fr.png)](images/reports.fr.png)
 
 **Rapport de pilotage du SMSI** : choisissez un référentiel (facultatif) et une période, puis cliquez sur « Créer ».
-Un document Word est généré à partir du [modèle de rapport de pilotage](#documents).
+Un document Word est généré à partir du [modèle de rapport de pilotage](#templates).
 
 Voici le rapport de pilotage du SMSI :
 
@@ -118,7 +122,7 @@ La page « Paramètres », réservée aux administrateurs, regroupe dans des ong
 
 Chaque onglet a ses propres boutons. Après un enregistrement, la page revient sur l'onglet modifié.
 
-<!-- TODO capture : images/parameters.fr.png -->
+[![Screenshot](images/parameters.fr.png)](images/parameters.fr.png)
 
 ## Documents {#documents}
 
@@ -137,9 +141,18 @@ En cliquant sur « Vérifier », Deming lance le contrôle d'intégrité des doc
 
 Cette partie de l'onglet permet de configurer la durée de conservation (en mois) des contrôles réalisés dans l'application.
 
-Tous les contrôles réalisés passé cette date sont supprimés ainsi que les documents et plans d'actions associés.
+Tous les contrôles réalisés avant cette durée sont supprimés, ainsi que les documents, les plans d'action et les logs
+associés.
 
-Cette suppression est effectuée en exécutant la commande
+Lorsque vous cliquez sur :
+
+* « Sauver » - la durée de conservation est enregistrée ;
+
+* « Tester » - Deming affiche le nombre de logs, de documents et de contrôles qui seraient supprimés, sans les supprimer ;
+
+* « Supprimer » - après confirmation, la suppression est effectuée immédiatement.
+
+La suppression est aussi effectuée automatiquement en exécutant la commande
 
     php artisan deming:cleanup
 
@@ -150,9 +163,22 @@ au travers d'un cron.
 L'onglet « Modèles » de la page [Paramètres](#parameters) permet de modifier les modèles de document utilisés pour les
 fiches de contrôle et le rapport de pilotage du SMSI.
 
+L'onglet contient deux blocs, « Fiche de contrôle » et « Rapport de pilotage ». Chaque bloc propose :
+
+* un lien pour télécharger le modèle par défaut ;
+
+* un lien « Modèle modifié » pour télécharger le modèle personnalisé, s'il en existe un ;
+
+* un champ pour charger un nouveau modèle (.docx), qui remplace le modèle personnalisé.
+
+Les modèles chargés sont enregistrés en cliquant sur « Sauver ».
+
+[![Screenshot](images/templates.fr.png)](images/templates.fr.png)
+
 Le modèle du rapport de pilotage est un document Word (.docx) dont les balises sont remplacées lors de la génération
 du rapport. Le panneau « Balises du modèle », affiché à côté des modèles, liste les balises disponibles ; un clic sur
-une balise la copie dans le presse-papiers.
+une balise la copie dans le presse-papiers. La partie « Colonnes disponibles » liste, pour chaque table, les
+colonnes utilisables dans les tableaux personnalisés.
 
 * Variables : `${today}`, `${start_date}`, `${end_date}`, `${framework}`, ainsi que les tableaux prédéfinis
   `${control_table}`, `${kpi_table}`, `${made_control_table}` et `${action_plans_table}`.
@@ -173,6 +199,8 @@ L'onglet « IA » de la page [Paramètres](#parameters), réservée aux administ
 mesures de sécurité, les contrôles, les plans d'action et les risques : activation, URL de l'agent, clé API, liste des
 tâches disponibles, test de connexion et suppression de toutes les analyses. Les prompts et les modèles sont gérés par
 le fournisseur de l'agent, la passerelle IA Sourcentis. L'IA est désactivée par défaut.
+
+[![Screenshot](images/ai-config.fr.png)](images/ai-config.fr.png)
 
 Voir [Activer et configurer](ai.fr.md#config) et, avant toute activation, [Protection des données](ai.fr.md#privacy).
 
@@ -206,7 +234,6 @@ enregistrée, la case « Supprimer » l'efface. Si l'`APP_KEY` change, il faut l
 
 * le délai : les contrôles qui arrivent à échéance dans ce délai sont notifiés.
 
-<!-- TODO capture : refaire images/config.fr.png (onglet Notifications avec le serveur SMTP) -->
 [![Screenshot](images/config.fr.png)](images/config.fr.png)
 
 Lorsque vous cliquez sur :
@@ -220,8 +247,11 @@ Lorsque vous cliquez sur :
 ## Logs {#logs}
 
 Cet écran, accessible depuis le menu « Configuration », liste, du plus récent au plus ancien, toutes les
-modifications apportées aux mesures de sécurité, aux contrôles, aux plans d'action, aux risques et aux utilisateurs :
-action (création, modification, suppression), type et identifiant de l'objet, utilisateur, adresse IP et date.
+modifications apportées aux mesures de sécurité, aux contrôles, aux plans d'action, aux risques, aux utilisateurs et à
+la configuration, ainsi que les connexions et déconnexions : action (création, modification, suppression, connexion,
+déconnexion), type et identifiant de l'objet, utilisateur, adresse IP et date.
+
+[![Screenshot](images/logs.fr.png)](images/logs.fr.png)
 
 En cliquant sur :
 
@@ -231,6 +261,14 @@ En cliquant sur :
 * l'identifiant d'un objet, vous affichez cet objet ;
 
 * le bouton « Historique », vous affichez l'historique des modifications de cet objet.
+
+Voici le détail d'une modification :
+
+[![Screenshot](images/logs.show.fr.png)](images/logs.show.fr.png)
+
+L'historique des modifications présente, en colonnes, les valeurs successives de l'objet :
+
+[![Screenshot](images/logs.history.fr.png)](images/logs.history.fr.png)
 
 L'historique des modifications d'un objet est aussi accessible par le bouton « Historique » des écrans d'affichage
 d'un [contrôle](controls.fr.md#show), d'un [risque](risks.fr.md#show) ou d'un [utilisateur](#users).
