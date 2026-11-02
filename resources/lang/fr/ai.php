@@ -129,7 +129,11 @@ return [
     'errors' => [
         'unreachable' => "L'agent IA est injoignable.",
         'timeout' => "L'agent IA n'a pas répondu à temps.",
-        'truncated' => "Réponse tronquée de l'agent IA.",
+        'invalid_key' => "Clé d'accès à l'agent IA invalide, suspendue ou résiliée.",
+        'quota_exceeded' => 'Quota IA du mois atteint — contactez votre fournisseur.',
+        'rate_limited' => 'Trop de demandes, réessayez dans quelques instants.',
+        'too_large' => 'Objet trop volumineux pour être analysé.',
+        'incompatible' => 'Agent IA incompatible avec cette version de Deming.',
         'invalid_response' => "Réponse invalide de l'agent IA.",
         'insecure_url' => "L'URL de l'agent IA doit utiliser https.",
         'not_configured' => "L'URL de l'agent IA n'est pas configurée.",

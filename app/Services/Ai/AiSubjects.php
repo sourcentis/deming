@@ -27,7 +27,6 @@ final class AiSubjects
         // Security measure ("mesure" in the UI)
         'control' => [
             'model' => Control::class,
-            'tag' => 'mesure',
             'prompt' => 'ai.prompt_control',
             'context' => ControlContext::class,
             'label' => 'cruds.control.show',
@@ -35,21 +34,18 @@ final class AiSubjects
         // Control ("contrôle" in the UI)
         'measure' => [
             'model' => Measure::class,
-            'tag' => 'controle',
             'prompt' => 'ai.prompt_measure',
             'context' => MeasureContext::class,
             'label' => 'cruds.measure.title_singular',
         ],
         'action' => [
             'model' => Action::class,
-            'tag' => 'plan_action',
             'prompt' => 'ai.prompt_action',
             'context' => ActionContext::class,
             'label' => 'cruds.action.show',
         ],
         'risk' => [
             'model' => Risk::class,
-            'tag' => 'risque',
             'prompt' => 'ai.prompt_risk',
             'context' => RiskContext::class,
             'label' => 'cruds.risk.singular',
@@ -62,7 +58,7 @@ final class AiSubjects
         return array_keys(self::TYPES);
     }
 
-    /** @return array{model: class-string<Control|Measure|Action|Risk>, tag: string, prompt: string, context: class-string<ContextBuilder>, label: string} */
+    /** @return array{model: class-string<Control|Measure|Action|Risk>, prompt: string, context: class-string<ContextBuilder>, label: string} */
     public static function get(string $type): array
     {
         if (! array_key_exists($type, self::TYPES)) {

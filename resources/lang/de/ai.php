@@ -129,7 +129,11 @@ return [
     'errors' => [
         'unreachable' => 'Der KI-Agent ist nicht erreichbar.',
         'timeout' => 'Der KI-Agent hat nicht rechtzeitig geantwortet.',
-        'truncated' => 'Abgeschnittene Antwort des KI-Agenten.',
+        'invalid_key' => 'Zugangsschlüssel des KI-Agenten ungültig, gesperrt oder gekündigt.',
+        'quota_exceeded' => 'KI-Monatskontingent erreicht — wenden Sie sich an Ihren Anbieter.',
+        'rate_limited' => 'Zu viele Anfragen, bitte in wenigen Augenblicken erneut versuchen.',
+        'too_large' => 'Objekt zu groß für eine Analyse.',
+        'incompatible' => 'KI-Agent nicht kompatibel mit dieser Deming-Version.',
         'invalid_response' => 'Ungültige Antwort des KI-Agenten.',
         'insecure_url' => 'Die URL des KI-Agenten muss https verwenden.',
         'not_configured' => "Die URL des KI-Agenten ist nicht konfiguriert.",

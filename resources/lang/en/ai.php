@@ -129,7 +129,11 @@ return [
     'errors' => [
         'unreachable' => 'The AI agent cannot be reached.',
         'timeout' => 'The AI agent did not answer in time.',
-        'truncated' => 'Truncated answer from the AI agent.',
+        'invalid_key' => 'AI agent access key invalid, suspended or terminated.',
+        'quota_exceeded' => 'Monthly AI quota reached — contact your provider.',
+        'rate_limited' => 'Too many requests, try again in a few moments.',
+        'too_large' => 'Object too large to be analysed.',
+        'incompatible' => 'AI agent incompatible with this version of Deming.',
         'invalid_response' => 'Invalid answer from the AI agent.',
         'insecure_url' => 'The AI agent URL must use https.',
         'not_configured' => "The AI agent URL is not configured.",

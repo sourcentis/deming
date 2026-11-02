@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\AuditLog;
 use App\Models\Configuration;
 use App\Models\Control;
+use App\Services\Ai\AiGateway;
 use App\Services\Ai\AiResponseValidator;
 use App\Services\Ai\AiSubjects;
-use App\Services\AiAgentService;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -80,7 +80,7 @@ class AiConfigController extends Controller
         // While AI is off, the settings fields are disabled in the form, hence not submitted: keep them
         $request->validate([
             'base_url' => ['exclude_unless:enabled,1', 'required', 'url', 'max:2048', function ($attribute, $value, $fail) {
-                if (! AiAgentService::isAllowedUrl($value)) {
+                if (! AiGateway::isAllowedUrl($value)) {
                     $fail(trans('ai.config.invalid_url'));
                 }
             }],
@@ -138,7 +138,7 @@ class AiConfigController extends Controller
         if ($baseUrl === '') {
             return response()->json(['ok' => false, 'error' => trans('ai.errors.not_configured')]);
         }
-        if (! AiAgentService::isAllowedUrl($baseUrl)) {
+        if (! AiGateway::isAllowedUrl($baseUrl)) {
             return response()->json(['ok' => false, 'error' => trans('ai.errors.insecure_url')]);
         }
 

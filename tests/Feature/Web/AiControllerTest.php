@@ -87,12 +87,12 @@ test('the auditor can see an owned risk but not analyse it', function () {
 });
 
 test('admin gets the analysis', function (string $type) {
-    Http::fake(['*' => aiAgentResponse()]);
+    aiFakeGateway();
     $object = aiCreateSubject($type);
 
     $this->actingAs($this->admin)->postJson("/ai/{$type}/{$object->id}")
         ->assertOk()
-        ->assertJson(['ok' => true, 'cached' => false, 'model' => 'gpt-oss-120b', 'data' => aiValidAnalysis()])
+        ->assertJson(['ok' => true, 'cached' => false, 'model' => 'sourcentis-standard', 'data' => aiValidAnalysis()])
         ->assertJsonStructure(['ok', 'data' => ['synthese', 'points_de_vue' => ['ceo', 'rssi', 'dpo', 'auditeur']], 'cached', 'analyzed_at', 'model']);
 })->with(AI_ENDPOINT_TYPES);
 
@@ -138,7 +138,7 @@ test('a user who cannot see the object gets 403 without any call', function (str
 })->with(['control', 'measure']);
 
 test('a user assigned to a control gets the analysis of its security measure', function () {
-    Http::fake(['*' => aiAgentResponse()]);
+    aiFakeGateway();
     $user = User::factory()->user()->create();
     $control = Control::factory()->create();
     $measure = Measure::factory()->create();
@@ -150,7 +150,7 @@ test('a user assigned to a control gets the analysis of its security measure', f
 });
 
 test('a user assigned through a group can analyse the control', function () {
-    Http::fake(['*' => aiAgentResponse()]);
+    aiFakeGateway();
     $user = User::factory()->user()->create();
     $group = UserGroup::factory()->create();
     $group->users()->sync([$user->id]);
@@ -161,7 +161,7 @@ test('a user assigned through a group can analyse the control', function () {
 });
 
 test('auditee can analyse an assigned control only, and no action plan', function () {
-    Http::fake(['*' => aiAgentResponse()]);
+    aiFakeGateway();
     $auditee = User::factory()->auditee()->create();
     $assigned = aiCreateSubject('measure');
     $assigned->users()->sync([$auditee->id]);
@@ -175,7 +175,7 @@ test('auditee can analyse an assigned control only, and no action plan', functio
 });
 
 test('risk analysis follows RiskController@show for every role', function (string $role) {
-    Http::fake(['*' => aiAgentResponse()]);
+    aiFakeGateway();
     $user = User::factory()->{$role}()->create();
     $risk = Risk::factory()->create(['owner_id' => $this->admin->id]);
 
@@ -190,30 +190,50 @@ test('risk analysis follows RiskController@show for every role', function (strin
 // Agent answers
 // -----------------------------------------------------------------------------
 
-test('agent failures return 502 or 504 with a generic message', function (Closure $fake, int $status) {
-    Http::fake(['*' => $fake]);
+test('gateway failures return a generic message, never the gateway body', function (Closure $fake, int $status, string $reason) {
+    aiFakeGateway($fake);
     $object = aiCreateSubject('risk');
 
     $response = $this->actingAs($this->admin)->postJson("/ai/risk/{$object->id}")->assertStatus($status);
 
     $response->assertJson(['ok' => false]);
-    expect($response->json('error'))->toBeString()
-        ->and($response->getContent())->not->toContain('secret body')
-        ->not->toContain('oai.endpoints');
+    expect($response->json('error'))->toBe(trans("ai.errors.{$reason}"))
+        ->and($response->getContent())->not->toContain('secret')
+        ->not->toContain('agent.example.com');
 })->with([
-    'truncated' => [fn () => aiAgentResponse(null, 'length'), 502],
-    'invalid json' => [fn () => aiAgentResponse('{oops'), 502],
-    'missing dpo' => [fn () => aiAgentResponse(array_replace(aiValidAnalysis(), ['points_de_vue' => ['ceo' => 'a', 'rssi' => 'b', 'auditeur' => 'c']])), 502],
-    'http error with body' => [fn () => Http::response('secret body', 500), 502],
-    'redirect' => [fn () => Http::response('secret body', 302, ['Location' => 'https://elsewhere.example.com']), 502],
-    'timeout' => [fn () => throw new ConnectionException('cURL error 28: Operation timed out'), 504],
+    'invalid key' => [fn () => aiGatewayError(401, 'key_blocked'), 502, 'invalid_key'],
+    'quota' => [fn () => aiGatewayError(402, 'budget_exceeded'), 502, 'quota_exceeded'],
+    'rate limit' => [fn () => aiGatewayError(429, 'rate_limit_exceeded'), 429, 'rate_limited'],
+    'too large' => [fn () => aiGatewayError(413, 'context_too_large'), 502, 'too_large'],
+    'incompatible' => [fn () => aiGatewayError(400, 'unknown_field'), 502, 'incompatible'],
+    'invalid answer' => [fn () => aiGatewayError(502, 'invalid_model_response'), 502, 'invalid_response'],
+    'missing synthese' => [fn () => aiAgentResponse(array_diff_key(aiValidAnalysis(), ['synthese' => 1])), 502, 'invalid_response'],
+    'http error with body' => [fn () => Http::response('secret body', 500), 502, 'unreachable'],
+    'redirect' => [fn () => Http::response('secret body', 302, ['Location' => 'https://elsewhere.example.com']), 502, 'unreachable'],
+    'timeout' => [fn () => throw new ConnectionException('cURL error 28: Operation timed out'), 504, 'timeout'],
+]);
+
+test('401, 402, 429 and 413 keep the previous analysis and store nothing', function (int $status, string $code) {
+    $object = aiCreateSubject('control');
+    storeAnalysis($object);
+    $before = DB::table('controls')->where('id', $object->id)->first();
+    aiFakeGateway(aiGatewayError($status, $code));
+
+    $this->actingAs($this->admin)->postJson("/ai/control/{$object->id}", ['force' => 1])->assertJson(['ok' => false]);
+
+    expect(DB::table('controls')->where('id', $object->id)->first())->toEqual($before);
+})->with([
+    [401, 'invalid_api_key'],
+    [402, 'budget_exceeded'],
+    [429, 'rate_limit_exceeded'],
+    [413, 'context_too_large'],
 ]);
 
 test('a failure keeps the previous analysis', function (string $type) {
     $object = aiCreateSubject($type);
     storeAnalysis($object);
     $before = DB::table($object->getTable())->where('id', $object->id)->first();
-    Http::fake(['*' => aiAgentResponse(null, 'length')]);
+    aiFakeGateway(aiGatewayError(502, 'invalid_model_response'));
 
     $this->actingAs($this->admin)->postJson("/ai/{$type}/{$object->id}", ['force' => 1])->assertStatus(502);
 
@@ -221,15 +241,15 @@ test('a failure keeps the previous analysis', function (string $type) {
 })->with(AI_ENDPOINT_TYPES);
 
 test('the second call is cached and force runs a new analysis', function (string $type) {
-    Http::fake(['*' => aiAgentResponse()]);
+    aiFakeGateway();
     $object = aiCreateSubject($type);
 
     $this->actingAs($this->admin)->postJson("/ai/{$type}/{$object->id}")->assertJson(['cached' => false]);
     $this->actingAs($this->admin)->postJson("/ai/{$type}/{$object->id}")->assertJson(['cached' => true]);
-    Http::assertSentCount(1);
+    expect(aiRunCount())->toBe(1);
 
     $this->actingAs($this->admin)->postJson("/ai/{$type}/{$object->id}", ['force' => 1])->assertJson(['cached' => false]);
-    Http::assertSentCount(2);
+    expect(aiRunCount())->toBe(2);
 })->with(AI_ENDPOINT_TYPES);
 
 test('the eleventh request in a minute is throttled', function () {
@@ -237,7 +257,7 @@ test('the eleventh request in a minute is throttled', function () {
     $this->app->forgetInstance(ThrottleRequests::class);
     // Fresh in-memory counters: the default cache store may persist between test runs
     $this->app->instance(RateLimiter::class, new RateLimiter(Cache::store('array')));
-    Http::fake(['*' => aiAgentResponse()]);
+    aiFakeGateway();
     $object = aiCreateSubject('control');
 
     for ($i = 0; $i < 10; $i++) {

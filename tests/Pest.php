@@ -47,18 +47,65 @@ function aiValidAnalysis(array $overrides = []): array
     ], $overrides);
 }
 
-/** Fake /chat/completions answer wrapping the given content. */
-function aiAgentResponse(array|string|null $content = null, string $finishReason = 'stop', int $status = 200)
-{
-    $content ??= aiValidAnalysis();
+const AI_GATEWAY_TYPES = ['control', 'measure', 'action', 'risk'];
 
-    return \Illuminate\Support\Facades\Http::response([
-        'choices' => [[
-            'finish_reason' => $finishReason,
-            'message' => ['role' => 'assistant', 'content' => is_array($content) ? json_encode($content) : $content],
-        ]],
-        'usage' => ['total_tokens' => 1234],
-    ], $status);
+/** Answer of POST {base_url}/deming/{type}, wrapping the given analysis. */
+function aiAgentResponse(?array $data = null, array $extra = [], int $status = 200)
+{
+    return \Illuminate\Support\Facades\Http::response(array_replace([
+        'task' => 'deming/control',
+        'task_version' => 'v1',
+        'schema' => 'analysis-v1',
+        'model' => 'sourcentis-standard',
+        'data' => $data ?? aiValidAnalysis(),
+        'usage' => ['prompt_tokens' => 1000, 'completion_tokens' => 234, 'total_tokens' => 1234],
+    ], $extra), $status);
+}
+
+/** Answer of GET {base_url}/tasks: the Deming tasks of the given types, and a task of another application. */
+function aiTasksResponse(string $version = 'v1', array $types = AI_GATEWAY_TYPES)
+{
+    $tasks = array_map(fn (string $type) => [
+        'id' => "deming/{$type}",
+        'application' => 'deming',
+        'task' => $type,
+        'title' => ['fr' => "Analyse {$type}", 'en' => "Analysis {$type}", 'de' => "Analyse {$type} (de)"],
+        'description' => ['fr' => '…'],
+        'languages' => ['fr', 'en', 'de'],
+        'schema' => ['name' => 'analysis-v1', 'content' => ['type' => 'object']],
+        'task_version' => $version,
+    ], $types);
+    $tasks[] = ['id' => 'mercator/map', 'title' => ['fr' => 'Autre application'], 'task_version' => 'other'];
+
+    return \Illuminate\Support\Facades\Http::response(['object' => 'list', 'data' => $tasks]);
+}
+
+/** Error of the gateway, with a body that must never reach the browser. */
+function aiGatewayError(int $status, string $code = 'error')
+{
+    return \Illuminate\Support\Facades\Http::response(['error' => [
+        'message' => "secret gateway body {$code}", 'type' => 'error', 'code' => $code,
+    ]], $status);
+}
+
+/** Fakes the gateway: GET /tasks and POST /deming/{type}. */
+function aiFakeGateway(mixed $run = null, mixed $tasks = null): void
+{
+    $run ??= aiAgentResponse();
+    $tasks ??= aiTasksResponse();
+
+    // A single dispatcher: with URL patterns, Laravel would also feed GET /tasks to a POST sequence
+    \Illuminate\Support\Facades\Http::fake(function (\Illuminate\Http\Client\Request $request, array $options) use ($run, $tasks) {
+        $stub = $request->method() === 'GET' && str_ends_with($request->url(), '/tasks') ? $tasks : $run;
+
+        return is_callable($stub) ? $stub($request, $options) : $stub;
+    });
+}
+
+/** Number of analyses requested from the gateway (POST), the catalog excluded. */
+function aiRunCount(): int
+{
+    return \Illuminate\Support\Facades\Http::recorded(fn ($request) => $request->method() === 'POST')->count();
 }
 
 /** Creates an object of the given AI type, with a security measure linked to controls. */
@@ -78,10 +125,9 @@ function aiCreateSubject(string $type): \Illuminate\Database\Eloquent\Model
     return $object->fresh();
 }
 
-// AI enabled with a test agent (there is no default agent URL)
+// AI enabled with a test gateway (there is no default gateway URL)
 function aiEnable(): void
 {
     \App\Models\Configuration::set('ai.enabled', '1');
     \App\Models\Configuration::set('ai.base_url', 'https://agent.example.com/v1');
-    \App\Models\Configuration::set('ai.model', 'gpt-oss-120b');
 }
