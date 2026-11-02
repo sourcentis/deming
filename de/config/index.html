@@ -835,6 +835,7 @@ die <a href="../crosswalk/">Zuordnungen zwischen Rahmenwerken</a>, die <a href="
 Sie enthält die Liste der Attribute und ermöglicht es, Attributlisten zu erstellen, zu löschen oder zu ändern.</p>
 <p><a href="../images/tags.png"><img alt="Screenshot" src="../images/tags.png" /></a></p>
 <p>Nur Administratoren verfügen über eine Schaltfläche „Verwalten“, die ein Formular öffnet, mit dem ein bestehender Attributwert global durch einen neuen Wert ersetzt werden kann. Die Ersetzung gilt überall dort, wo der Wert verwendet wird: in den Attributlisten, in den Sicherheitsmaßnahmen sowie in den noch nicht durchgeführten Kontrollen. Bereits durchgeführte Kontrollen werden nicht geändert, da sie eine Historie darstellen.</p>
+<p><a href="../images/tags.replace.png"><img alt="Screenshot" src="../images/tags.replace.png" /></a></p>
 <h2 id="domains">Domänen<a class="headerlink" href="#domains" title="Permanent link">&para;</a></h2>
 <p>Mit dieser Ansicht können Listen von Sicherheitsdomänen erstellt, geändert oder gelöscht werden.</p>
 <p><a href="../images/domains.png"><img alt="Screenshot" src="../images/domains.png" /></a></p>
@@ -845,6 +846,7 @@ Sie enthält die Liste der Attribute und ermöglicht es, Attributlisten zu erste
 <p>Ein Benutzer besteht aus einem Login, einem Namen, einem Titel, einer Rolle, einer E-Mail-Adresse, einer Sprache,
 einem Passwort und der Liste der ihm zugewiesenen Kontrollen. Die Sprache wird für die Benutzeroberfläche, die
 Benachrichtigungen und die erzeugten Dokumente verwendet.</p>
+<p><a href="../images/users.edit.png"><img alt="Screenshot" src="../images/users.edit.png" /></a></p>
 <p>Es gibt sechs verschiedene Rollen:</p>
 <ul>
 <li>
@@ -899,7 +901,7 @@ Kontrollen bleiben beim Ändern der Gruppe mit ihr verknüpft.</p>
 Erklärung der Anwendbarkeit und die Datenexporte erzeugt.</p>
 <p><a href="../images/reports.png"><img alt="Screenshot" src="../images/reports.png" /></a></p>
 <p><strong>ISMS-Steuerungsbericht</strong>: Wählen Sie ein Rahmenwerk (optional) und einen Zeitraum und klicken Sie dann auf
-„Erstellen“. Ein Word-Dokument wird auf Grundlage der <a href="#documents">Vorlage des Steuerungsberichts</a> erzeugt.</p>
+„Erstellen“. Ein Word-Dokument wird auf Grundlage der <a href="#templates">Vorlage des Steuerungsberichts</a> erzeugt.</p>
 <p>Hier ist der ISMS-Steuerungsbericht:</p>
 <p><a href="../../images/report1.png"><img alt="Screenshot" src="../../images/report1.png" style="width:600px" /></a></p>
 <p><a href="../../images/report2.png"><img alt="Screenshot" src="../../images/report2.png" style="width:600px" /></a></p>
@@ -922,7 +924,7 @@ zusammen:</p>
 <p><strong>Vorlagen</strong>: die <a href="#templates">Dokumentvorlagen</a>;</p>
 </li>
 <li>
-<p><strong>Klassifizierung</strong>: die <a href="../risks/#scoring">Konfiguration der Risikobewertung</a>;</p>
+<p><strong>Scoring</strong>: die <a href="../risks/#scoring">Konfiguration der Risikobewertung</a>;</p>
 </li>
 <li>
 <p><strong>KI</strong>: die Konfiguration des <a href="#ai">KI-Agenten</a>;</p>
@@ -933,8 +935,7 @@ zusammen:</p>
 </ul>
 <p>Jede Registerkarte hat ihre eigenen Schaltflächen. Nach dem Speichern kehrt die Seite zur geänderten Registerkarte
 zurück.</p>
-<!-- TODO capture : images/parameters.de.png -->
-
+<p><a href="../images/parameters.png"><img alt="Screenshot" src="../images/parameters.png" /></a></p>
 <h2 id="documents">Dokumente<a class="headerlink" href="#documents" title="Permanent link">&para;</a></h2>
 <p>Die Registerkarte „Dokumente“ der Seite <a href="#parameters">Einstellungen</a> dient zur Prüfung der in Deming gespeicherten
 Dokumente und zur Konfiguration ihrer Aufbewahrungsdauer.</p>
@@ -944,8 +945,21 @@ Dokumente und zur Konfiguration ihrer Aufbewahrungsdauer.</p>
 <p>Durch Klicken auf „Prüfen“ startet Deming die Integritätsprüfung der in der Anwendung gespeicherten Dokumente mithilfe eines CRC32.</p>
 <h3 id="aufbewahrung">Aufbewahrung<a class="headerlink" href="#aufbewahrung" title="Permanent link">&para;</a></h3>
 <p>In diesem Teil der Registerkarte wird die Aufbewahrungsdauer (in Monaten) der in der Anwendung durchgeführten Kontrollen konfiguriert.</p>
-<p>Alle nach Ablauf dieser Dauer durchgeführten Kontrollen werden zusammen mit den zugehörigen Dokumenten und Aktionsplänen gelöscht.</p>
-<p>Diese Löschung erfolgt durch Ausführen des Befehls</p>
+<p>Alle Kontrollen, die vor dieser Dauer durchgeführt wurden, werden zusammen mit den zugehörigen Dokumenten,
+Aktionsplänen und Logs gelöscht.</p>
+<p>Wenn Sie klicken auf:</p>
+<ul>
+<li>
+<p>„Sichern“ – die Aufbewahrungsdauer wird gespeichert;</p>
+</li>
+<li>
+<p>„Testen“ – Deming zeigt die Anzahl der Logs, Dokumente und Kontrollen an, die gelöscht würden, ohne sie zu löschen;</p>
+</li>
+<li>
+<p>„Löschen“ – nach Bestätigung wird die Löschung sofort durchgeführt.</p>
+</li>
+</ul>
+<p>Die Löschung erfolgt außerdem automatisch durch Ausführen des Befehls</p>
 <div class="highlight"><pre><span></span><code>php artisan deming:cleanup
 </code></pre></div>
 <p>über einen Cron-Job.</p>
@@ -965,9 +979,11 @@ Kontrollblätter und den ISMS-Steuerungsbericht geändert.</p>
 </li>
 </ul>
 <p>Die hochgeladenen Vorlagen werden mit „Sichern“ gespeichert.</p>
+<p><a href="../images/templates.png"><img alt="Screenshot" src="../images/templates.png" /></a></p>
 <p>Die Vorlage des Steuerungsberichts ist ein Word-Dokument (.docx), dessen Platzhalter bei der Erzeugung des Berichts
 ersetzt werden. Das neben den Vorlagen angezeigte Feld „Platzhalter der Vorlage“ listet die verfügbaren Platzhalter
-auf; ein Klick auf einen Platzhalter kopiert ihn in die Zwischenablage.</p>
+auf; ein Klick auf einen Platzhalter kopiert ihn in die Zwischenablage. Der Teil „Verfügbare Spalten“ listet für jede
+Tabelle die Spalten auf, die in den benutzerdefinierten Tabellen verwendet werden können.</p>
 <ul>
 <li>
 <p>Variablen: <code>${today}</code>, <code>${start_date}</code>, <code>${end_date}</code>, <code>${framework}</code> sowie die vordefinierten Tabellen
@@ -989,6 +1005,7 @@ auf; ein Klick auf einen Platzhalter kopiert ihn in die Zwischenablage.</p>
 der Sicherheitsmaßnahmen, Kontrollen, Aktionspläne und Risiken analysiert: Aktivierung, URL des Agenten,
 API-Schlüssel, Liste der verfügbaren Aufgaben, Verbindungstest und Löschen aller Analysen. Prompts und Modelle werden
 vom Anbieter des Agenten, dem Sourcentis-KI-Gateway, verwaltet. Die KI ist standardmäßig deaktiviert.</p>
+<p><a href="../images/ai-config.png"><img alt="Screenshot" src="../images/ai-config.png" /></a></p>
 <p>Siehe <a href="../ai/#config">Aktivieren und konfigurieren</a> und vor jeder Aktivierung <a href="../ai/#privacy">Datenschutz</a>.</p>
 <h2 id="notifications">Benachrichtigungen<a class="headerlink" href="#notifications" title="Permanent link">&para;</a></h2>
 <p>Mit der Registerkarte „Benachrichtigungen“ der Seite <a href="#parameters">Einstellungen</a> werden die Benachrichtigungen konfiguriert, die an die Benutzer gesendet werden, wenn sie Kontrollen durchführen müssen.</p>
@@ -1026,7 +1043,6 @@ das Kästchen „Löschen“ entfernt ihn. Ändert sich der <code>APP_KEY</code>
 <p>die Frist: Kontrollen, die innerhalb dieser Frist fällig werden, werden gemeldet.</p>
 </li>
 </ul>
-<!-- TODO capture : refaire images/config.de.png (onglet Notifications avec le serveur SMTP) -->
 <p><a href="../images/config.png"><img alt="Screenshot" src="../images/config.png" /></a></p>
 <p>Wenn Sie klicken auf:</p>
 <ul>
@@ -1042,8 +1058,10 @@ das Kästchen „Löschen“ entfernt ihn. Ändert sich der <code>APP_KEY</code>
 </ul>
 <h2 id="logs">Logs<a class="headerlink" href="#logs" title="Permanent link">&para;</a></h2>
 <p>Diese Ansicht, die über das Menü „Konfiguration“ erreichbar ist, listet – vom neuesten zum ältesten – alle Änderungen
-an den Sicherheitsmaßnahmen, den Kontrollen, den Aktionsplänen, den Risiken und den Benutzern auf: Aktion (Erstellung,
-Änderung, Löschung), Typ und Kennung des Objekts, Benutzer, IP-Adresse und Datum.</p>
+an den Sicherheitsmaßnahmen, den Kontrollen, den Aktionsplänen, den Risiken, den Benutzern und der Konfiguration sowie
+die An- und Abmeldungen auf: Aktion (Erstellung, Änderung, Löschung, Anmeldung, Abmeldung), Typ und Kennung des
+Objekts, Benutzer, IP-Adresse und Datum.</p>
+<p><a href="../images/logs.png"><img alt="Screenshot" src="../images/logs.png" /></a></p>
 <p>Wenn Sie klicken auf:</p>
 <ul>
 <li>
@@ -1057,6 +1075,10 @@ an den Sicherheitsmaßnahmen, den Kontrollen, den Aktionsplänen, den Risiken un
 <p>die Schaltfläche „Historie“, wird die Änderungshistorie dieses Objekts angezeigt.</p>
 </li>
 </ul>
+<p>Hier ist das Detail einer Änderung:</p>
+<p><a href="../images/logs.show.png"><img alt="Screenshot" src="../images/logs.show.png" /></a></p>
+<p>Die Änderungshistorie zeigt die aufeinanderfolgenden Werte des Objekts in Spalten an:</p>
+<p><a href="../images/logs.history.png"><img alt="Screenshot" src="../images/logs.history.png" /></a></p>
 <p>Die Änderungshistorie eines Objekts ist auch über die Schaltfläche „Historie“ der Ansichten einer
 <a href="../controls/#show">Kontrolle</a>, eines <a href="../risks/#show">Risikos</a> oder eines <a href="#users">Benutzers</a> erreichbar.</p>
 <p>Logs, die älter als die <a href="#documents">Aufbewahrungsdauer</a> sind, werden durch den Befehl <code>deming:cleanup</code> gelöscht.</p>

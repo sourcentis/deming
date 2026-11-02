@@ -835,6 +835,7 @@
 It contains the list of attributes and allows you to create, delete or modify attribute lists.</p>
 <p><a href="../images/tags.png"><img alt="Screenshot" src="../images/tags.png" /></a></p>
 <p>Administrators only have access to a "Manage" button, which opens a form to globally replace an existing attribute value with a new one. The replacement is applied everywhere the value is used: in the attribute lists, in the controls, and in measures that have not yet been carried out. Measures that have already been carried out are left untouched, since they are historical records.</p>
+<p><a href="../images/tags.replace.png"><img alt="Screenshot" src="../images/tags.replace.png" /></a></p>
 <h2 id="domains">Domains<a class="headerlink" href="#domains" title="Permanent link">&para;</a></h2>
 <p>This screen allows you to create, modify or delete lists of security domains.</p>
 <p><a href="../images/domains.png"><img alt="Screenshot" src="../images/domains.png" /></a></p>
@@ -845,6 +846,7 @@ It contains the list of attributes and allows you to create, delete or modify at
 <p>A user is composed of a login, a name, a title, a role, an email address, a language, a password and the list of
 measurements assigned to them. The language is used for the user interface, the notifications and the generated
 documents.</p>
+<p><a href="../images/users.edit.png"><img alt="Screenshot" src="../images/users.edit.png" /></a></p>
 <p>There are six different roles:</p>
 <ul>
 <li>
@@ -899,7 +901,7 @@ to the group when it is updated.</p>
 Statement of Applicability and the data exports.</p>
 <p><a href="../images/reports.png"><img alt="Screenshot" src="../images/reports.png" /></a></p>
 <p><strong>ISMS steering report</strong>: select a framework (optional) and a period, then click "Create". A Word document is
-generated from the <a href="#documents">steering report template</a>.</p>
+generated from the <a href="#templates">steering report template</a>.</p>
 <p>Here is the ISMS pilot report:</p>
 <p><a href="../images/report1.png"><img alt="Screenshot" src="../images/report1.png" /></a></p>
 <p><a href="../images/report2.png"><img alt="Screenshot" src="../images/report2.png" /></a></p>
@@ -931,8 +933,7 @@ register to Excel files.</p>
 </li>
 </ul>
 <p>Each tab has its own buttons. After saving, the page comes back to the tab that was changed.</p>
-<!-- TODO capture : images/parameters.png -->
-
+<p><a href="../images/parameters.png"><img alt="Screenshot" src="../images/parameters.png" /></a></p>
 <h2 id="documents">Documents<a class="headerlink" href="#documents" title="Permanent link">&para;</a></h2>
 <p>The "Documents" tab of the <a href="#parameters">Settings</a> page is used to check the documents stored in Deming and to
 configure their retention period.</p>
@@ -942,8 +943,20 @@ configure their retention period.</p>
 <p>By clicking on “Check”, Deming launches the integrity check of documents stored in the application, using a CRC32.</p>
 <h3 id="retention">Retention<a class="headerlink" href="#retention" title="Permanent link">&para;</a></h3>
 <p>This part of the tab lets you configure the retention period (in months) for checks carried out in the application.</p>
-<p>All checks carried out after this date are deleted, along with the associated documents and action plans.</p>
-<p>This is done by executing the command</p>
+<p>All checks carried out before this period are deleted, along with the associated documents, action plans and logs.</p>
+<p>When you click on:</p>
+<ul>
+<li>
+<p>"Save" - the retention period is saved;</p>
+</li>
+<li>
+<p>"Test" - Deming displays the number of logs, documents and checks that would be deleted, without deleting them;</p>
+</li>
+<li>
+<p>"Delete" - after confirmation, the deletion is carried out immediately.</p>
+</li>
+</ul>
+<p>The deletion is also carried out automatically by executing the command</p>
 <div class="highlight"><pre><span></span><code>php artisan deming:cleanup
 </code></pre></div>
 <p>command via a cron.</p>
@@ -963,9 +976,11 @@ sheets and the ISMS management report.</p>
 </li>
 </ul>
 <p>The uploaded templates are saved by clicking on "Save".</p>
+<p><a href="../images/templates.png"><img alt="Screenshot" src="../images/templates.png" /></a></p>
 <p>The steering report template is a Word document (.docx) whose tags are replaced when the report is generated.
 The "Template tags" panel, displayed next to the templates, lists the available tags; clicking on a tag copies it
-to the clipboard.</p>
+to the clipboard. The "Available columns" part lists, for each table, the columns that can be used in the custom
+tables.</p>
 <ul>
 <li>
 <p>Variables: <code>${today}</code>, <code>${start_date}</code>, <code>${end_date}</code>, <code>${framework}</code>, and the predefined tables
@@ -987,6 +1002,7 @@ to the clipboard.</p>
 controls, measurements, action plans and risks: activation, agent URL, API key, list of the available tasks,
 connection test and deletion of all analyses. The prompts and the models are managed by the provider of the agent,
 the Sourcentis AI gateway. AI is disabled by default.</p>
+<p><a href="../images/ai-config.png"><img alt="Screenshot" src="../images/ai-config.png" /></a></p>
 <p>See <a href="../ai/#config">Enable and configure</a> and, before enabling it, <a href="../ai/#privacy">Data protection</a>.</p>
 <h2 id="notifications">Notifications<a class="headerlink" href="#notifications" title="Permanent link">&para;</a></h2>
 <p>The "Notifications" tab of the <a href="#parameters">Settings</a> page is used to configure the notifications sent to users when they have to carry out controls.</p>
@@ -1024,7 +1040,6 @@ it. If the <code>APP_KEY</code> changes, they must be entered again.</p>
 <p>the delay: the controls due within this delay are notified.</p>
 </li>
 </ul>
-<!-- TODO capture : refaire images/config.png (onglet Notifications avec le serveur SMTP) -->
 <p><a href="../images/config.png"><img alt="Screenshot" src="../images/config.png" /></a></p>
 <p>When you click on:</p>
 <ul>
@@ -1040,8 +1055,10 @@ it. If the <code>APP_KEY</code> changes, they must be entered again.</p>
 </ul>
 <h2 id="logs">Logs<a class="headerlink" href="#logs" title="Permanent link">&para;</a></h2>
 <p>This screen, available from the "Configuration" menu, lists, from the most recent, all the changes made to
-the security measures, the controls, the action plans, the risks and the users: action (creation, modification,
-deletion), type and identifier of the object, user, IP address and date.</p>
+the security measures, the controls, the action plans, the risks, the users and the configuration, as well as the
+logins and logouts: action (creation, modification, deletion, login, logout), type and identifier of the object, user,
+IP address and date.</p>
+<p><a href="../images/logs.png"><img alt="Screenshot" src="../images/logs.png" /></a></p>
 <p>Clicking on:</p>
 <ul>
 <li>
@@ -1055,6 +1072,10 @@ deletion), type and identifier of the object, user, IP address and date.</p>
 <p>the "History" button displays the change history of this object.</p>
 </li>
 </ul>
+<p>Here is the detail of a change:</p>
+<p><a href="../images/logs.show.png"><img alt="Screenshot" src="../images/logs.show.png" /></a></p>
+<p>The change history shows, in columns, the successive values of the object:</p>
+<p><a href="../images/logs.history.png"><img alt="Screenshot" src="../images/logs.history.png" /></a></p>
 <p>The change history of an object is also accessible through the "History" button of the screens displaying
 a <a href="../controls/#show">control</a>, a <a href="../risks/#show">risk</a> or a <a href="#users">user</a>.</p>
 <p>The logs older than the <a href="#documents">retention period</a> are deleted by the <code>deming:cleanup</code> command.</p>

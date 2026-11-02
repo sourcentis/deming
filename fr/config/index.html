@@ -835,6 +835,7 @@ aux <a href="../crosswalk/">correspondances entre référentiels</a>, aux <a hre
 Il contient la liste des attributs et permet de créer, supprimer ou modifier des listes d’attributs.</p>
 <p><a href="../images/tags.png"><img alt="Screenshot" src="../images/tags.png" /></a></p>
 <p>Les administrateurs disposent d'un bouton « Gérer » qui ouvre un formulaire permettant de remplacer globalement une valeur d'attribut existante par une nouvelle valeur. Le remplacement s'applique partout où la valeur est utilisée : dans les listes d'attributs, dans les mesures de sécurité, ainsi que dans les contrôles qui n'ont pas encore été réalisés. Les contrôles déjà réalisés ne sont pas modifiés, car ils constituent un historique.</p>
+<p><a href="../images/tags.replace.png"><img alt="Screenshot" src="../images/tags.replace.png" /></a></p>
 <h2 id="domains">Domaines<a class="headerlink" href="#domains" title="Permanent link">&para;</a></h2>
 <p>Cet écran permet de créer, modifier ou supprimer des listes de domaines de sécurité.</p>
 <p><a href="../images/domains.png"><img alt="Screenshot" src="../images/domains.png" /></a></p>
@@ -845,6 +846,7 @@ Il contient la liste des attributs et permet de créer, supprimer ou modifier de
 <p>Un utilisateur est composé d'un identifiant, d'un nom, d'un titre, d'un rôle, d'une adresse mail, d'une langue,
 d'un mot de passe et de la liste des contrôles qui lui sont assignés. La langue est utilisée pour l'interface, les
 notifications et les documents générés.</p>
+<p><a href="../images/users.edit.png"><img alt="Screenshot" src="../images/users.edit.png" /></a></p>
 <p>Il existe six rôles différents :</p>
 <ul>
 <li>
@@ -899,7 +901,7 @@ restent liés au groupe lors de sa modification.</p>
 SMSI, la déclaration d'applicabilité et les exports de données.</p>
 <p><a href="../images/reports.png"><img alt="Screenshot" src="../images/reports.png" /></a></p>
 <p><strong>Rapport de pilotage du SMSI</strong> : choisissez un référentiel (facultatif) et une période, puis cliquez sur « Créer ».
-Un document Word est généré à partir du <a href="#documents">modèle de rapport de pilotage</a>.</p>
+Un document Word est généré à partir du <a href="#templates">modèle de rapport de pilotage</a>.</p>
 <p>Voici le rapport de pilotage du SMSI :</p>
 <p><a href="../../images/report1.png"><img alt="Screenshot" src="../../images/report1.png" style="width:600px" /></a></p>
 <p><a href="../../images/report2.png"><img alt="Screenshot" src="../../images/report2.png" style="width:600px" /></a></p>
@@ -931,8 +933,7 @@ de sécurité, les contrôles, les plans d'action et le registre des risques.</p
 </li>
 </ul>
 <p>Chaque onglet a ses propres boutons. Après un enregistrement, la page revient sur l'onglet modifié.</p>
-<!-- TODO capture : images/parameters.fr.png -->
-
+<p><a href="../images/parameters.png"><img alt="Screenshot" src="../images/parameters.png" /></a></p>
 <h2 id="documents">Documents<a class="headerlink" href="#documents" title="Permanent link">&para;</a></h2>
 <p>L'onglet « Documents » de la page <a href="#parameters">Paramètres</a> permet de vérifier les documents conservés dans Deming et de
 configurer leur durée de conservation.</p>
@@ -942,8 +943,21 @@ configurer leur durée de conservation.</p>
 <p>En cliquant sur « Vérifier », Deming lance le contrôle d'intégrité des documents conservés dans l'application en utilisant un CRC32.</p>
 <h3 id="conservation">Conservation<a class="headerlink" href="#conservation" title="Permanent link">&para;</a></h3>
 <p>Cette partie de l'onglet permet de configurer la durée de conservation (en mois) des contrôles réalisés dans l'application.</p>
-<p>Tous les contrôles réalisés passé cette date sont supprimés ainsi que les documents et plans d'actions associés.</p>
-<p>Cette suppression est effectuée en exécutant la commande</p>
+<p>Tous les contrôles réalisés avant cette durée sont supprimés, ainsi que les documents, les plans d'action et les logs
+associés.</p>
+<p>Lorsque vous cliquez sur :</p>
+<ul>
+<li>
+<p>« Sauver » - la durée de conservation est enregistrée ;</p>
+</li>
+<li>
+<p>« Tester » - Deming affiche le nombre de logs, de documents et de contrôles qui seraient supprimés, sans les supprimer ;</p>
+</li>
+<li>
+<p>« Supprimer » - après confirmation, la suppression est effectuée immédiatement.</p>
+</li>
+</ul>
+<p>La suppression est aussi effectuée automatiquement en exécutant la commande</p>
 <div class="highlight"><pre><span></span><code>php artisan deming:cleanup
 </code></pre></div>
 <p>au travers d'un cron.</p>
@@ -963,9 +977,11 @@ fiches de contrôle et le rapport de pilotage du SMSI.</p>
 </li>
 </ul>
 <p>Les modèles chargés sont enregistrés en cliquant sur « Sauver ».</p>
+<p><a href="../images/templates.png"><img alt="Screenshot" src="../images/templates.png" /></a></p>
 <p>Le modèle du rapport de pilotage est un document Word (.docx) dont les balises sont remplacées lors de la génération
 du rapport. Le panneau « Balises du modèle », affiché à côté des modèles, liste les balises disponibles ; un clic sur
-une balise la copie dans le presse-papiers.</p>
+une balise la copie dans le presse-papiers. La partie « Colonnes disponibles » liste, pour chaque table, les
+colonnes utilisables dans les tableaux personnalisés.</p>
 <ul>
 <li>
 <p>Variables : <code>${today}</code>, <code>${start_date}</code>, <code>${end_date}</code>, <code>${framework}</code>, ainsi que les tableaux prédéfinis
@@ -987,6 +1003,7 @@ une balise la copie dans le presse-papiers.</p>
 mesures de sécurité, les contrôles, les plans d'action et les risques : activation, URL de l'agent, clé API, liste des
 tâches disponibles, test de connexion et suppression de toutes les analyses. Les prompts et les modèles sont gérés par
 le fournisseur de l'agent, la passerelle IA Sourcentis. L'IA est désactivée par défaut.</p>
+<p><a href="../images/ai-config.png"><img alt="Screenshot" src="../images/ai-config.png" /></a></p>
 <p>Voir <a href="../ai/#config">Activer et configurer</a> et, avant toute activation, <a href="../ai/#privacy">Protection des données</a>.</p>
 <h2 id="notifications">Notifications<a class="headerlink" href="#notifications" title="Permanent link">&para;</a></h2>
 <p>L'onglet « Notifications » de la page <a href="#parameters">Paramètres</a> permet de configurer les notifications envoyées aux utilisateurs lorsqu'ils doivent réaliser des contrôles.</p>
@@ -1024,7 +1041,6 @@ enregistrée, la case « Supprimer » l'efface. Si l'<code>APP_KEY</code> change
 <p>le délai : les contrôles qui arrivent à échéance dans ce délai sont notifiés.</p>
 </li>
 </ul>
-<!-- TODO capture : refaire images/config.fr.png (onglet Notifications avec le serveur SMTP) -->
 <p><a href="../images/config.png"><img alt="Screenshot" src="../images/config.png" /></a></p>
 <p>Lorsque vous cliquez sur :</p>
 <ul>
@@ -1040,8 +1056,10 @@ enregistrée, la case « Supprimer » l'efface. Si l'<code>APP_KEY</code> change
 </ul>
 <h2 id="logs">Logs<a class="headerlink" href="#logs" title="Permanent link">&para;</a></h2>
 <p>Cet écran, accessible depuis le menu « Configuration », liste, du plus récent au plus ancien, toutes les
-modifications apportées aux mesures de sécurité, aux contrôles, aux plans d'action, aux risques et aux utilisateurs :
-action (création, modification, suppression), type et identifiant de l'objet, utilisateur, adresse IP et date.</p>
+modifications apportées aux mesures de sécurité, aux contrôles, aux plans d'action, aux risques, aux utilisateurs et à
+la configuration, ainsi que les connexions et déconnexions : action (création, modification, suppression, connexion,
+déconnexion), type et identifiant de l'objet, utilisateur, adresse IP et date.</p>
+<p><a href="../images/logs.png"><img alt="Screenshot" src="../images/logs.png" /></a></p>
 <p>En cliquant sur :</p>
 <ul>
 <li>
@@ -1055,6 +1073,10 @@ action (création, modification, suppression), type et identifiant de l'objet, u
 <p>le bouton « Historique », vous affichez l'historique des modifications de cet objet.</p>
 </li>
 </ul>
+<p>Voici le détail d'une modification :</p>
+<p><a href="../images/logs.show.png"><img alt="Screenshot" src="../images/logs.show.png" /></a></p>
+<p>L'historique des modifications présente, en colonnes, les valeurs successives de l'objet :</p>
+<p><a href="../images/logs.history.png"><img alt="Screenshot" src="../images/logs.history.png" /></a></p>
 <p>L'historique des modifications d'un objet est aussi accessible par le bouton « Historique » des écrans d'affichage
 d'un <a href="../controls/#show">contrôle</a>, d'un <a href="../risks/#show">risque</a> ou d'un <a href="#users">utilisateur</a>.</p>
 <p>Les logs plus anciens que la <a href="#documents">durée de conservation</a> sont supprimés par la commande <code>deming:cleanup</code>.</p>
