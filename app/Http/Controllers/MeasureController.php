@@ -1491,7 +1491,10 @@ class MeasureController extends Controller
         $measure->observations     = request('observations');
         $measure->note             = request('note');
         $measure->score            = request('score');
-        $measure->realisation_date = request('realisation_date');
+        // Accepting a control must not change the date it was made on
+        if ($measure->realisation_date === null) {
+            $measure->realisation_date = request('realisation_date');
+        }
         $measure->plan_date        = request('plan_date');
         $measure->action_plan      = request('action_plan');
 

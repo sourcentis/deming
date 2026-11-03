@@ -105,10 +105,9 @@
             <div class="col-lg-2 col-md-3">
 				<input class="form-control" type="date"
 					name="realisation_date"
-					value="{{
-						\Carbon\Carbon::now()
-						->format('Y-m-d')
-						}}"/>
+					value="{{ old('realisation_date', $measure->realisation_date ?? \Carbon\Carbon::now()->format('Y-m-d')) }}"
+					@if ($measure->status === 1) readonly @endif
+					/>
 			</div>
 		</div>
 
