@@ -152,3 +152,23 @@ test('a note above 100 is accepted', function () {
 
     expect((float) Measure::find($measure->id)->note)->toBe(150.5);
 });
+
+test('accepting a control keeps its realisation date', function () {
+    $measure = Measure::factory()->create([
+        'status' => 1,
+        'periodicity' => 0,
+        'realisation_date' => '2026-01-15',
+    ]);
+    $measure->controls()->sync([Control::factory()->create()->id]);
+
+    $this->actingAs($this->admin)->post('/bob/accept', [
+        'id' => $measure->id,
+        'plan_date' => '2026-01-01',
+        'realisation_date' => now()->format('Y-m-d'),
+        'score' => 3,
+    ])->assertRedirect('/bob/index');
+
+    $measure->refresh();
+    expect($measure->status)->toBe(2)
+        ->and($measure->realisation_date)->toBe('2026-01-15');
+});
