@@ -41,6 +41,9 @@ Die Ansicht enthält:
     * B. eine Zusammenfassung pro Person, die direkte Zuweisungen und Zuweisungen über eine Gruppe unterscheidet,
     * C. eine Zusammenfassung pro Gruppe mit ihrem Typ (Fachbereich oder Sicherheit) und ihrer Mitgliederzahl.
 
+  Jeder Benutzer- und Gruppenname verweist auf seine Seite. Administratoren erhalten alle Links; andere Benutzer
+  nur den Link zu ihrer eigenen Seite.
+
 * **Definitionen** der in der Ansicht verwendeten Indikatoren.
 
 Die Zuständigkeit für eine Kontrolle ergibt sich aus dem [Gruppentyp](config.de.md#groups): Eine Kontrolle wird vom

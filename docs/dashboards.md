@@ -40,6 +40,9 @@ The screen contains:
     * B. a summary by individual, counting direct assignments and assignments through a group,
     * C. a summary by group, with its type (Business or Security) and its number of members.
 
+  Each user and group name links to its page. Administrators get every link; other users only get the link
+  to their own page.
+
 * **Definitions** of the indicators used on the screen.
 
 The ownership of a measurement is derived from the [group type](config.md#groups): a measurement is Security
