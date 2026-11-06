@@ -4,6 +4,9 @@
 @php
     $pct = fn (float $value) => \App\Services\MonitoringService::formatPercent($value);
     $statHeaders = ['col_live', 'col_overdue', 'col_not_yet', 'col_pending', 'col_rate', 'col_max_days'];
+    // User pages are open to admins and to the user themselves, group pages to admins only
+    $isAdmin = Auth::user()->isAdmin();
+    $canShowUser = fn (int $id) => $isAdmin || Auth::id() === $id;
 @endphp
 <div class="card">
     <div class="card-header d-flex flex-wrap justify-content-between">
@@ -165,7 +168,18 @@
         <tbody>
             @foreach ($combinations as $row)
             <tr>
-                <td>{!! $row['unassigned'] ? '<em>' . e(trans('cruds.monitoring.unassigned')) . '</em>' : e($row['label']) !!}</td>
+                <td>
+                    @if ($row['unassigned'])
+                    <em>{{ trans('cruds.monitoring.unassigned') }}</em>
+                    @else
+                    @foreach ($row['users'] as $id => $name)
+                    @if ($canShowUser($id))<a href="/users/{{ $id }}">{{ $name }}</a>@else{{ $name }}@endif{{ ($loop->last && $row['groups'] === []) ? '' : ',' }}
+                    @endforeach
+                    @foreach ($row['groups'] as $id => $name)
+                    @if ($isAdmin)<a href="/groups/{{ $id }}">{{ $name }}</a>@else{{ $name }}@endif{{ $loop->last ? '' : ',' }}
+                    @endforeach
+                    @endif
+                </td>
                 @include('radar.monitoring-cells', ['row' => $row])
             </tr>
             @endforeach
@@ -190,7 +204,11 @@
             @foreach ($individuals as $row)
             <tr>
                 <td>
+                    @if ($canShowUser($row['id']))
+                    <a href="/users/{{ $row['id'] }}">{{ $row['name'] }}</a>
+                    @else
                     {{ $row['name'] }}
+                    @endif
                     @if ($row['disabled'])
                     <span class="badge text-bg-secondary">{{ trans('cruds.monitoring.disabled') }}</span>
                     @endif
@@ -220,7 +238,13 @@
         <tbody>
             @foreach ($groups as $row)
             <tr>
-                <td>{{ $row['name'] }}</td>
+                <td>
+                    @if ($isAdmin)
+                    <a href="/groups/{{ $row['id'] }}">{{ $row['name'] }}</a>
+                    @else
+                    {{ $row['name'] }}
+                    @endif
+                </td>
                 <td>@include('groups.type_badge', ['group' => (object) $row])</td>
                 <td class="text-end">{{ $row['members'] }}</td>
                 @include('radar.monitoring-cells', ['row' => $row])

@@ -249,3 +249,34 @@ test('the number of queries does not depend on the number of measures', function
 
     expect($large)->toBe($small);
 });
+
+// --- Links
+
+test('admins get links to every user and group page', function () {
+    $admin = User::factory()->admin()->create();
+    $user = User::factory()->user()->create(['name' => 'Linked User']);
+    $group = UserGroup::factory()->create(['name' => 'Linked Group']);
+
+    $measure = Measure::factory()->create(['status' => 0, 'plan_date' => '2026-10-01']);
+    $measure->users()->attach($user->id);
+    $measure->groups()->attach($group->id);
+
+    $this->actingAs($admin)->get('/radar/monitoring')
+        ->assertSee('<a href="/users/' . $user->id . '">Linked User</a>', false)
+        ->assertSee('<a href="/groups/' . $group->id . '">Linked Group</a>', false);
+});
+
+test('non-admins only get a link to their own user page', function () {
+    $user = User::factory()->user()->create(['name' => 'Self User']);
+    $other = User::factory()->user()->create(['name' => 'Other User']);
+    $group = UserGroup::factory()->create(['name' => 'Some Group']);
+
+    $measure = Measure::factory()->create(['status' => 0, 'plan_date' => '2026-10-01']);
+    $measure->users()->attach([$user->id, $other->id]);
+    $measure->groups()->attach($group->id);
+
+    $this->actingAs($user)->get('/radar/monitoring')
+        ->assertSee('<a href="/users/' . $user->id . '">Self User</a>', false)
+        ->assertDontSee('href="/users/' . $other->id . '"', false)
+        ->assertDontSee('href="/groups/' . $group->id . '"', false);
+});
