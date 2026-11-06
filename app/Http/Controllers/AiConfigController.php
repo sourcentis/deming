@@ -45,7 +45,6 @@ class AiConfigController extends Controller
     public function save(Request $request): RedirectResponse
     {
         abort_if(! Auth::user()->isAdmin(), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        abort_if(! Configuration::aiActivated(), Response::HTTP_NOT_FOUND, '404 Not Found');
 
         // While AI is off, the settings fields are disabled in the form, hence not submitted: keep them
         $request->validate([
@@ -84,7 +83,6 @@ class AiConfigController extends Controller
     public function test(AiGateway $gateway): JsonResponse
     {
         abort_if(! Auth::user()->isAdmin(), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        abort_if(! Configuration::aiActivated(), Response::HTTP_NOT_FOUND, '404 Not Found');
 
         $expected = count(AiSubjects::types());
         $start = microtime(true);
@@ -156,7 +154,6 @@ class AiConfigController extends Controller
     public function purge(): RedirectResponse
     {
         abort_if(! Auth::user()->isAdmin(), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        abort_if(! Configuration::aiActivated(), Response::HTTP_NOT_FOUND, '404 Not Found');
 
         $count = 0;
         foreach (self::TABLES as $table) {
