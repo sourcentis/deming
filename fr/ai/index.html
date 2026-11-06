@@ -567,7 +567,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#obtenir-une-cle" class="md-nav__link">
+  <a href="#key" class="md-nav__link">
     <span class="md-ellipsis">
       Obtenir une clé
     </span>
@@ -870,12 +870,13 @@ envoyée et l'icône d'analyse n'apparaît pas.</p>
 <p>L'agent IA est fourni par la <strong>passerelle IA Sourcentis</strong>, un service privé qui détient les prompts, le format des
 réponses et les modèles. Deming ne lui envoie que les données de l'objet à analyser. La fonction est donc réservée
 aux clients de Sourcentis : aucun agent n'est configuré par défaut, et Deming ne peut pas s'adresser directement à un
-autre fournisseur ni à un modèle local.</p>
+autre fournisseur ni à un modèle local. <a href="#key">Contactez-nous</a> si vous souhaitez utiliser votre propre moteur d'IA.</p>
 <h2 id="config">Activer et configurer<a class="headerlink" href="#config" title="Permanent link">&para;</a></h2>
 <p>La configuration se trouve dans l'onglet « IA » de la page <a href="../config/#parameters">Paramètres</a> (menu « Configuration →
 Paramètres »). Elle est réservée aux administrateurs.</p>
 <p><a href="../images/ai-config.png"><img alt="Screenshot" src="../images/ai-config.png" /></a></p>
-<p>L'écran contient un encart « Protection des données » qui rappelle ce qui est envoyé à l'agent ; lisez la section
+<p>En haut de l'écran, un encart « Obtenir l'accès à l'agent IA » indique comment obtenir une clé ou utiliser votre
+propre moteur d'IA (voir <a href="#key">Obtenir une clé</a>). L'écran contient aussi un encart « Protection des données » qui rappelle ce qui est envoyé à l'agent ; lisez la section
 <a href="#privacy">Protection des données</a> avant d'activer l'IA.</p>
 <p>Les champs sont les suivants :</p>
 <ul>
@@ -903,9 +904,10 @@ clé, un message le signale à la place de la liste.</p>
 <p>Le bouton « Tester la connexion » interroge le catalogue des tâches de la passerelle, avec la configuration
 enregistrée. Cette requête est gratuite : elle ne consomme aucun token. Il affiche le statut HTTP, la latence et le
 nombre de tâches Deming trouvées : « 4/4 tâches Deming » indique que tout est en place. La clé n'est jamais affichée.</p>
-<h3 id="obtenir-une-cle">Obtenir une clé<a class="headerlink" href="#obtenir-une-cle" title="Permanent link">&para;</a></h3>
-<p>L'URL et la clé sont communiquées par Sourcentis. La clé n'est transmise qu'une seule fois : collez-la dans le champ
-« Clé API » de Deming.</p>
+<h3 id="key">Obtenir une clé<a class="headerlink" href="#key" title="Permanent link">&para;</a></h3>
+<p>L'URL et la clé sont communiquées par Sourcentis : contactez-nous pour en obtenir une. La clé n'est transmise qu'une
+seule fois : collez-la dans le champ « Clé API » de Deming.</p>
+<p>Contactez-nous également si vous souhaitez utiliser votre propre moteur d'IA à la place de la passerelle IA Sourcentis.</p>
 <h3 id="purge">Supprimer toutes les analyses<a class="headerlink" href="#purge" title="Permanent link">&para;</a></h3>
 <p>Le bouton « Supprimer toutes les analyses IA », en bas de l'onglet, efface la dernière analyse enregistrée sur
 chaque mesure de sécurité, contrôle, plan d'action et risque, après confirmation. L'opération est tracée dans les
