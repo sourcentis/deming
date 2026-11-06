@@ -13,7 +13,7 @@ displayed.
 The AI agent is provided by the **Sourcentis AI gateway**, a private service that holds the prompts, the response
 format and the models. Deming only sends it the data of the object to analyse. The feature is therefore reserved for
 Sourcentis customers: no agent is configured by default, and Deming cannot call another provider or a local model
-directly.
+directly. [Contact us](#key) if you want to use your own AI engine.
 
 ## Enable and configure {#config}
 
@@ -22,7 +22,8 @@ It is restricted to administrators.
 
 [![Screenshot](images/ai-config.png)](images/ai-config.png)
 
-The screen contains a "Data protection" notice that summarizes what is sent to the agent; read the
+At the top of the screen, a "Getting access to the AI agent" notice explains how to get a key or use your own AI
+engine (see [Get a key](#key)). The screen also contains a "Data protection" notice that summarizes what is sent to the agent; read the
 [Data protection](#privacy) section before enabling AI.
 
 The fields are:
@@ -48,9 +49,12 @@ The "Test the connection" button queries the task catalog of the gateway, with t
 is free: it uses no token. It displays the HTTP status, the latency and the number of Deming tasks found: "4/4 Deming
 tasks" means that everything is in place. The key is never displayed.
 
-### Get a key
+### Get a key {#key}
 
-The URL and the key are provided by Sourcentis. The key is sent only once: paste it in Deming's "API key" field.
+The URL and the key are provided by Sourcentis: contact us to get one. The key is sent only once: paste it in
+Deming's "API key" field.
+
+Contact us as well if you want to use your own AI engine instead of the Sourcentis AI gateway.
 
 ### Delete all analyses {#purge}
 

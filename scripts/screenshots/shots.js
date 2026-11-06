@@ -98,7 +98,15 @@ async function capture(page, screen, lang, values) {
     });
     // Steps before the capture: click on an element, then wait for another one (e.g. the result of an AI analysis)
     for (const step of screen.steps || []) {
+        // Replaces the value of a field on the page only (nothing is saved), e.g. to hide a real URL
+        if (step.fill) {
+            const field = page.locator(step.fill).first();
+            await field.fill(step.value);
+            await field.blur();
+        }
         if (step.click) await page.locator(step.click).first().click();
+        // Replaces the text of an element on the page only, e.g. to hide the host of the AI agent
+        if (step.text) await page.locator(step.text).first().evaluate((e, v) => { e.textContent = v; }, step.value);
         if (step.waitFor) await page.locator(step.waitFor).first().waitFor({ timeout: 180000 });
     }
     await page.waitForTimeout(screen.wait || 1200);

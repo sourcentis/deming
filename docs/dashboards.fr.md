@@ -40,6 +40,9 @@ L'écran contient :
     * B. une synthèse par individu, distinguant les affectations directes et les affectations via un groupe,
     * C. une synthèse par groupe, avec son type (Business ou Sécurité) et son nombre de membres.
 
+  Chaque nom d'utilisateur et de groupe renvoie vers sa fiche. Les administrateurs ont tous les liens ; les autres
+  utilisateurs n'ont que le lien vers leur propre fiche.
+
 * **Définitions** des indicateurs utilisés dans l'écran.
 
 La propriété d'un contrôle est déduite du [type de groupe](config.md#groups) : un contrôle est pris en charge par

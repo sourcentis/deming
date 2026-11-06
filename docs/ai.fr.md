@@ -15,7 +15,7 @@ envoyée et l'icône d'analyse n'apparaît pas.
 L'agent IA est fourni par la **passerelle IA Sourcentis**, un service privé qui détient les prompts, le format des
 réponses et les modèles. Deming ne lui envoie que les données de l'objet à analyser. La fonction est donc réservée
 aux clients de Sourcentis : aucun agent n'est configuré par défaut, et Deming ne peut pas s'adresser directement à un
-autre fournisseur ni à un modèle local.
+autre fournisseur ni à un modèle local. [Contactez-nous](#key) si vous souhaitez utiliser votre propre moteur d'IA.
 
 ## Activer et configurer {#config}
 
@@ -24,7 +24,8 @@ Paramètres »). Elle est réservée aux administrateurs.
 
 [![Screenshot](images/ai-config.fr.png)](images/ai-config.fr.png)
 
-L'écran contient un encart « Protection des données » qui rappelle ce qui est envoyé à l'agent ; lisez la section
+En haut de l'écran, un encart « Obtenir l'accès à l'agent IA » indique comment obtenir une clé ou utiliser votre
+propre moteur d'IA (voir [Obtenir une clé](#key)). L'écran contient aussi un encart « Protection des données » qui rappelle ce qui est envoyé à l'agent ; lisez la section
 [Protection des données](#privacy) avant d'activer l'IA.
 
 Les champs sont les suivants :
@@ -51,10 +52,12 @@ Le bouton « Tester la connexion » interroge le catalogue des tâches de la pas
 enregistrée. Cette requête est gratuite : elle ne consomme aucun token. Il affiche le statut HTTP, la latence et le
 nombre de tâches Deming trouvées : « 4/4 tâches Deming » indique que tout est en place. La clé n'est jamais affichée.
 
-### Obtenir une clé
+### Obtenir une clé {#key}
 
-L'URL et la clé sont communiquées par Sourcentis. La clé n'est transmise qu'une seule fois : collez-la dans le champ
-« Clé API » de Deming.
+L'URL et la clé sont communiquées par Sourcentis : contactez-nous pour en obtenir une. La clé n'est transmise qu'une
+seule fois : collez-la dans le champ « Clé API » de Deming.
+
+Contactez-nous également si vous souhaitez utiliser votre propre moteur d'IA à la place de la passerelle IA Sourcentis.
 
 ### Supprimer toutes les analyses {#purge}
 
