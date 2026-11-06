@@ -198,6 +198,8 @@ class MonitoringService
             if (! isset($combinations[$key])) {
                 $combinations[$key] = [
                     'label' => implode(', ', array_merge(array_values($userPart), array_values($groupPart))),
+                    'users' => $userPart,
+                    'groups' => $groupPart,
                     'unassigned' => $userPart === [] && $groupPart === [],
                 ] + self::emptyStats();
             }
