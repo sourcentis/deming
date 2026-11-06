@@ -64,6 +64,9 @@ ID_control=18 ID_measure_done=1231 npm run docs:screenshots
     * `wait`: delay in ms before the capture (default: 1200)
     * `steps`: actions before the capture, each one with a `click` (element to click) and/or a `waitFor` (element to
       wait for, up to 3 minutes), e.g. to open the AI panel and wait for the analysis
+      and/or a `fill` (field whose displayed value is replaced by `value`, without saving anything), e.g. to show the
+      documented AI agent URL instead of the real one
+      and/or a `text` (element whose text is replaced by `value`), e.g. to hide the host of the AI agent in the panel
 
 The AI analysis is written in the language of the administrator account, not in the language of the capture: change
 the language of the account before capturing `ai-panel` in each language.

@@ -12,6 +12,14 @@
 <div class="ai-config">
     @include('partials.help', ['page' => 'ai_config'])
 
+    <div class="alert alert-info col-lg-9" role="note">
+        <strong><i class="bi bi-key"></i> {{ trans('ai.config.access_title') }}</strong>
+        <ul class="mb-0">
+            <li>{{ trans('ai.config.access_key') }}</li>
+            <li>{{ trans('ai.config.access_own_engine') }}</li>
+        </ul>
+    </div>
+
     <div class="alert alert-warning ai-privacy col-lg-9" role="note">
         <strong><i class="bi bi-shield-lock"></i> {{ trans('ai.config.privacy_title') }}</strong>
         <ul>

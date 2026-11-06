@@ -14,7 +14,8 @@ und das Analyse-Symbol wird nicht angezeigt.
 Der KI-Agent wird vom **Sourcentis-KI-Gateway** bereitgestellt, einem privaten Dienst, der die Prompts, das
 Antwortformat und die Modelle verwaltet. Deming sendet ihm nur die Daten des zu analysierenden Objekts. Die Funktion
 ist daher Sourcentis-Kunden vorbehalten: Standardmäßig ist kein Agent konfiguriert, und Deming kann weder einen anderen
-Anbieter noch ein lokales Modell direkt ansprechen.
+Anbieter noch ein lokales Modell direkt ansprechen. [Kontaktieren Sie uns](#key), wenn Sie Ihre eigene KI-Engine
+verwenden möchten.
 
 ## Aktivieren und konfigurieren {#config}
 
@@ -23,7 +24,8 @@ Die Konfiguration befindet sich in der Registerkarte „KI“ der Seite [Einstel
 
 [![Screenshot](images/ai-config.de.png)](images/ai-config.de.png)
 
-Die Seite enthält einen Hinweis „Datenschutz“, der zusammenfasst, was an den Agenten gesendet wird; lesen Sie den
+Oben auf der Seite erklärt ein Hinweis „Zugang zum KI-Agenten erhalten“, wie Sie einen Schlüssel erhalten oder Ihre
+eigene KI-Engine verwenden (siehe [Einen Schlüssel erhalten](#key)). Die Seite enthält außerdem einen Hinweis „Datenschutz“, der zusammenfasst, was an den Agenten gesendet wird; lesen Sie den
 Abschnitt [Datenschutz](#privacy), bevor Sie die KI aktivieren.
 
 Die Felder sind:
@@ -51,10 +53,12 @@ Diese Anfrage ist kostenlos: Sie verbraucht keine Tokens. Sie zeigt den HTTP-Sta
 gefundenen Deming-Aufgaben an: „4/4 Deming-Aufgaben“ bedeutet, dass alles bereit ist. Der Schlüssel wird nie
 angezeigt.
 
-### Einen Schlüssel erhalten
+### Einen Schlüssel erhalten {#key}
 
-URL und Schlüssel werden von Sourcentis mitgeteilt. Der Schlüssel wird nur einmal übermittelt: Fügen Sie ihn in das
+URL und Schlüssel werden von Sourcentis mitgeteilt: Kontaktieren Sie uns, um einen zu erhalten. Der Schlüssel wird nur einmal übermittelt: Fügen Sie ihn in das
 Feld „API-Schlüssel“ von Deming ein.
+
+Kontaktieren Sie uns ebenfalls, wenn Sie anstelle des Sourcentis-KI-Gateways Ihre eigene KI-Engine verwenden möchten.
 
 ### Alle Analysen löschen {#purge}
 

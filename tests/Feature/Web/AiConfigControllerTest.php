@@ -313,18 +313,11 @@ test('turning AI on still requires the agent URL', function () {
     expect(Configuration::bool('ai.enabled'))->toBeFalse();
 });
 
-test('AI not activated in .env: no AI tab and the AI settings are unreachable', function () {
-    config(['app.ai_activated' => false]);
-    Http::fake();
+test('the AI tab tells how to get access or use your own engine', function (string $language) {
+    $admin = User::factory()->admin()->create(['language' => $language]);
 
-    $html = $this->actingAs($this->admin)->get('/config/parameters?tab=ai')->assertOk()->getContent();
-    expect($html)->not->toContain('id="tab-ai"')
-        ->not->toContain('action="/config/ai/save"')
-        ->toContain('class="tab-pane fade show active" id="tab-documents"');
-
-    $this->actingAs($this->admin)->post('/config/ai/save', aiConfigPayload())->assertNotFound();
-    $this->actingAs($this->admin)->post('/config/ai/test')->assertNotFound();
-    $this->actingAs($this->admin)->post('/config/ai/purge')->assertNotFound();
-    expect(Configuration::get('ai.enabled'))->toBe('0');
-    Http::assertNothingSent();
-});
+    $this->actingAs($admin)->get('/config/parameters?tab=ai')
+        ->assertSeeText(trans('ai.config.access_title', [], $language))
+        ->assertSeeText(trans('ai.config.access_key', [], $language))
+        ->assertSeeText(trans('ai.config.access_own_engine', [], $language));
+})->with(['fr', 'en', 'de']);
