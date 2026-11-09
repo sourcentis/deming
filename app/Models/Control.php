@@ -47,7 +47,8 @@ class Control extends Model
     /**
      * Access rule of ControlController@show (security measure page):
      * no API account, and unless the user sees all data, at least one
-     * control (Measure) of this security measure assigned directly to the user.
+     * control (Measure) of this security measure assigned to the user,
+     * directly or through one of their groups.
      */
     public static function isViewableBy(User $user, int $id): bool
     {
@@ -55,12 +56,20 @@ class Control extends Model
             return false;
         }
 
-        return $user->seesAllData() ||
-            DB::table('measures')
-                ->join('control_measure', 'control_measure.measure_id', '=', 'measures.id')
-                ->join('measure_user', 'measure_user.measure_id', '=', 'measures.id')
-                ->where('control_measure.control_id', $id)
-                ->where('measure_user.user_id', $user->id)
+        if ($user->seesAllData()) {
+            return true;
+        }
+
+        $measureIds = DB::table('control_measure')->where('control_id', $id)->select('measure_id');
+
+        return DB::table('measure_user')
+            ->where('user_id', $user->id)
+            ->whereIn('measure_id', $measureIds)
+            ->exists()
+            || DB::table('measure_user_group')
+                ->join('user_user_group', 'measure_user_group.user_group_id', '=', 'user_user_group.user_group_id')
+                ->where('user_user_group.user_id', $user->id)
+                ->whereIn('measure_user_group.measure_id', $measureIds)
                 ->exists();
     }
 

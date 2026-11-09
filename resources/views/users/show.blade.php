@@ -95,10 +95,12 @@
 				                <th>{{ trans("cruds.measure.fields.name") }}</th>
                                 <th>{{ trans("cruds.measure.fields.scope") }}</th>
 				                <th>{{ trans("cruds.measure.fields.planned") }}</th>
+				                <th>{{ trans("cruds.user.fields.groups") }}</th>
 				            </tr>
 				        </thead>
 				        <tbody>
-	    			@foreach($user->measures as $measure)
+	    			@foreach($assignments as $assignment)
+	    				@php($measure = $assignment['measure'])
 	    				<tr>
 				            <td>
                                 @foreach($measure->controls as $control)
@@ -115,18 +117,27 @@
                                 {{ $measure->scope }}
 				            </td>
 		    				<td>
-				                <a id="{{ $measure->plan_date }}" href="/bob/show/{{$control->id}}">
+				                <a id="{{ $measure->plan_date }}" href="/bob/show/{{ $measure->id }}">
 				                <b>
 				                    @if( strtotime($measure->plan_date) >= strtotime('now') )
 				                        <font color="green">{{ $measure->plan_date }}</font>
 				                    @else
-				                        <font color="red">{{ $measure    ->plan_date }}</font>
+				                        <font color="red">{{ $measure->plan_date }}</font>
 				                    @endif
 				                </b>
 				                </a>
 		    				</td>
+		    				<td>
+                                @foreach($assignment['groups'] as $group)
+                                    <a href="/groups/{{ $group->id }}">{{ $group->name }}</a>
+                                    @if(!$loop->last)
+                                    ,
+                                    @endif
+                                @endforeach
+		    				</td>
 		    			</tr>
 	    			@endforeach
+				        </tbody>
 	    			</table>
 	    		</div>
 	    	</div>
