@@ -101,7 +101,9 @@ class UserController extends Controller
         // Allow only admin or the owner of the profile to view
         $this->authorizeAdminOrOwner($user);
 
-        return view('users.show', compact('user'));
+        $assignments = $user->pendingMeasureAssignments();
+
+        return view('users.show', compact('user', 'assignments'));
     }
 
     /**
@@ -164,9 +166,12 @@ class UserController extends Controller
         $user->title = $request->input('title');
         $user->language = $request->input('language');
 
-        // Update controls assigned to the user
+        // Update controls assigned to the user. The form only lists pending measures,
+        // so only those may be detached: measures already performed keep their history.
         if (Auth::user()->isAdmin() || Auth::user()->isUser()) {
-            $user->lastMeasures()->sync($request->input('controls', []));
+            $selected = $request->input('controls', []);
+            $user->measures()->detach($user->lastMeasures()->whereNotIn('measures.id', $selected)->pluck('measures.id')->all());
+            $user->measures()->syncWithoutDetaching($selected);
         }
 
         $user->update();

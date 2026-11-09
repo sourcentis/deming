@@ -91,6 +91,113 @@ test('admin can update a user', function () {
     $this->assertDatabaseHas('users', ['id' => $target->id, 'name' => 'Updated Name']);
 });
 
+test('updating a user only changes pending measures and keeps performed ones', function () {
+    $target = User::factory()->create();
+    $done = \App\Models\Measure::factory()->done()->create();
+    $kept = \App\Models\Measure::factory()->create();
+    $removed = \App\Models\Measure::factory()->create();
+    $added = \App\Models\Measure::factory()->create();
+    $target->measures()->attach([$done->id, $kept->id, $removed->id]);
+
+    $this->actingAs($this->admin)
+        ->put("/users/{$target->id}", [
+            'login' => $target->login,
+            'name' => $target->name,
+            'email' => $target->email,
+            'title' => 'Test Title',
+            'role' => $target->role,
+            'controls' => [(string) $kept->id, (string) $added->id],
+        ])
+        ->assertRedirect();
+
+    expect($target->measures()->pluck('measures.id')->sort()->values()->all())
+        ->toBe(collect([$done->id, $kept->id, $added->id])->sort()->values()->all());
+});
+
+test('user page links each pending measure to itself', function () {
+    // Offset the ids so that a measure id cannot match a control id by chance
+    \App\Models\Measure::factory()->count(3)->create();
+    $control = \App\Models\Control::factory()->create();
+    $measure = \App\Models\Measure::factory()->create();
+    $measure->controls()->attach($control->id);
+    $measure->users()->attach($this->user->id);
+
+    $this->actingAs($this->admin)
+        ->get("/users/{$this->user->id}")
+        ->assertStatus(200)
+        ->assertSee("/alice/show/{$control->id}")
+        ->assertSee("/bob/show/{$measure->id}")
+        ->assertDontSee("/bob/show/{$control->id}\"", false);
+});
+
+test('user page accepts a measure without control', function () {
+    $measure = \App\Models\Measure::factory()->create();
+    $measure->users()->attach($this->user->id);
+
+    $this->actingAs($this->admin)
+        ->get("/users/{$this->user->id}")
+        ->assertStatus(200)
+        ->assertSee("/bob/show/{$measure->id}");
+});
+
+test('user page hides performed measures', function () {
+    $done = \App\Models\Measure::factory()->done()->create(['name' => 'Performed measure']);
+    $todo = \App\Models\Measure::factory()->create(['name' => 'Pending measure']);
+    $this->user->measures()->attach([$done->id, $todo->id]);
+
+    $this->actingAs($this->admin)
+        ->get("/users/{$this->user->id}")
+        ->assertSee('Pending measure')
+        ->assertDontSee('Performed measure');
+});
+
+test('user page lists pending measures assigned through a group once', function () {
+    $group = \App\Models\UserGroup::factory()->create(['name' => 'Audit team']);
+    $group->users()->attach($this->user->id);
+
+    $viaGroup = \App\Models\Measure::factory()->create(['name' => 'Group measure']);
+    $both = \App\Models\Measure::factory()->create(['name' => 'Shared measure']);
+    $doneViaGroup = \App\Models\Measure::factory()->done()->create(['name' => 'Performed group measure']);
+    $group->measures()->attach([$viaGroup->id, $both->id, $doneViaGroup->id]);
+    $this->user->measures()->attach($both->id);
+
+    $assignments = $this->user->pendingMeasureAssignments();
+
+    expect($assignments)->toHaveCount(2);
+    expect($assignments->every(fn ($assignment) => collect($assignment['groups'])->pluck('id')->all() === [$group->id]))->toBeTrue();
+
+    $this->actingAs($this->admin)
+        ->get("/users/{$this->user->id}")
+        ->assertSee('Group measure')
+        ->assertSee('Shared measure')
+        ->assertSee("/groups/{$group->id}")
+        ->assertDontSee('Performed group measure');
+});
+
+test('control is viewable by an auditee assigned through a group', function () {
+    $auditee = User::factory()->auditee()->create();
+    $group = \App\Models\UserGroup::factory()->create();
+    $group->users()->attach($auditee->id);
+    $measure = \App\Models\Measure::factory()->create();
+    $control = \App\Models\Control::factory()->create();
+    $otherControl = \App\Models\Control::factory()->create();
+    $measure->controls()->attach($control->id);
+    $group->measures()->attach($measure->id);
+
+    expect(\App\Models\Control::isViewableBy($auditee, $control->id))->toBeTrue();
+    expect(\App\Models\Control::isViewableBy($auditee, $otherControl->id))->toBeFalse();
+});
+
+test('control is viewable by an auditee assigned directly', function () {
+    $auditee = User::factory()->auditee()->create();
+    $measure = \App\Models\Measure::factory()->create();
+    $control = \App\Models\Control::factory()->create();
+    $measure->controls()->attach($control->id);
+    $measure->users()->attach($auditee->id);
+
+    expect(\App\Models\Control::isViewableBy($auditee, $control->id))->toBeTrue();
+});
+
 test('admin can delete a user', function () {
     $target = User::factory()->create();
 

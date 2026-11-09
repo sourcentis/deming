@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Collection;
 use Laravel\Passport\Contracts\OAuthenticatable;
 use Laravel\Passport\HasApiTokens;
 
@@ -67,6 +68,8 @@ class User extends Authenticatable implements OAuthenticatable
 
     /**
      * Relations
+     *
+     * @return BelongsToMany<UserGroup, $this>
      */
     public function groups(): BelongsToMany
     {
@@ -78,6 +81,7 @@ class User extends Authenticatable implements OAuthenticatable
         return $this->belongsToMany(Measure::class, 'measure_user', 'user_id', 'measure_id')->orderBy('name');
     }
 
+    /** @return BelongsToMany<Measure, $this> */
     public function lastMeasures(): BelongsToMany
     {
         return $this->belongsToMany(Measure::class, 'measure_user', 'user_id', 'measure_id')->whereNull('realisation_date')->orderBy('name');
@@ -91,6 +95,33 @@ class User extends Authenticatable implements OAuthenticatable
     /**
      * Helpers
      */
+
+    /**
+     * Pending measures assigned to the user, directly or through their groups.
+     * Each measure appears once, with the groups that assign it to the user
+     * (empty when the assignment is only direct).
+     *
+     * @return Collection<int, array{measure: Measure, groups: list<UserGroup>}>
+     */
+    public function pendingMeasureAssignments(): Collection
+    {
+        $this->loadMissing(['lastMeasures.controls', 'groups.measures.controls']);
+
+        $assignments = [];
+
+        foreach ($this->lastMeasures as $measure) {
+            $assignments[$measure->id] = ['measure' => $measure, 'groups' => []];
+        }
+
+        foreach ($this->groups as $group) {
+            foreach ($group->measures as $measure) {
+                $assignments[$measure->id] ??= ['measure' => $measure, 'groups' => []];
+                $assignments[$measure->id]['groups'][] = $group;
+            }
+        }
+
+        return collect(array_values($assignments));
+    }
 
     /**
      * Get user initials from their name
