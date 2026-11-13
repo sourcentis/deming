@@ -17,7 +17,7 @@ use App\Http\Controllers\RiskController;
 use App\Http\Controllers\RiskScoringConfigController;
 use App\Services\Ai\AiSubjects;
 
-Auth::routes();
+Auth::routes(['register' => false]);
 
 /* Socialite (must be reachable while the user is NOT yet authenticated) */
 Route::namespace('App\\Http\\Controllers')->group(function () {
