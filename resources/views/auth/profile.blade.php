@@ -47,7 +47,7 @@ Modifier le profil
             </li>
         </ul>
         <button type="submit" class="btn btn-success"><i class="bi bi-floppy"></i> Sauver</button>
-        <button type="submit" class="btn btn-light border" onclick='this.form.method="GET";this.form.action="/";'><span class="bi bi-x-circle"></span> Annuler</button>
+        <button type="submit" class="btn btn-light border" data-form-method="GET" data-form-action="/"><span class="bi bi-x-circle"></span> Annuler</button>
     </form>
 
 @endsection

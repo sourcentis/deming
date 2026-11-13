@@ -30,7 +30,7 @@
                 <strong>{{ trans('cruds.group.fields.description') }}</strong>
 	    	</div>
 			<div class="col-lg-11 col-md-10">
-                {!! $group->description !!}
+                {{ $group->description }}
     		</div>
 	    </div>
 
@@ -145,7 +145,7 @@
 	    	&nbsp;
 	    	@endif
 			@if (Auth::User()->role==1)
-            <form action="/groups/{{ $group->id }}" method="post" onSubmit="if(!confirm('{{ trans('common.confirm') }}')){return false;}" class="d-inline">
+            <form action="/groups/{{ $group->id }}" method="post" data-confirm="{{ trans('common.confirm') }}" class="d-inline">
                {{ method_field('delete') }}
                @csrf
 	            <button class="btn btn-danger" type="submit">

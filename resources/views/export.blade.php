@@ -68,7 +68,7 @@
                     </div>
     		        <div class="col-md-2 col-lg-1 text-md-end">
     				    <button type="submit" class="btn btn-success"
-                            onclick="if ($('#clean').is(':checked')) return confirm('Do you want to remove all other measures and controls  ?')">
+                            data-confirm-if="#clean" data-confirm="Do you want to remove all other measures and controls  ?">
                                 {{ trans("common.import") }}
                         </button>
     		        </div>

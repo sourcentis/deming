@@ -45,7 +45,7 @@
                 <a href="/domains/{{ $domain->id }}/edit" class="btn btn-primary">
     		            <span class="bi bi-pencil-square"></span> {{ trans('common.edit') }}
                 </a>
-    			<form action="/domains/{{ $domain->id }}" class="d-inline" method="post" onSubmit="if(!confirm('{{ trans('common.confirm') }}')){return false;}">
+    			<form action="/domains/{{ $domain->id }}" class="d-inline" method="post" data-confirm="{{ trans('common.confirm') }}">
     	           {{ method_field('delete') }}
     	           @csrf
     		        <button class="btn btn-danger" type="submit">

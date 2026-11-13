@@ -13,12 +13,12 @@
 			</div>
 			@if (Auth::User()->role==1)
 			<div class="col-md-12 col-lg-7 text-md-end">
-				<button class="btn btn-warning" onclick="location.href = '/attribute/replace';">
+				<button class="btn btn-warning" data-href="/attribute/replace">
 		            <span class="bi bi-pencil-square"></span>
 					{{ trans('common.manage') }}
 				</button>
 				&nbsp;
-				<button class="btn btn-primary" onclick="location.href = '/attributes/create';">
+				<button class="btn btn-primary" data-href="/attributes/create">
 		            <span class="bi bi-plus-lg"></span> {{ trans('common.new') }}
 				</button>
 			</div>

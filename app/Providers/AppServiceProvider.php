@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
 use PhpOffice\PhpWord\Settings as PhpWordSettings;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\RateLimiter;
@@ -35,6 +36,13 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Paginator::useBootstrapFive();
+
+        // Markdown affiché dans les vues : le HTML brut est échappé et les liens
+        // dangereux (javascript:, data:...) sont neutralisés
+        \Parsedown::instance()->setSafeMode(true);
+
+        // <script @nonce> : nonce CSP de la requête (voir ContentSecurityPolicy)
+        Blade::directive('nonce', fn () => '<?php if ($__cspNonce = \\Illuminate\\Support\\Facades\\Vite::cspNonce()) { echo \'nonce="\' . e($__cspNonce) . \'"\'; } ?>');
 
         // Documents Word : échappe le texte écrit par PhpWord (sinon un "&" dans les
         // données produit un document.xml invalide que Word / LibreOffice refusent d'ouvrir)

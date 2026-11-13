@@ -269,7 +269,7 @@
     </div>
 </div>
 
-<script>
+<script @nonce>
 document.addEventListener("DOMContentLoaded", () => {
     new Chart(document.getElementById('ownershipChart'), {
         type: 'doughnut',

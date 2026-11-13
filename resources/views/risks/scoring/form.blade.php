@@ -236,8 +236,7 @@
                                            style="width:40px;"
                                            name="risk_thresholds[{{ $idx }}][color]"
                                            class="js-color-input form-control form-control-color"
-                                           value="{{ $t['color'] ?? '#cccccc' }}"
-                                           onchange="updatePreview(this)">
+                                           value="{{ $t['color'] ?? '#cccccc' }}">
                                 </td>
                                 <td class="text-center">
                                     <span class="badge js-preview"
@@ -315,7 +314,7 @@
 }
 </style>
 
-<script>
+<script @nonce>
 const isNew = {{ isset($config->id) ? 'false' : 'true' }};
 const formulaDefaults = @json($formulaDefaults);
 
@@ -347,7 +346,7 @@ document.addEventListener("DOMContentLoaded", function () {
             '<td><input type="text"   name="risk_thresholds[' + idx + '][level]" class="form-control" value="' + escapeAttr(t.level) + '" required></td>' +
             '<td><input type="text"   name="risk_thresholds[' + idx + '][label]" class="js-threshold-label form-control" value="' + escapeAttr(t.label) + '" required></td>' +
             '<td><input type="number" name="risk_thresholds[' + idx + '][max]"   class="js-threshold-max form-control" value="' + escapeAttr(maxVal) + '" placeholder="∞" min="1" style="width:80px; text-align:center;"></td>' +
-            '<td><input type="color"  name="risk_thresholds[' + idx + '][color]" class="js-color-input form-control form-control-color" value="' + escapeAttr(color) + '" style="width:40px;" onchange="updatePreview(this)"></td>' +
+            '<td><input type="color"  name="risk_thresholds[' + idx + '][color]" class="js-color-input form-control form-control-color" value="' + escapeAttr(color) + '" style="width:40px;"></td>' +
             '<td class="text-center"><span class="badge js-preview" style="background:' + color + ';color:' + contrast + ';padding:2px 8px;font-size:1rem">' + escapeAttr(t.label) + '</span></td>' +
             '<td><button type="button" class="btn btn-sm btn-danger js-remove-threshold"><span class="bi bi-trash"></span></button></td>' +
             '</tr>';
@@ -441,6 +440,10 @@ document.addEventListener("DOMContentLoaded", function () {
         if (label) preview.textContent = label.value || '—';
     };
 
+    document.getElementById('thresholds-body').addEventListener('change', function (e) {
+        if (e.target.classList.contains('js-color-input')) updatePreview(e.target);
+    });
+
     document.getElementById('thresholds-body').addEventListener('input', function (e) {
         if (!e.target.classList.contains('js-threshold-label')) return;
         const row     = e.target.closest('tr');
@@ -512,7 +515,7 @@ document.addEventListener("DOMContentLoaded", function () {
             '<td><input type="text"   name="risk_thresholds[' + thrIdx + '][label]" class="js-threshold-label form-control" required></td>' +
             '<td><input type="number" name="risk_thresholds[' + thrIdx + '][max]"   class="form-control" placeholder="∞" min="1" style="width:80px; text-align:center;"></td>' +
             '<td><input type="color" name="risk_thresholds[' + thrIdx + '][color]" class="js-color-input form-control form-control-color"' +
-                ' value="#cccccc" style="width:40px;" onchange="updatePreview(this)"></td>' +
+                ' value="#cccccc" style="width:40px;"></td>' +
             '<td class="text-center"><span class="badge js-preview" style="background:#cccccc;color:#fff">—</span></td>' +
             '<td><button type="button" class="btn btn-sm btn-danger js-remove-threshold"><span class="bi bi-trash"></span></button></td>';
 

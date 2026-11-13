@@ -93,7 +93,7 @@
 
 </form>
 
-<script>
+<script @nonce>
 window.addEventListener('DOMContentLoaded', function() {
     var clauseSelect = document.getElementById('clauses');
     clauseSelect.addEventListener('change', function() {

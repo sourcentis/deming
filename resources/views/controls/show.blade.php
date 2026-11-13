@@ -110,7 +110,7 @@
     	            <span class="bi bi-plus-lg"></span> {{ trans('common.clone') }}
                 </a>
     	    &nbsp;
-    		<form action="/alice/delete/{{ $control->id }}" class="d-inline" method="POST" onSubmit="if(!confirm('{{ trans('common.confirm') }}')){return false;}">
+    		<form action="/alice/delete/{{ $control->id }}" class="d-inline" method="POST" data-confirm="{{ trans('common.confirm') }}">
                 @csrf
     			<button class="btn btn-danger" type="submit">
     				<span class="bi bi-trash"></span> {{ trans('common.delete') }}

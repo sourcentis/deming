@@ -282,7 +282,7 @@
             @endif
 
             @if (Auth::User()->role === 1)
-                <form action="/risk/delete/{{ $risk->id }}" onSubmit="if(!confirm('{{ trans('common.confirm') }}')){return false;}" class="d-inline">
+                <form action="/risk/delete/{{ $risk->id }}" data-confirm="{{ trans('common.confirm') }}" class="d-inline">
                     @csrf
                     <button class="btn btn-danger">
                         <span class="bi bi-trash"></span> {{ trans("common.delete") }}

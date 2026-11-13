@@ -305,6 +305,41 @@ MAIL_PASSWORD=
 Don't forget to [configure](https://sourcentis.github.io/deming/config/#notifications) the content and frequency of
 your e-mails, in the same tab.
 
+## Content Security Policy
+
+Deming sends a `Content-Security-Policy` header on every page: scripts and
+resources are only loaded from the Deming server itself, inline scripts are
+allowed by a per-request nonce, and the pages cannot be framed by another site.
+
+```
+# Enable the policy
+CSP_ENABLED=true
+# false: the policy is enforced, violations are blocked
+# true: violations are only reported in the browser console, nothing is blocked
+CSP_REPORT_ONLY=false
+# URL receiving the violation reports (optional)
+CSP_REPORT_URI=
+```
+
+A new installation created from `.env.example` enforces the policy. When
+`CSP_REPORT_ONLY` is missing from the `.env` file, which is the case when you
+update an existing installation, the policy is only reported. In that case,
+browse the application, check the browser console (lines starting with
+`[Report Only]`), then add `CSP_REPORT_ONLY=false` to enforce it.
+
+A violation located in `sandbox eval code` or `moz-extension://` comes from a
+browser extension, not from Deming: it disappears in a private window and can
+be ignored.
+
+If your deployment needs other sources (images, reverse proxy, embedding in
+a portal...), add them per directive, separated by spaces:
+
+```
+CSP_IMG_SRC="https://images.example.com"
+CSP_CONNECT_SRC=
+CSP_FRAME_ANCESTORS="https://portal.example.com"
+```
+
 ## LDAP / LDAPRecord configuration (optional)
 
 This section lets you enable LDAP authentication in Deming using **LDAPRecord v2**. It works with **Active Directory** *and* **OpenLDAP**, and can coexist with local (database) authentication.

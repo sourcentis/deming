@@ -30,7 +30,7 @@
                 </div>
             </div>
             <div class="col-lg-1 col-md-2 text-md-end">
-                <a href="#" onclick="downloadModel()" class="btn btn-info">
+                <a href="#" id="download-model" class="btn btn-info">
                     {{ trans("common.download") }}
                 </a>
             </div>
@@ -55,7 +55,7 @@
             </div>
             <div class="col-lg-1 col-md-2 text-md-end">
     		    <button type="submit" class="btn btn-success"
-                    onclick="return checkImport()">
+                    id="import-submit">
                         {{ trans("common.import") }}
                 </button>
             </div>
@@ -138,7 +138,7 @@
 </div>
 </div>
 
-<script>
+<script @nonce>
 function downloadModel() {
     const model = document.getElementById('model').value;
     if (!model) {
@@ -157,5 +157,16 @@ function checkImport() {
         return confirm('Do you want to remove all other measures and controls  ?');
     return true;
 }
+
+document.getElementById('download-model').addEventListener('click', function (e) {
+    e.preventDefault();
+    downloadModel();
+});
+
+document.getElementById('import-submit').addEventListener('click', function (e) {
+    if (!checkImport()) {
+        e.preventDefault();
+    }
+});
 </script>
 @endsection

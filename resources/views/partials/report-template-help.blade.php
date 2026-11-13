@@ -73,7 +73,7 @@
     </div>
 </div>
 
-<script>
+<script @nonce>
 // Clic sur une balise ou une colonne de l'aide : copie dans le presse-papiers
 document.addEventListener('click', (e) => {
     const el = e.target.closest('.report-help .copy-tag');

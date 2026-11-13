@@ -82,7 +82,7 @@
 </div>
 </div>
 
-<script>
+<script @nonce>
 document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("deleteButton").addEventListener("click", function (event) {
         const select = document.getElementById("durationSelect");

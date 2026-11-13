@@ -41,7 +41,7 @@
     </div>
 </div>
 
-<script>
+<script @nonce>
     window.addEventListener('load', function(){
 
         var select = document.getElementById('type');

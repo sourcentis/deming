@@ -235,18 +235,18 @@
                 @endif
                 @if ((Auth::User()->role === 1)||(Auth::User()->role === 2))
                     @if ($measure->status===1)
-					<button type="submit" class="btn btn-success" onclick='this.form.action="/bob/accept"'>
+					<button type="submit" class="btn btn-success" data-form-action="/bob/accept">
 						<span class="bi bi-check-lg"></span> {{ trans('common.accept') }}
 					</button>
 					&nbsp;
-					<button type="submit" class="btn btn-danger" onclick='this.form.action="/bob/reject"'>
+					<button type="submit" class="btn btn-danger" data-form-action="/bob/reject">
 						<span class="bi bi-trash"></span> {{ trans('common.reject') }}
 					</button>
 					&nbsp;
                     @endif
                 @endif
                 @if ($measure->canMake())
-					<button type="submit" class="btn btn-primary" onclick='this.form.action="/bob/draft"'>
+					<button type="submit" class="btn btn-primary" data-form-action="/bob/draft">
                         <span class="bi bi-floppy"></span> {{ trans('common.save') }}
 					</button>
 					&nbsp;
@@ -264,7 +264,7 @@
 <br>
 <br>
 
-<script>
+<script @nonce>
 document.addEventListener('DOMContentLoaded', function () {
 
     // ---------------------------------------------------------

@@ -103,7 +103,7 @@
     </div>
     @endif
 
-    <a href="/logout" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+    <a href="/logout" data-logout>
         <i class="bi bi-box-arrow-right"></i><span class="menu-text">{{ trans("menu.logout") }}</span>
     </a>
 

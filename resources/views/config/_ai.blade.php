@@ -148,7 +148,7 @@
         'error' => trans('ai.errors.generic'),
     ];
 @endphp
-<script>
+<script @nonce>
 (function () {
     // AI switch: enable or disable the settings without reloading the page
     const enabled = document.getElementById('enabled');

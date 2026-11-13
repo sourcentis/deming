@@ -83,7 +83,7 @@
     </div>
 </form>
 
-<script>
+<script @nonce>
     document.addEventListener('DOMContentLoaded', function() {
         setTimeout(function() {
             document.getElementById('login').focus();

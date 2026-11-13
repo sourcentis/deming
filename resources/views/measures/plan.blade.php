@@ -118,7 +118,7 @@
     			&nbsp;
     		@endif
     		@if (Auth::User()->role !== 3)
-                <form action="/bob/unplan" method="POST" onSubmit="if(!confirm('{{ trans('common.confirm') }}')){return false;}" class="d-inline">
+                <form action="/bob/unplan" method="POST" data-confirm="{{ trans('common.confirm') }}" class="d-inline">
     				@csrf
     				<input type="hidden" name="id" value="{{ $measure->id }}"/>
     	            <button class="btn btn-danger" type="submit">

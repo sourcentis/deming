@@ -10,7 +10,7 @@
 			</div>
 			@if (Auth::User()->role==1)
 			<div class="col-md-12 col-lg-7 text-md-end">
-				<button class="btn btn-primary" onclick="location.href = '/domains/create';">
+				<button class="btn btn-primary" data-href="/domains/create">
 		            <span class="bi bi-plus-lg"></span> {{ trans('common.new') }}
 				</button>
 			</div>
