@@ -14,8 +14,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   engine.
 - Security: a `Content-Security-Policy` header is sent on every page (inline
   scripts allowed by a per-request nonce, no inline event handler, no framing by
-  another site). It is in report-only mode by default; set
-  `CSP_REPORT_ONLY=false` in the `.env` file to enforce it.
+  another site). New installations enforce it (`CSP_REPORT_ONLY=false` in
+  `.env.example`). When updating, the policy is only reported while
+  `CSP_REPORT_ONLY` is missing from the `.env` file: check the browser console,
+  then add `CSP_REPORT_ONLY=false` to enforce it.
 
 ### Changed
 
