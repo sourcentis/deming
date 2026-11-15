@@ -6,7 +6,6 @@ use App\Models\Control;
 use App\Models\Measure;
 use Carbon\Carbon;
 use Database\Seeders\RiskTestDataSeeder;
-use Faker;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
@@ -35,7 +34,7 @@ class GenerateTestData extends Command
     {
         $this->components->info('Generate test data');
 
-        // get language for the faker : --locale option, fallback to system LANG
+        // get language : --locale option, fallback to system LANG
         $locale = strtolower((string) $this->option('locale'));
         if (! in_array($locale, ['fr', 'en'], true)) {
             $locale = strtolower(substr((string) getenv('LANG'), 0, 2)) === 'fr' ? 'fr' : 'en';
@@ -89,10 +88,8 @@ class GenerateTestData extends Command
         // loop on security measures
         $delta = $perPeriod - rand(-$perPeriod / 2, $perPeriod / 2);
 
-        $fakerLocale = $locale === 'fr' ? 'fr_FR' : 'en_US';
-
-        // Intialize faker
-        $faker = Faker\Factory::create($fakerLocale);
+        // Observations by clause and score, consistent with the score given
+        $observations = require database_path('data/observations.' . $locale . '.php');
 
         // Loop on security measures
         foreach ($securityControls as $secControl) {
@@ -115,8 +112,8 @@ class GenerateTestData extends Command
             // do it
             $measure->plan_date = (new Carbon($curDate))->day(rand(0, 28))->toDateString();
             $measure->realisation_date = (new Carbon($curDate))->addDays(rand(0, 28))->toDateString();
-            $measure->observations = $faker->text(256);
-            $measure->score = rand(0, 100) < 90 ? 3 : (rand(0, 2) < 2 ? 2 : 1);
+            $measure->score = $this->randomScore();
+            $measure->observations = $this->observation($observations, $secControl->clause, $measure->score, $locale);
             $measure->status = 2;
             $measure->save();
             $measure->controls()->sync([$secControl->id]);
@@ -133,8 +130,8 @@ class GenerateTestData extends Command
             // do it
             $prev_measure->plan_date = (new Carbon($curDate))->addMonths(-$measure->periodicity)->day(rand(0, 28))->toDateString();
             $prev_measure->realisation_date = (new Carbon($curDate))->addMonths(-$measure->periodicity)->addDays(rand(0, 28))->toDateString();
-            $prev_measure->observations = $faker->text(256);
-            $prev_measure->score = rand(0, 100) < 90 ? 3 : (rand(0, 2) < 2 ? 2 : 1);
+            $prev_measure->score = $this->randomScore();
+            $prev_measure->observations = $this->observation($observations, $secControl->clause, $prev_measure->score, $locale);
             $prev_measure->next_id = $measure->id;
             $prev_measure->status = 2;
             $prev_measure->save();
@@ -167,5 +164,48 @@ class GenerateTestData extends Command
         // Generate test data for risks, action plans and exceptions
         $this->components->info('Generate risks, action plans and exceptions test data');
         (new RiskTestDataSeeder())->run($locale);
+    }
+
+    /**
+     * Draw a score: 5% non-compliant (red), 20% to improve (orange)
+     * and 75% compliant (green).
+     */
+    private function randomScore(): int
+    {
+        $draw = rand(1, 100);
+
+        if ($draw <= 5) {
+            return 1;
+        }
+
+        return $draw <= 25 ? 2 : 3;
+    }
+
+    /**
+     * Observation consistent with the score of the control. Controls outside
+     * the ISO 27001:2022 framework receive a generic observation.
+     *
+     * @param  array<string, array<int, string>>  $observations
+     */
+    private function observation(array $observations, string $clause, int $score, string $locale): string
+    {
+        $clause = trim($clause);
+        if (isset($observations[$clause][$score])) {
+            return $observations[$clause][$score];
+        }
+
+        $generic = $locale === 'fr'
+            ? [
+                3 => 'La mesure est mise en œuvre conformément aux exigences et les preuves présentées sont complètes. Aucun écart n\'a été relevé.',
+                2 => 'La mesure est partiellement mise en œuvre et certaines preuves sont incomplètes. Des améliorations sont nécessaires pour atteindre la conformité.',
+                1 => 'La mesure n\'est pas mise en œuvre et aucune preuve n\'a pu être présentée. Un plan d\'action doit être défini.',
+            ]
+            : [
+                3 => 'The control is implemented in line with the requirements and the evidence provided is complete. No gap was found.',
+                2 => 'The control is partially implemented and some evidence is incomplete. Improvements are needed to reach compliance.',
+                1 => 'The control is not implemented and no evidence could be provided. An action plan must be defined.',
+            ];
+
+        return $generic[$score];
     }
 }
