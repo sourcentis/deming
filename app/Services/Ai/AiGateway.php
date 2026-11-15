@@ -180,7 +180,7 @@ class AiGateway
 
         $body = $response->json();
         if (! is_array($body) || ! is_array($body['data'] ?? null)) {
-            throw new AiAgentException(AiAgentException::INVALID_RESPONSE);
+            throw new AiAgentException(AiAgentException::INVALID_RESPONSE, 502, $response->status());
         }
 
         return $body;
