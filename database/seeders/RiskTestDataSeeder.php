@@ -659,13 +659,17 @@ class RiskTestDataSeeder extends Seeder
         DB::table('measure_user')->insert(array_map(fn ($id) => ['measure_id' => $id, 'user_id' => 7], $measures));
 
         if ($measures !== []) {
+            // Observation of the security measure of this control, not of another one
+            $clause = DB::table('control_measure')
+                ->join('controls', 'controls.id', '=', 'control_measure.control_id')
+                ->where('control_measure.measure_id', $measures[0])
+                ->value('controls.clause');
+
             DB::table('measures')->where('id', $measures[0])->update([
                 'status' => 1,
                 'score' => 3,
                 'realisation_date' => now()->toDateString(),
-                'observations' => $this->locale === 'fr'
-                    ? "Revue réalisée avec l'équipe applicative : les comptes inactifs ont été désactivés."
-                    : 'Review carried out with the application team: inactive accounts have been disabled.',
+                'observations' => TestObservations::for($clause, 3, $this->locale),
             ]);
         }
     }

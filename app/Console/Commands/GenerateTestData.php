@@ -6,6 +6,7 @@ use App\Models\Control;
 use App\Models\Measure;
 use Carbon\Carbon;
 use Database\Seeders\RiskTestDataSeeder;
+use Database\Seeders\TestObservations;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
@@ -88,9 +89,6 @@ class GenerateTestData extends Command
         // loop on security measures
         $delta = $perPeriod - rand(-$perPeriod / 2, $perPeriod / 2);
 
-        // Observations by clause and score, consistent with the score given
-        $observations = require database_path('data/observations.' . $locale . '.php');
-
         // Loop on security measures
         foreach ($securityControls as $secControl) {
             $delta--;
@@ -113,7 +111,7 @@ class GenerateTestData extends Command
             $measure->plan_date = (new Carbon($curDate))->day(rand(0, 28))->toDateString();
             $measure->realisation_date = (new Carbon($curDate))->addDays(rand(0, 28))->toDateString();
             $measure->score = $this->randomScore();
-            $measure->observations = $this->observation($observations, $secControl->clause, $measure->score, $locale);
+            $measure->observations = TestObservations::for($secControl->clause, $measure->score, $locale);
             $measure->status = 2;
             $measure->save();
             $measure->controls()->sync([$secControl->id]);
@@ -131,7 +129,7 @@ class GenerateTestData extends Command
             $prev_measure->plan_date = (new Carbon($curDate))->addMonths(-$measure->periodicity)->day(rand(0, 28))->toDateString();
             $prev_measure->realisation_date = (new Carbon($curDate))->addMonths(-$measure->periodicity)->addDays(rand(0, 28))->toDateString();
             $prev_measure->score = $this->randomScore();
-            $prev_measure->observations = $this->observation($observations, $secControl->clause, $prev_measure->score, $locale);
+            $prev_measure->observations = TestObservations::for($secControl->clause, $prev_measure->score, $locale);
             $prev_measure->next_id = $measure->id;
             $prev_measure->status = 2;
             $prev_measure->save();
@@ -179,33 +177,5 @@ class GenerateTestData extends Command
         }
 
         return $draw <= 25 ? 2 : 3;
-    }
-
-    /**
-     * Observation consistent with the score of the control. Controls outside
-     * the ISO 27001:2022 framework receive a generic observation.
-     *
-     * @param  array<string, array<int, string>>  $observations
-     */
-    private function observation(array $observations, string $clause, int $score, string $locale): string
-    {
-        $clause = trim($clause);
-        if (isset($observations[$clause][$score])) {
-            return $observations[$clause][$score];
-        }
-
-        $generic = $locale === 'fr'
-            ? [
-                3 => 'La mesure est mise en œuvre conformément aux exigences et les preuves présentées sont complètes. Aucun écart n\'a été relevé.',
-                2 => 'La mesure est partiellement mise en œuvre et certaines preuves sont incomplètes. Des améliorations sont nécessaires pour atteindre la conformité.',
-                1 => 'La mesure n\'est pas mise en œuvre et aucune preuve n\'a pu être présentée. Un plan d\'action doit être défini.',
-            ]
-            : [
-                3 => 'The control is implemented in line with the requirements and the evidence provided is complete. No gap was found.',
-                2 => 'The control is partially implemented and some evidence is incomplete. Improvements are needed to reach compliance.',
-                1 => 'The control is not implemented and no evidence could be provided. An action plan must be defined.',
-            ];
-
-        return $generic[$score];
     }
 }
