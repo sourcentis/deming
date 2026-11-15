@@ -74,14 +74,15 @@ class RiskTestDataSeeder extends Seeder
 
     /**
      * Les jeux de données ci-dessous référencent des utilisateurs par id fixe
-     * (owner_id, created_by, approved_by, ...). Sur une base fraîchement
-     * installée, seul l'administrateur (id 1) existe : on crée ici les
-     * utilisateurs de démonstration manquants avec ces mêmes id.
+     * (owner_id, created_by, approved_by, ...). On crée ici ceux qui manquent
+     * avec ces mêmes id, y compris l'administrateur (id 1), absent d'une base
+     * qui n'a pas été initialisée par db:seed.
      */
     private function ensureUsers(): void
     {
         $demoUsers = [
-            2 => ['login' => 'alice.martin@example.local', 'name' => 'Alice Martin', 'title' => 'Risk Owner'],
+            1 => ['login' => 'admin@admin.localhost', 'name' => 'Administrator', 'title' => 'Pirate Captain', 'role' => User::ROLE_ADMIN, 'password' => 'admin'],
+            2 =>['login' => 'alice.martin@example.local', 'name' => 'Alice Martin', 'title' => 'Risk Owner'],
             5 => ['login' => 'claire.dubois@example.local', 'name' => 'Claire Dubois', 'title' => 'Compliance Officer'],
             6 => ['login' => 'benoit.leroy@example.local', 'name' => 'Benoit Leroy', 'title' => 'IT Operations Manager'],
             7 => ['login' => 'julien.moreau@example.local', 'name' => 'Julien Moreau', 'title' => 'Application Owner', 'role' => User::ROLE_AUDITEE],
@@ -100,7 +101,7 @@ class RiskTestDataSeeder extends Seeder
                 'role' => $attributes['role'] ?? User::ROLE_USER,
                 'language' => $this->locale,
                 'email' => $attributes['login'],
-                'password' => bcrypt('password'),
+                'password' => bcrypt($attributes['password'] ?? 'password'),
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
