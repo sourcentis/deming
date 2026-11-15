@@ -50,7 +50,7 @@
         </div>
     </div>
 
-    <script>
+    <script @nonce>
     document.addEventListener("DOMContentLoaded", () => {
         let ready = false;
         window.addEventListener('load', () => {
@@ -147,7 +147,7 @@
                             @endphp
                         <td data-bs-placement="top" title="{{ collect($cell)->pluck('name')->take(5)->implode(', ') }}{{ $count > 5 ? ' …' : '' }}" data-bs-toggle="tooltip" style="background:{{ $bgColor }};color:{{ $txtColor }};padding:10px;vertical-align:middle;{{ $count > 0 ? 'cursor:pointer' : '' }}"
                             @if($count > 0)
-                                onclick="location.href='/risk/index?threshold={{ $thresholdIndex }}'"
+                                data-href="/risk/index?threshold={{ $thresholdIndex }}"
                             @endif>
                             @if ($count > 0)
                                 <div style="font-size:1.5rem;font-weight:700;line-height:1">{{ $count }}</div>

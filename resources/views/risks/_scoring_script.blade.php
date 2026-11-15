@@ -1,4 +1,4 @@
-<script>
+<script @nonce>
 {{-- Calcul dynamique du score + affichage conditionnel des sections --}}
 document.addEventListener("DOMContentLoaded", function () {
 

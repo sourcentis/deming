@@ -40,7 +40,7 @@
 
             {{-- Bouton Nouveau --}}
             <div class="col-lg-5 col-md-5 text-end">
-                <button class="btn btn-primary" onclick="location.href='/exception/create';">
+                <button class="btn btn-primary" data-href="/exception/create">
                     <span class="bi bi-plus-lg"></span> {{ trans('common.new') }}
                 </button>
             </div>
@@ -62,11 +62,11 @@
         </thead>
         <tbody>
         @foreach($exceptions as $exception)
-        <tr onclick="location.href='/exception/show/{{ $exception->id }}'" style="cursor:pointer;">
+        <tr data-href="/exception/show/{{ $exception->id }}" style="cursor:pointer;">
             <td><a href="/exception/show/{{ $exception->id }}">{{ $exception->name }}</a></td>
             <td>
                 @if($exception->measure)
-                    <a href="/alice/show/{{ $exception->measure->id }}" onclick="event.stopPropagation();">
+                    <a href="/alice/show/{{ $exception->measure->id }}">
                         {{ $exception->measure->clause }}
                     </a>
                 @else
@@ -118,7 +118,7 @@
 </div>
 </div>
 
-<script>
+<script @nonce>
 document.addEventListener("DOMContentLoaded", function () {
     let ready = false;
     window.addEventListener('load', () => {

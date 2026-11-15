@@ -147,13 +147,13 @@
             <div class="col-md-12 col-lg-6">
 			@if ((Auth::User()->role==1)||($user->id==Auth::User()->id))
 		    <form>
-		    	<button class="btn btn-primary" onclick='this.form.action="/users/{{ $user->id }}/edit"'>
+		    	<button class="btn btn-primary" data-form-action="/users/{{ $user->id }}/edit">
 		            <span class="bi bi-pencil"></span> {{ trans('common.edit') }}
 		    	</button>
 		    </form>
             @endif
 			@if (Auth::User()->role==1)
-			<form action="/users/{{ $user->id }}" method="post" onSubmit="if(!confirm('{{ trans('common.confirm') }}')){return false;}">
+			<form action="/users/{{ $user->id }}" method="post" data-confirm="{{ trans('common.confirm') }}">
                {{ method_field('delete') }}
                @csrf
 	            <button class="btn btn-danger" type="submit">

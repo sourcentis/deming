@@ -135,7 +135,7 @@
                                 </a>
                                 <form action="{{ route('crosswalk.destroy', $mapping) }}" method="POST"
                                       class="d-inline"
-                                      onsubmit="return confirm('{{ trans('common.confirm') }}');">
+                                      data-confirm="{{ trans('common.confirm') }}">
                                     @csrf
                                     @method('DELETE')
                                     <button class="btn btn-danger btn-sm" type="submit">

@@ -180,7 +180,7 @@
                 {{-- Soumettre (Brouillon → Soumise) : créateur ou admin --}}
                 @if($exception->canSubmit() && ((Auth::User()->role === 1) || (Auth::User()->role === 2)))
                     <form action="/exception/submit" method="POST" class="d-inline"
-                        onsubmit="if(!confirm('{{ trans('cruds.exception.confirm_submit') }}')){return false;}">
+                        data-confirm="{{ trans('cruds.exception.confirm_submit') }}">
                         @csrf
                         <input type="hidden" name="id" value="{{ $exception->id }}"/>
                         <button class="btn btn-info" type="submit">
@@ -201,7 +201,7 @@
                 {{-- Supprimer (Admin uniquement) --}}
                 @if(Auth::User()->role === 1)
                     <form action="/exception/delete/{{ $exception->id }}" method="GET" class="d-inline"
-                        onsubmit="if(!confirm('{{ trans('common.confirm') }}')){return false;}">
+                        data-confirm="{{ trans('common.confirm') }}">
                         @csrf
                         <button class="btn btn-danger" type="submit">
                             <span class="bi bi-trash"></span> {{ trans('common.delete') }}
@@ -242,7 +242,7 @@
                         placeholder="{{ trans('cruds.exception.fields.approval_comment_optional') }}"></textarea>
                     <br>
                     <button type="submit" class="btn btn-success mt-1"
-                        onclick="return confirm('{{ trans('cruds.exception.confirm_approve') }}');">
+                        data-confirm="{{ trans('cruds.exception.confirm_approve') }}">
                         <span class="bi bi-check-lg"></span> {{ trans('cruds.exception.actions.approve') }}
                     </button>
                 </form>
@@ -263,7 +263,7 @@
                         required></textarea>
                     <br>
                     <button type="submit" class="btn btn-danger mt-1"
-                        onclick="return confirm('{{ trans('cruds.exception.confirm_reject') }}');">
+                        data-confirm="{{ trans('cruds.exception.confirm_reject') }}">
                         <span class="bi bi-x-octagon"></span> {{ trans('cruds.exception.actions.reject') }}
                     </button>
                 </form>

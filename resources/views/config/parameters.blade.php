@@ -41,7 +41,7 @@
     </div>
 </div>
 
-<script>
+<script @nonce>
 // Keep the active tab in the URL, so that a reload or a redirect reopens it
 document.addEventListener('shown.bs.tab', function (event) {
     const tab = event.target.dataset.tab;

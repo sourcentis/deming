@@ -100,7 +100,7 @@
     </div>
 </aside>
 
-<script>
+<script @nonce>
 (function () {
     const cfg = @json($aiConfig);
     const L = cfg.labels;

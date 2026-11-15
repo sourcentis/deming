@@ -250,7 +250,7 @@
 </div>
 </div>
 
-<script>
+<script @nonce>
 document.addEventListener("DOMContentLoaded", function () {
 
 const myDropzone = new Dropzone("div#dropzoneFileUpload", {

@@ -64,7 +64,7 @@
                 </th>
                 <td>
                 <a href="/users/{{ $auditLog->user_id }}">
-                    {!! $auditLog->user->name !!}
+                    {{ $auditLog->user->name }}
                 </a>
                 </td>
             </tr>

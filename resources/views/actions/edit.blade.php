@@ -125,7 +125,7 @@ form, table {
 		<div class="col-md-12 col-lg-11">
             <div class="d-flex align-items-center gap-2">
                     <input class="form-range" value="{{ $action->progress }}" type="range" name="progress" min="0" max="100" step="1"
-                           oninput="this.nextElementSibling.textContent = this.value + '%'"/>
+                           data-range-label/>
                     <span class="badge bg-primary">{{ (int) $action->progress }}%</span>
                 </div>
         </div>

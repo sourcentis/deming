@@ -38,7 +38,7 @@
     	    	</button>
     	    </form>
             &nbsp;
-    		<form action="/attributes/{{ $attribute->id }}" method="post" onSubmit="if(!confirm('{{ trans('common.confirm') }}')){return false;}">
+    		<form action="/attributes/{{ $attribute->id }}" method="post" data-confirm="{{ trans('common.confirm') }}">
                {{ method_field('delete') }}
                @csrf
     	        <button class="btn btn-danger" type="submit">

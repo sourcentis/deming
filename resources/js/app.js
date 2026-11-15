@@ -166,6 +166,35 @@ function initSelect2(el) {
 window.initSelect2 = initSelect2;
 
 window.editors = {};
+
+const easyMdeIcons = {
+    'bold': 'bi bi-type-bold',
+    'italic': 'bi bi-type-italic',
+    'strikethrough': 'bi bi-type-strikethrough',
+    'heading': 'bi bi-type-h1',
+    'heading-smaller': 'bi bi-type-h2',
+    'heading-bigger': 'bi bi-type-h1',
+    'heading-1': 'bi bi-type-h1',
+    'heading-2': 'bi bi-type-h2',
+    'heading-3': 'bi bi-type-h3',
+    'code': 'bi bi-code',
+    'quote': 'bi bi-quote',
+    'ordered-list': 'bi bi-list-ol',
+    'unordered-list': 'bi bi-list-ul',
+    'check-list': 'bi bi-check2-square',
+    'clean-block': 'bi bi-eraser',
+    'link': 'bi bi-link-45deg',
+    'image': 'bi bi-image',
+    'upload-image': 'bi bi-image',
+    'table': 'bi bi-table',
+    'horizontal-rule': 'bi bi-dash-lg',
+    'preview': 'bi bi-eye',
+    'side-by-side': 'bi bi-layout-split',
+    'fullscreen': 'bi bi-arrows-fullscreen',
+    'guide': 'bi bi-question-circle',
+    'undo': 'bi bi-arrow-counterclockwise',
+    'redo': 'bi bi-arrow-clockwise',
+};
 document.addEventListener("DOMContentLoaded", function () {
     // EasyMDE
     document.querySelectorAll('.easymde').forEach(function (textarea) {
@@ -177,6 +206,9 @@ document.addEventListener("DOMContentLoaded", function () {
             spellChecker: false,
             toggleFullscreen: false,
             sideBySideFullscreen: false,
+            // Pas de Font Awesome depuis un CDN (bloqué par la CSP) : icônes Bootstrap Icons
+            autoDownloadFontAwesome: false,
+            iconClassMap: easyMdeIcons,
         });
         // Stocke l'instance par id pour un accès futur
         if (textarea.id) {
@@ -273,6 +305,70 @@ function toggleSidebar() {
     }
 }
 window.toggleSidebar = toggleSidebar;
+
+// ---------------------------------------------------------------------------
+// Comportements déclaratifs (remplacent les handlers inline onclick=...,
+// interdits par la Content-Security-Policy)
+//
+//   data-confirm="message"         confirmation avant le clic ou l'envoi du formulaire
+//   data-confirm-if="#selecteur"   ... seulement si cette case est cochée
+//   data-href="/url"               clic = navigation (bouton, ligne de tableau)
+//   data-form-action="/url"        clic = change l'action du formulaire parent
+//   data-form-method="GET"         ... et sa méthode
+//   data-range-label               affiche la valeur du curseur dans l'élément suivant
+//   data-logout                    envoie le formulaire #logout-form
+// ---------------------------------------------------------------------------
+function confirmed(el) {
+    const condition = el.dataset.confirmIf;
+    if (condition && !document.querySelector(condition)?.checked) {
+        return true;
+    }
+    return window.confirm(el.dataset.confirm);
+}
+
+document.addEventListener('click', function (e) {
+    const confirmEl = e.target.closest('[data-confirm]:not(form)');
+    if (confirmEl && !confirmed(confirmEl)) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        return;
+    }
+
+    const actionEl = e.target.closest('[data-form-action]');
+    if (actionEl && actionEl.form) {
+        actionEl.form.action = actionEl.dataset.formAction;
+        if (actionEl.dataset.formMethod) {
+            actionEl.form.method = actionEl.dataset.formMethod;
+        }
+    }
+
+    if (e.target.closest('[data-logout]')) {
+        e.preventDefault();
+        document.getElementById('logout-form').submit();
+        return;
+    }
+
+    const hrefEl = e.target.closest('[data-href]');
+    // Un lien à l'intérieur (ex. ligne de tableau cliquable) garde sa propre cible
+    if (hrefEl && !e.target.closest('a, input, select, textarea, label')?.closest('[data-href]')) {
+        e.preventDefault();
+        window.location.href = hrefEl.dataset.href;
+    }
+});
+
+document.addEventListener('submit', function (e) {
+    const form = e.target;
+    if (form.matches('form[data-confirm]') && !confirmed(form)) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+    }
+});
+
+document.addEventListener('input', function (e) {
+    if (e.target.matches('[data-range-label]') && e.target.nextElementSibling) {
+        e.target.nextElementSibling.textContent = e.target.value + '%';
+    }
+});
 
 // Chart colors
 window.chartColors = {

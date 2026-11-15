@@ -78,7 +78,7 @@
 				<strong>{{ trans("cruds.measure.fields.model") }}</strong>
 			</div>
 			<div class="col-lg-11 col-md-10">
-				<pre>{!! $measure->model !!}</pre>
+				<pre>{{ $measure->model }}</pre>
 			</div>
 		</div>
 
@@ -128,7 +128,7 @@
 					<strong>{{ trans("cruds.measure.fields.observations") }}</strong>
 				</div>
 				<div class="col-lg-11 col-md-10">
-					<pre>{!! $measure->observations !!}</pre>
+					<pre>{{ $measure->observations }}</pre>
 				</div>
 			</div>
 		@endif
@@ -288,7 +288,7 @@
 					<span class="bi bi-plus-lg"></span> {{ trans('common.clone') }}
 				</a>
 				&nbsp;
-				<form action="/bob/delete/{{ $measure->id }}" onSubmit="if(!confirm('{{ trans('common.confirm') }}')){return false;}" class="d-inline">
+				<form action="/bob/delete/{{ $measure->id }}" data-confirm="{{ trans('common.confirm') }}" class="d-inline">
 					<button class="btn btn-danger">
 						<span class="bi bi-trash"></span> {{ trans("common.delete") }}
 					</button>

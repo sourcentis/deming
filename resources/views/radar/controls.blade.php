@@ -89,7 +89,7 @@
 </div>
 </div>
 
-<script>
+<script @nonce>
 document.addEventListener("DOMContentLoaded", function () {
 
 const options = {

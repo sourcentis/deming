@@ -133,7 +133,7 @@
 
 </form>
 
-<script>
+<script @nonce>
 document.addEventListener("DOMContentLoaded", function () {
 
     const chartData = @json($data);

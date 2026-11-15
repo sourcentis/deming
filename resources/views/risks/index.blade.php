@@ -53,7 +53,7 @@
 
             <div class="col-auto ms-auto">
                 @if (Auth::User()->role === 1 || Auth::User()->role === 2)
-                    <button class="btn btn-primary" onclick="location.href='/risk/create'">
+                    <button class="btn btn-primary" data-href="/risk/create">
                         <span class="bi bi-plus-lg"></span>
                         {{ trans('common.new') }}
                     </button>
@@ -205,7 +205,7 @@
 }
 </style>
 
-<script>
+<script @nonce>
 document.addEventListener("DOMContentLoaded", () => {
     const getParam = (k) => new URLSearchParams(location.search).get(k) ?? '';
 

@@ -7,7 +7,7 @@
     <title>Deming - @yield('title', 'ISMS Controls Made Easy')</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @yield('styles')
-    <script>
+    <script @nonce>
     try {
         if (localStorage.getItem('sidebar_hidden') === 'true') {
             document.documentElement.classList.add('sidebar-preload-hidden');
@@ -30,7 +30,7 @@
         @yield('content')
     </main>
 </div>
-<script>
+<script @nonce>
     (function () {
         let hidden = false;
         try {

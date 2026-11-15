@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-lg-12 text-md-end">
                 @include('partials.help', ['page' => 'risks.scoring_index'])
-                <button class="btn btn-primary" onclick="location.href='/risk/scoring/create'">
+                <button class="btn btn-primary" data-href="/risk/scoring/create">
                     <span class="bi bi-plus-lg"></span>
                     {{ trans('common.new') }}
                 </button>
@@ -111,7 +111,7 @@ padding:2px 8px;
                     {{-- Suppression : GET, même pattern que /bob/delete/{id} --}}
                     <form action="/risk/scoring/{{ $config->id }}/delete"
                           class="d-inline"
-                          onsubmit="if(!confirm('{{ trans('common.confirm') }}')){return false;}">
+                          data-confirm="{{ trans('common.confirm') }}">
                         <button type="submit" class="btn btn-sm btn-danger"
                                 title="{{ trans('common.delete') }}">
                             <span class="bi bi-trash"></span>

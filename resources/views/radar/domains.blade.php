@@ -102,7 +102,7 @@
     </div>
 </form>
 
-<script>
+<script @nonce>
 document.addEventListener("DOMContentLoaded", function () {
     var barChartData = {
         labels : [
