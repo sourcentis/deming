@@ -62,6 +62,10 @@ return [
         'justification' => 'Rationale',
         'due' => 'Due',
         'reference' => 'Reference',
+        'practices' => 'Good practices and coverage',
+        'practice' => 'Good practice',
+        'coverage' => 'Coverage',
+        'controls' => 'Controls',
         'footer' => 'AI-generated analysis — to be validated by a human',
         'data_sent' => 'Data sent',
         'data_sent_title' => 'Data sent to the agent',
@@ -106,8 +110,15 @@ return [
     'finding' => [
         'force' => 'Strength',
         'faiblesse' => 'Weakness',
+        'lacune' => 'Gap',
         'manque_preuve' => 'Missing evidence',
         'incoherence' => 'Inconsistency',
+    ],
+
+    'coverage' => [
+        'couvert' => 'Covered',
+        'partiel' => 'Partial',
+        'non_couvert' => 'Not covered',
     ],
 
     'priority' => [

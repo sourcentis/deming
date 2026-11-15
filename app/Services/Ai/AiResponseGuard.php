@@ -5,10 +5,11 @@ namespace App\Services\Ai;
 /**
  * Defensive check of the analysis before it is stored and displayed.
  *
- * The response format is defined by the AI gateway (tasks/_schemas/analysis-v1.json
- * in sourcentis-ai-gateway), which validates the answer of the model. Deming
- * follows version 1 of that format and does not define it: this guard only
- * protects the panel.
+ * The response format is defined by the AI gateway (tasks/_schemas/analysis-v*.json
+ * in llm-gateway), which validates the answer of the model. Deming follows
+ * versions 1 and 2 of that format and does not define it: this guard only
+ * protects the panel. Version 2 adds the "lacune" finding type and the optional
+ * "referentiel" list (expected good practices and their coverage by the controls).
  *
  * - The essential fields (synthese, statut_evalue) must be strings: otherwise 502.
  * - The other displayed fields are kept when they have the type the panel
@@ -19,14 +20,15 @@ namespace App\Services\Ai;
  */
 class AiResponseGuard
 {
-    // Version of the gateway's response format followed by Deming
-    public const SCHEMA = 'analysis-v1';
+    // Versions of the gateway's response format followed by Deming
+    public const SCHEMAS = ['analysis-v1', 'analysis-v2'];
 
     private const ESSENTIAL = ['synthese', 'statut_evalue'];
     private const OPTIONAL_STRINGS = ['niveau_risque', 'confiance'];
     private const FINDING = ['type', 'description'];
     private const RECOMMENDATION = ['priorite', 'action', 'justification', 'echeance_suggeree', 'reference'];
     private const VIEWPOINTS = ['ceo', 'rssi', 'dpo', 'auditeur'];
+    private const PRACTICE = ['element', 'couverture', 'controles', 'commentaire'];
 
     /**
      * @return array<string, mixed> the data the panel can display
@@ -51,6 +53,11 @@ class AiResponseGuard
             if (is_string($data[$key] ?? null) && $data[$key] !== '') {
                 $result[$key] = $data[$key];
             }
+        }
+
+        $practices = $this->objects($data['referentiel'] ?? null, self::PRACTICE, ['element', 'couverture']);
+        if ($practices !== null) {
+            $result['referentiel'] = $practices;
         }
 
         $findings = $this->objects($data['constats'] ?? null, self::FINDING, ['description']);

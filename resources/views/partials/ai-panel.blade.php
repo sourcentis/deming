@@ -5,6 +5,7 @@
         'status' => ['conforme' => '#3AB87A', 'partiellement_conforme' => '#E09B1A', 'non_conforme' => '#D94F45', 'non_evaluable' => '#6C757D'],
         'risk_level' => ['faible' => '#3AB87A', 'moyen' => '#E09B1A', 'eleve' => '#E8731A', 'critique' => '#D94F45'],
         'priority' => ['haute' => '#D94F45', 'moyenne' => '#E09B1A', 'basse' => '#3AB87A'],
+        'coverage' => ['couvert' => '#3AB87A', 'partiel' => '#E09B1A', 'non_couvert' => '#D94F45'],
         'roles' => ['ceo' => '#3A72C4', 'rssi' => '#D94F45', 'dpo' => '#8059C8', 'auditeur' => '#17A8C4'],
     ];
     $aiContrast = [];
@@ -29,6 +30,7 @@
         'confidence' => trans('ai.confidence'),
         'finding' => trans('ai.finding'),
         'priority' => trans('ai.priority'),
+        'coverage' => trans('ai.coverage'),
         'roles' => trans('ai.roles'),
         'labels' => trans('ai.panel'),
         'errors' => trans('ai.errors'),
@@ -69,6 +71,11 @@
     .ai-badge-unknown { background-color: #6C757D; color: #fff; }
     .ai-finding { display: flex; gap: .5rem; }
     .ai-finding .bi { flex: none; margin-top: .1rem; }
+    .ai-practices { width: 100%; font-size: .85rem; margin-bottom: .5rem; }
+    .ai-practices th { font-size: .75rem; font-weight: 600; color: var(--bs-secondary-color, #6c757d); padding: 0 .25rem .25rem 0; }
+    .ai-practices td { vertical-align: top; padding: .3rem .25rem .3rem 0; border-top: 1px solid var(--bs-border-color, #dee2e6); }
+    .ai-practices td:last-child { white-space: nowrap; }
+    .ai-practices .ai-reco-meta { display: block; }
     .ai-reco { border-left: 3px solid var(--bs-border-color, #dee2e6); padding-left: .6rem; }
     .ai-reco-meta { font-size: .75rem; color: var(--bs-secondary-color, #6c757d); }
     .ai-viewpoint { display: flex; gap: .6rem; margin-bottom: .75rem; }
@@ -221,10 +228,36 @@
         section(L.summary);
         body.appendChild(el('p', null, data.synthese));
 
-        // 3. Findings
+        // 3. Good practices expected for a security measure and their coverage by the controls
+        if (data.referentiel && data.referentiel.length) {
+            section(L.practices);
+            const table = el('table', 'ai-practices');
+            const head = el('tr');
+            head.appendChild(el('th', null, L.practice));
+            head.appendChild(el('th', null, L.coverage));
+            table.appendChild(el('thead')).appendChild(head);
+            const rows = el('tbody');
+            data.referentiel.forEach(function (practice) {
+                const row = el('tr');
+                const cell = el('td');
+                cell.appendChild(el('strong', 'd-block', practice.element));
+                if (practice.controles) { cell.appendChild(el('span', 'ai-reco-meta', L.controls + L.colon + practice.controles)); }
+                if (practice.commentaire) { cell.appendChild(el('span', 'ai-reco-meta', practice.commentaire)); }
+                row.appendChild(cell);
+                const coverage = el('td');
+                coverage.appendChild(badge('coverage', practice.couverture, label(cfg.coverage, practice.couverture)));
+                row.appendChild(coverage);
+                rows.appendChild(row);
+            });
+            table.appendChild(rows);
+            body.appendChild(table);
+        }
+
+        // 4. Findings
         const findingIcons = {
             force: ['bi-check-circle', '#3AB87A'],
             faiblesse: ['bi-exclamation-triangle', '#E8731A'],
+            lacune: ['bi-puzzle', '#E09B1A'],
             manque_preuve: ['bi-file-earmark-x', '#D94F45'],
             incoherence: ['bi-question-diamond', '#8059C8'],
         };
@@ -248,7 +281,7 @@
             body.appendChild(list);
         }
 
-        // 4. Recommendations
+        // 5. Recommendations
         if (data.recommandations && data.recommandations.length) {
             section(L.recommendations);
             const list = el('ol');
@@ -272,7 +305,7 @@
             body.appendChild(list);
         }
 
-        // 5. Open questions
+        // 6. Open questions
         if (data.questions_ouvertes && data.questions_ouvertes.length) {
             section(L.questions);
             const list = el('ul');
@@ -285,7 +318,7 @@
             body.appendChild(list);
         }
 
-        // 6. Points of view
+        // 7. Points of view
         const viewpoints = data.points_de_vue || {};
         const roles = ['ceo', 'rssi', 'dpo', 'auditeur'].filter(function (role) { return viewpoints[role]; });
         if (roles.length) { section(L.viewpoints); }

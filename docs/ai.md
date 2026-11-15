@@ -80,7 +80,12 @@ The panel contains:
 
 * the **summary**;
 
-* the **findings**: strengths, weaknesses, missing evidence and inconsistencies;
+* for a control, the **good practices and their coverage**: the elements a sound implementation should cover
+  according to ISO/IEC 27002:2022, and for each one whether the measurements in Deming cover it fully, partially
+  or not at all;
+
+* the **findings**: strengths, weaknesses, gaps (expected element that no measurement checks), missing evidence
+  and inconsistencies;
 
 * the **recommendations**, with their priority, rationale, a suggested deadline and a standard reference;
 
@@ -166,12 +171,13 @@ gateway.
 Long text fields of the analysed object are limited to 4,000 characters; those of related objects (observations,
 justifications…) to 300 characters.
 
-**Control**: clause, name, domain (framework and title), objective, attributes, input data, model,
-indicator, action plan, periodicity, the last 5 measurements made (date, score, summarized observations and action plan),
-the next 5 planned measurements (planned date, status, late or not), related open action plans (reference, name, type,
-criticality, status, progress, due date, late or not), related risks (name, level, treatment status), exceptions
-(name, status, start and end dates, expired or not, summarized justification and compensating controls) and up to 10
-mappings to other frameworks (framework, clause, name, type and coverage).
+**Control**: clause, name, domain (framework and title), objective, attributes, input data, model, indicator, action
+plan, periodicity, up to 15 related measurements, one per distinct measurement (summarized name, scope, objective,
+input data, model and indicator, periodicity, last result with its date, score and summarized observations, the last 3
+scores, next planned date, late or not), the next 5 planned measurements (planned date, status, late or not), related
+open action plans (reference, name, type, criticality, status, progress, due date, late or not), related risks (name,
+level, treatment status), exceptions (name, status, start and end dates, expired or not, summarized justification and
+compensating controls) and up to 10 mappings to other frameworks (framework, clause, name, type and coverage).
 
 **Measurement**: name, scope, covered controls (clause and name), objective, attributes, input data, model,
 indicator, periodicity, status, planned date, completion date, late or not, score, grade, observations, action plan,

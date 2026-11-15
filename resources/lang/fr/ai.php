@@ -62,6 +62,10 @@ return [
         'justification' => 'Justification',
         'due' => 'Échéance',
         'reference' => 'Référence',
+        'practices' => 'Bonnes pratiques et couverture',
+        'practice' => 'Bonne pratique',
+        'coverage' => 'Couverture',
+        'controls' => 'Contrôles',
         'footer' => 'Analyse générée par IA — à valider par un humain',
         'data_sent' => 'Données envoyées',
         'data_sent_title' => 'Données envoyées à l\'agent',
@@ -106,8 +110,15 @@ return [
     'finding' => [
         'force' => 'Force',
         'faiblesse' => 'Faiblesse',
+        'lacune' => 'Lacune',
         'manque_preuve' => 'Manque de preuve',
         'incoherence' => 'Incohérence',
+    ],
+
+    'coverage' => [
+        'couvert' => 'Couvert',
+        'partiel' => 'Partiel',
+        'non_couvert' => 'Non couvert',
     ],
 
     'priority' => [

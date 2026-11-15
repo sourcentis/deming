@@ -79,11 +79,11 @@ class AiAgentService
         $model = is_string($answer['model'] ?? null) ? $answer['model'] : '';
         $version = is_string($answer['task_version'] ?? null) ? $answer['task_version'] : '';
         $this->gateway->noteVersion($type, $version);
-        if (($answer['schema'] ?? AiResponseGuard::SCHEMA) !== AiResponseGuard::SCHEMA) {
+        if (isset($answer['schema']) && ! in_array($answer['schema'], AiResponseGuard::SCHEMAS, true)) {
             Log::warning('AI analysis: unexpected response format', [
                 'type' => $type,
                 'schema' => is_string($answer['schema']) ? mb_substr($answer['schema'], 0, 64) : gettype($answer['schema']),
-                'expected' => AiResponseGuard::SCHEMA,
+                'expected' => AiResponseGuard::SCHEMAS,
             ]);
         }
 
