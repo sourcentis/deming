@@ -404,13 +404,40 @@ test('a missing or ill-typed essential field gives 502', function (mixed $data) 
 ]);
 
 test('another response format is logged without blocking', function () {
-    aiFakeGateway(aiAgentResponse(null, ['schema' => 'analysis-v2']));
+    aiFakeGateway(aiAgentResponse(null, ['schema' => 'analysis-v3']));
     Log::spy();
 
     $result = $this->service->analyze('control', aiCreateSubject('control'));
 
     expect($result['data'])->toBe(aiValidAnalysis());
-    Log::shouldHaveReceived('warning')->withArgs(fn (string $message, array $context) => $context['schema'] === 'analysis-v2')->once();
+    Log::shouldHaveReceived('warning')->withArgs(fn (string $message, array $context) => $context['schema'] === 'analysis-v3')->once();
+});
+
+test('the analysis-v2 format keeps the good practices and the gap findings', function () {
+    $practices = [
+        ['element' => 'Politique approuvée et revue', 'couverture' => 'non_couvert', 'controles' => '', 'commentaire' => 'Aucun contrôle.'],
+        ['element' => 'Revue des accès', 'couverture' => 'partiel', 'controles' => 'Contrôle d\'accès', 'commentaire' => 'Applications SaaS exclues.'],
+    ];
+    $data = aiValidAnalysis(['referentiel' => $practices, 'constats' => [['type' => 'lacune', 'description' => 'Revue non vérifiée.']]]);
+    aiFakeGateway(aiAgentResponse($data, ['schema' => 'analysis-v2']));
+    Log::spy();
+
+    $result = $this->service->analyze('control', aiCreateSubject('control'));
+
+    expect($result['data']['referentiel'])->toBe($practices)
+        ->and($result['data']['constats'][0]['type'])->toBe('lacune');
+    Log::shouldNotHaveReceived('warning');
+});
+
+test('the guard drops ill-typed good practices', function () {
+    $result = (new AiResponseGuard())->check(aiValidAnalysis(['referentiel' => [
+        ['element' => 'Ok', 'couverture' => 'couvert', 'controles' => ['x'], 'extra' => 'x'],
+        ['element' => 'Sans couverture'],
+        'oops',
+    ]]));
+
+    expect($result['referentiel'])->toBe([['element' => 'Ok', 'couverture' => 'couvert']])
+        ->and((new AiResponseGuard())->check(aiValidAnalysis(['referentiel' => 'oops'])))->not->toHaveKey('referentiel');
 });
 
 // -----------------------------------------------------------------------------
@@ -569,6 +596,39 @@ test('the hash is computed after masking', function () {
     $context = json_encode(AiSubjects::context('measure', $measure->fresh()), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     expect($context)->not->toContain('example.org')
         ->and(DB::table('measures')->where('id', $measure->id)->value('ai_analysis_hash'))->not->toBe($hash);
+});
+
+test('a security measure sends one entry per distinct control, with what it checks and its last results', function () {
+    $control = aiCreateSubject('control');
+    $link = fn (Measure $m) => $m->controls()->sync([$control->id]);
+
+    // Chain of the access review: made in 2024 and 2025, planned in 2027
+    $next = Measure::factory()->create(['name' => 'Revue des accès', 'scope' => 'Applications critiques', 'objective' => 'Vérifier les droits.',
+        'plan_date' => '2027-01-15', 'realisation_date' => null, 'score' => null, 'status' => 0, 'periodicity' => 12]);
+    $made2025 = Measure::factory()->create(['name' => 'Revue des accès', 'realisation_date' => '2025-01-20', 'score' => 2,
+        'observations' => 'Comptes inactifs relevés.', 'status' => 2, 'next_id' => $next->id]);
+    $made2024 = Measure::factory()->create(['name' => 'Revue des accès', 'realisation_date' => '2024-01-18', 'score' => 3,
+        'status' => 2, 'next_id' => $made2025->id]);
+    // A second control, never made
+    $policy = Measure::factory()->create(['name' => 'Politique de contrôle d\'accès', 'plan_date' => now()->subMonth()->toDateString(),
+        'realisation_date' => null, 'score' => null, 'status' => 0]);
+    collect([$next, $made2025, $made2024, $policy])->each($link);
+
+    $context = AiSubjects::context('control', $control->fresh());
+
+    expect($context)->not->toHaveKey('derniers_controles')
+        ->and(array_column($context['controles'], 'nom'))->toBe(['Politique de contrôle d\'accès', 'Revue des accès']);
+
+    [$policyEntry, $review] = $context['controles'];
+    expect($review['perimetre'])->toBe('Applications critiques')
+        ->and($review['objectif'])->toBe('Vérifier les droits.')
+        ->and($review['dernier_resultat'])->toBe(['date' => '2025-01-20', 'score' => 'orange (partiellement atteint)', 'observations' => 'Comptes inactifs relevés.'])
+        ->and(array_column($review['historique'], 'date'))->toBe(['2025-01-20', '2024-01-18'])
+        ->and($review['prochaine_date'])->toBe('2027-01-15')
+        ->and($review['en_retard'])->toBeFalse()
+        ->and($policyEntry['dernier_resultat'])->toBeNull()
+        ->and($policyEntry['historique'])->toBe([])
+        ->and($policyEntry['en_retard'])->toBeTrue();
 });
 
 test('late flags are booleans', function () {

@@ -84,7 +84,12 @@ Le panneau contient :
 
 * la **synthèse** ;
 
-* les **constats** : forces, faiblesses, manques de preuve et incohérences ;
+* pour une mesure de sécurité, les **bonnes pratiques et leur couverture** : les éléments qu'une bonne mise en œuvre
+  devrait couvrir selon l'ISO/IEC 27002:2022, et pour chacun s'il est couvert, partiellement couvert ou non couvert
+  par les contrôles de Deming ;
+
+* les **constats** : forces, faiblesses, lacunes (élément attendu qu'aucun contrôle ne vérifie), manques de preuve
+  et incohérences ;
 
 * les **recommandations**, avec leur priorité, leur justification, une échéance suggérée et une référence
   normative ;
@@ -174,12 +179,13 @@ Les champs texte longs de l'objet analysé sont limités à 4 000 caractères ; 
 justifications…) à 300 caractères.
 
 **Mesure de sécurité** : clause, nom, domaine (référentiel et titre), objectif, attributs, données d'entrée, modèle,
-indicateur, plan d'action, périodicité, les 5 derniers contrôles réalisés (date de réalisation, score, observations
-et plan d'action résumés), les 5 prochains contrôles planifiés (date planifiée, statut, en retard ou non), les plans
-d'action ouverts liés (référence, nom, type, criticité, statut, avancement, échéance, en retard ou non), les risques
-liés (nom, niveau, statut de traitement), les exceptions (nom, statut, dates de début et de fin, expirée ou non,
-justification et mesures compensatoires résumées) et jusqu'à 10 correspondances avec d'autres référentiels
-(référentiel, clause, nom, type et couverture).
+indicateur, plan d'action, périodicité, jusqu'à 15 contrôles rattachés, un par contrôle distinct (nom, périmètre,
+objectif, données d'entrée, modèle et indicateur résumés, périodicité, dernier résultat avec sa date, son score et ses
+observations résumées, les 3 derniers scores, prochaine date planifiée, en retard ou non), les 5 prochains contrôles
+planifiés (date planifiée, statut, en retard ou non), les plans d'action ouverts liés (référence, nom, type,
+criticité, statut, avancement, échéance, en retard ou non), les risques liés (nom, niveau, statut de traitement), les
+exceptions (nom, statut, dates de début et de fin, expirée ou non, justification et mesures compensatoires résumées)
+et jusqu'à 10 correspondances avec d'autres référentiels (référentiel, clause, nom, type et couverture).
 
 **Contrôle** : nom, périmètre, mesures de sécurité couvertes (clause et nom), objectif, attributs, données d'entrée,
 modèle, indicateur, périodicité, statut, date planifiée, date de réalisation, en retard ou non, score, note,

@@ -86,7 +86,12 @@ Das Fenster enthält:
 
 * die **Zusammenfassung**;
 
-* die **Feststellungen**: Stärken, Schwächen, fehlende Nachweise und Widersprüche;
+* für eine Sicherheitsmaßnahme die **bewährten Praktiken und ihre Abdeckung**: die Elemente, die eine gute
+  Umsetzung nach ISO/IEC 27002:2022 abdecken sollte, und für jedes, ob die Kontrollen in Deming es ganz, teilweise
+  oder nicht abdecken;
+
+* die **Feststellungen**: Stärken, Schwächen, Lücken (erwartetes Element, das keine Kontrolle prüft), fehlende
+  Nachweise und Widersprüche;
 
 * die **Empfehlungen** mit ihrer Priorität, Begründung, einer vorgeschlagenen Frist und einer Normreferenz;
 
@@ -177,11 +182,13 @@ Lange Textfelder des analysierten Objekts sind auf 4.000 Zeichen begrenzt, jene 
 (Beobachtungen, Begründungen…) auf 300 Zeichen.
 
 **Sicherheitsmaßnahme**: Klausel, Name, Domäne (Rahmenwerk und Titel), Ziel, Attribute, Eingabedaten, Modell,
-Indikator, Aktionsplan, Periodizität, die letzten 5 durchgeführten Kontrollen (Datum, Bewertung, zusammengefasste
-Beobachtungen und Aktionsplan), die nächsten 5 geplanten Kontrollen (geplantes Datum, Status, verspätet oder nicht),
-verknüpfte offene Aktionspläne (Referenz, Name, Typ, Kritikalität, Status, Fortschritt, Frist, verspätet oder nicht),
-verknüpfte Risiken (Name, Niveau, Behandlungsstatus), Ausnahmen (Name, Status, Beginn- und Enddatum, abgelaufen oder
-nicht, zusammengefasste Begründung und kompensierende Maßnahmen) und bis zu 10 Zuordnungen zu anderen Rahmenwerken
+Indikator, Aktionsplan, Periodizität, bis zu 15 verknüpfte Kontrollen, eine je unterschiedlicher Kontrolle
+(zusammengefasst Name, Umfang, Ziel, Eingabedaten, Modell und Indikator, Periodizität, letztes Ergebnis mit Datum,
+Bewertung und zusammengefassten Beobachtungen, die letzten 3 Bewertungen, nächstes geplantes Datum, verspätet oder
+nicht), die nächsten 5 geplanten Kontrollen (geplantes Datum, Status, verspätet oder nicht), verknüpfte offene
+Aktionspläne (Referenz, Name, Typ, Kritikalität, Status, Fortschritt, Frist, verspätet oder nicht), verknüpfte Risiken
+(Name, Niveau, Behandlungsstatus), Ausnahmen (Name, Status, Beginn- und Enddatum, abgelaufen oder nicht,
+zusammengefasste Begründung und kompensierende Maßnahmen) und bis zu 10 Zuordnungen zu anderen Rahmenwerken
 (Rahmenwerk, Klausel, Name, Typ und Abdeckung).
 
 **Kontrolle**: Name, Geltungsbereich, abgedeckte Sicherheitsmaßnahmen (Klausel und Name), Ziel, Attribute,

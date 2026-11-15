@@ -62,6 +62,10 @@ return [
         'justification' => 'Begründung',
         'due' => 'Frist',
         'reference' => 'Referenz',
+        'practices' => 'Bewährte Praktiken und Abdeckung',
+        'practice' => 'Bewährte Praxis',
+        'coverage' => 'Abdeckung',
+        'controls' => 'Kontrollen',
         'footer' => 'Von KI erstellte Analyse — von einem Menschen zu prüfen',
         'data_sent' => 'Gesendete Daten',
         'data_sent_title' => 'An den Agenten gesendete Daten',
@@ -106,8 +110,15 @@ return [
     'finding' => [
         'force' => 'Stärke',
         'faiblesse' => 'Schwäche',
+        'lacune' => 'Lücke',
         'manque_preuve' => 'Fehlender Nachweis',
         'incoherence' => 'Widerspruch',
+    ],
+
+    'coverage' => [
+        'couvert' => 'Abgedeckt',
+        'partiel' => 'Teilweise',
+        'non_couvert' => 'Nicht abgedeckt',
     ],
 
     'priority' => [
