@@ -46,6 +46,11 @@ test('views only output raw html from trusted sources', function () {
 
     $offenders = [];
     foreach (\Illuminate\Support\Facades\File::allFiles(resource_path('views')) as $file) {
+        // Vues des paquets copiées par vendor:publish (mail, pagination) : hors du code de l'application
+        if (str_starts_with(str_replace('\\', '/', $file->getRelativePathname()), 'vendor/')) {
+            continue;
+        }
+
         foreach (explode("\n", $file->getContents()) as $n => $line) {
             if (preg_match_all('/\{!!.*?!!\}/', $line, $m)) {
                 foreach ($m[0] as $raw) {
