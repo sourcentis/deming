@@ -72,7 +72,7 @@ class AiAgentService
             ]);
             $data = (new AiResponseGuard())->check($answer['data']);
         } catch (AiAgentException $e) {
-            $this->log($type, $id, null, null, $this->elapsed($start), null, false, $e->reason);
+            $this->log($type, $id, null, null, $this->elapsed($start), null, false, $e->reason, $e->upstreamStatus);
             throw $e;
         }
 
@@ -131,8 +131,14 @@ class AiAgentService
         return (int) round((microtime(true) - $start) * 1000);
     }
 
-    // Metadata only: never the context, the answer nor the key
-    private function log(string $type, int $id, ?string $model, ?string $taskVersion, int $durationMs, ?int $tokens, bool $cached, string $status): void
+    /**
+     * Metadata only: never the context, the answer nor the key.
+     *
+     * upstream_status tells the failures apart: for invalid_response, 502 means
+     * the gateway rejected the answer of the model, 200 that its body could not
+     * be read, and null that the answer was refused by AiResponseGuard.
+     */
+    private function log(string $type, int $id, ?string $model, ?string $taskVersion, int $durationMs, ?int $tokens, bool $cached, string $status, ?int $upstreamStatus = null): void
     {
         Log::info('AI analysis', [
             'type' => $type,
@@ -143,6 +149,7 @@ class AiAgentService
             'tokens' => $tokens,
             'cached' => $cached,
             'status' => $status,
+            'upstream_status' => $upstreamStatus,
         ]);
     }
 }

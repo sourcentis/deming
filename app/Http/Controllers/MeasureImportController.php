@@ -183,6 +183,8 @@ class MeasureImportController extends Controller
         +-------------+---------------+------+-----+---------+----------------+
         */
 
+        $data = self::trimClauses($data);
+
         // Check for errors
         $lastLine = count($data);
 
@@ -255,6 +257,25 @@ class MeasureImportController extends Controller
     }
 
     /**
+     * Removes the spaces around the clauses: some frameworks of the repository
+     * end them with a space, which MySQL ignores in comparisons but which is
+     * stored and shown as is.
+     *
+     * @param  array<int, array<int, mixed>>  $data
+     * @return array<int, array<int, mixed>>
+     */
+    private static function trimClauses(array $data): array
+    {
+        foreach ($data as $line => $row) {
+            if (is_string($row[3] ?? null)) {
+                $data[$line][3] = trim($row[3]);
+            }
+        }
+
+        return $data;
+    }
+
+    /**
      * Import Measures from an XLSX file
      */
     public function importFromFile(
@@ -268,6 +289,8 @@ class MeasureImportController extends Controller
         $newDomainCount = 0;
         $deleteControlCount = 0;
         $deleteDocumentCount = 0;
+
+        $data = self::trimClauses($data);
 
         // Read file
         $lastLine = count($data);

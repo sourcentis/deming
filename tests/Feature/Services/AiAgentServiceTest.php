@@ -171,6 +171,22 @@ test('only metadata is logged, with the task version and the model', function ()
         && ! str_contains(json_encode($context), 'Synthèse'))->once();
 });
 
+test('an invalid response logs the status returned by the gateway', function (mixed $response, ?int $upstreamStatus) {
+    aiFakeGateway($response);
+    Log::spy();
+
+    expectAiError(fn () => $this->service->analyze('measure', aiCreateSubject('measure')), 'invalid_response', 502);
+
+    Log::shouldHaveReceived('info')->withArgs(fn (string $message, array $context) => $message === 'AI analysis'
+        && $context['status'] === 'invalid_response'
+        && $context['upstream_status'] === $upstreamStatus
+        && ! str_contains(json_encode($context), 'secret'))->once();
+})->with([
+    'rejected by the gateway' => [fn () => aiGatewayError(502, 'invalid_model_response'), 502],
+    'unreadable body' => [fn () => Http::response('secret not json'), 200],
+    'refused by the guard' => [fn () => aiAgentResponse(array_diff_key(aiValidAnalysis(), ['synthese' => 1])), null],
+]);
+
 // -----------------------------------------------------------------------------
 // Storage and cache
 // -----------------------------------------------------------------------------
