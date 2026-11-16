@@ -264,6 +264,8 @@ return [
         'meaning_non_security' => 'Non-Security: :overdue of :live live / active measurements are overdue (:rate).',
         'meaning_total' => 'Overall: :overdue of :live live / active measurements are overdue (:rate).',
         'priorities_title' => 'Contributor action priorities',
+        'filtered_by' => 'Filtered on population',
+        'remove_filter' => 'Remove filter',
         'priority' => 'Priority',
         'population' => 'Population',
         'count' => 'Count',

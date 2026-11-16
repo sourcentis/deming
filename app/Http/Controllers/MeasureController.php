@@ -7,6 +7,7 @@ use App\Models\Action;
 use App\Models\Control;
 use App\Models\Domain;
 use App\Models\Measure;
+use App\Services\MonitoringService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -97,6 +98,20 @@ class MeasureController extends Controller
             $status = '2';
         }
 
+        // Monitoring population filter (from the Monitoring dashboard):
+        // replaces the other filters with the ids of that population
+        $monitoring = $request->get('monitoring');
+        $monitoringIds = null;
+        if ($monitoring !== null) {
+            $monitoringIds = app(MonitoringService::class)->priorityMeasureIds(
+                Auth::user()->seesAllData() ? null : Auth::user()->id,
+                (string) $monitoring
+            );
+            if ($monitoringIds === null) {
+                $monitoring = null;
+            }
+        }
+
         $domains = Domain::All();
 
         $clauses = DB::table('controls')
@@ -158,56 +173,60 @@ class MeasureController extends Controller
                 });
         }
 
-        // Filter on domain
-        if ($domain !== null && $domain !== 0) {
-            $measures = $measures->where('controls.domain_id', '=', $domain);
-        }
-
-        // Filter on clause
-        if ($clause !== null) {
-            $measures = $measures->where('clause', '=', $clause);
-        }
-
-        // Filter on scope
-        if ($scope !== null) {
-            $measures = $measures->where('m1.scope', '=', $scope);
-        }
-
-        // Filter on period
-        if ($period !== null && $period !== 99) {
-            $measures = $measures
-                ->where(
-                    'm1.plan_date',
-                    '>=',
-                    (new Carbon('first day of this month'))
-                        ->addMonths($period)
-                        ->format('Y-m-d')
-                )
-                ->where(
-                    'm1.plan_date',
-                    '<',
-                    (new Carbon('first day of next month'))
-                        ->addMonths($period)
-                        ->format('Y-m-d')
-                );
-        }
-
-        // Filter on status
-        if ($late !== null) {
-            $measures = $measures
-                ->where('m1.plan_date', '<', Carbon::today()->format('Y-m-d'))
-                ->whereIn('m1.status', [0, 1]);
-        } elseif ($status === '1') {
-            if (Auth::user()->role === 5) {
-                $measures = $measures->whereIn('m1.status', [1, 2]);
-            } else {
-                $measures = $measures->where('m1.status', 2);
+        if ($monitoringIds !== null) {
+            $measures = $measures->whereIn('m1.id', $monitoringIds);
+        } else {
+            // Filter on domain
+            if ($domain !== null && $domain !== 0) {
+                $measures = $measures->where('controls.domain_id', '=', $domain);
             }
-        } elseif ($status === '2') {
-            if (Auth::user()->role === 5) {
-                $measures = $measures->where('m1.status', 0);
-            } else {
-                $measures = $measures->whereIn('m1.status', [0, 1]);
+
+            // Filter on clause
+            if ($clause !== null) {
+                $measures = $measures->where('clause', '=', $clause);
+            }
+
+            // Filter on scope
+            if ($scope !== null) {
+                $measures = $measures->where('m1.scope', '=', $scope);
+            }
+
+            // Filter on period
+            if ($period !== null && $period !== 99) {
+                $measures = $measures
+                    ->where(
+                        'm1.plan_date',
+                        '>=',
+                        (new Carbon('first day of this month'))
+                            ->addMonths($period)
+                            ->format('Y-m-d')
+                    )
+                    ->where(
+                        'm1.plan_date',
+                        '<',
+                        (new Carbon('first day of next month'))
+                            ->addMonths($period)
+                            ->format('Y-m-d')
+                    );
+            }
+
+            // Filter on status
+            if ($late !== null) {
+                $measures = $measures
+                    ->where('m1.plan_date', '<', Carbon::today()->format('Y-m-d'))
+                    ->whereIn('m1.status', [0, 1]);
+            } elseif ($status === '1') {
+                if (Auth::user()->role === 5) {
+                    $measures = $measures->whereIn('m1.status', [1, 2]);
+                } else {
+                    $measures = $measures->where('m1.status', 2);
+                }
+            } elseif ($status === '2') {
+                if (Auth::user()->role === 5) {
+                    $measures = $measures->where('m1.status', 0);
+                } else {
+                    $measures = $measures->whereIn('m1.status', [0, 1]);
+                }
             }
         }
 
@@ -257,6 +276,7 @@ class MeasureController extends Controller
         }
 
         return view('measures.index')
+            ->with('monitoring', $monitoring)
             ->with('measures', $measures)
             ->with('clauses', $clauses)
             ->with('scopes', $scopes)

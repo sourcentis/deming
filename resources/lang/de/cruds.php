@@ -265,6 +265,8 @@ return [
         'meaning_non_security' => 'Außerhalb Sicherheit: :overdue von :live Live- / aktiven Kontrollen sind überfällig (:rate).',
         'meaning_total' => 'Insgesamt: :overdue von :live Live- / aktiven Kontrollen sind überfällig (:rate).',
         'priorities_title' => 'Handlungsprioritäten der Beteiligten',
+        'filtered_by' => 'Gefiltert nach Population',
+        'remove_filter' => 'Filter entfernen',
         'priority' => 'Priorität',
         'population' => 'Population',
         'count' => 'Anzahl',

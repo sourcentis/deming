@@ -280,3 +280,55 @@ test('non-admins only get a link to their own user page', function () {
         ->assertDontSee('href="/users/' . $other->id . '"', false)
         ->assertDontSee('href="/groups/' . $group->id . '"', false);
 });
+
+// --- Priority populations link to the measure list
+
+test('each priority population links to the filtered measure list', function () {
+    $admin = User::factory()->admin()->create();
+    $response = $this->actingAs($admin)->get('/radar/monitoring');
+    foreach (['security_overdue', 'non_security_overdue', 'pending', 'not_yet_due'] as $key) {
+        $response->assertSee('href="/bob/index?monitoring=' . $key . '"', false);
+    }
+});
+
+test('the measure list shows only the measures of the monitoring population', function () {
+    $security = UserGroup::factory()->security()->create();
+    $securityOverdue = Measure::factory()->create(['status' => 0, 'plan_date' => '2026-10-07']);
+    $securityOverdue->groups()->attach($security->id);
+    $otherOverdue = Measure::factory()->create(['status' => 0, 'plan_date' => '2026-10-07']);
+    $notYetDue = Measure::factory()->create(['status' => 0, 'plan_date' => '2026-12-01']);
+    $pending = Measure::factory()->create(['status' => 1, 'plan_date' => '2026-10-07']);
+
+    $admin = User::factory()->admin()->create(['language' => 'en']);
+    // Session filters must not restrict the population
+    $this->actingAs($admin)->withSession(['status' => '1', 'period' => 3]);
+
+    $ids = fn (string $key) => $this->get('/bob/index?monitoring=' . $key)
+        ->assertStatus(200)
+        ->assertViewHas('monitoring', $key)
+        ->viewData('measures')->pluck('id')->sort()->values()->all();
+
+    expect($ids('security_overdue'))->toBe([$securityOverdue->id])
+        ->and($ids('non_security_overdue'))->toBe([$otherOverdue->id])
+        ->and($ids('not_yet_due'))->toBe([$notYetDue->id])
+        ->and($ids('pending'))->toBe([$pending->id]);
+});
+
+test('an unknown monitoring population is ignored', function () {
+    $admin = User::factory()->admin()->create();
+    $this->actingAs($admin)->get('/bob/index?monitoring=unknown')
+        ->assertStatus(200)
+        ->assertViewHas('monitoring', null);
+});
+
+test('outside the group view, only the own measures of the population are listed', function () {
+    $user = User::factory()->user()->create();
+    $mine = Measure::factory()->create(['status' => 0, 'plan_date' => '2026-10-07']);
+    $mine->users()->attach($user->id);
+    Measure::factory()->create(['status' => 0, 'plan_date' => '2026-10-07']);
+
+    $ids = $this->actingAs($user)->withSession(['group_view' => false])
+        ->get('/bob/index?monitoring=non_security_overdue')
+        ->viewData('measures')->pluck('id')->all();
+    expect($ids)->toBe([$mine->id]);
+});
