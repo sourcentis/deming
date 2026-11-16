@@ -243,7 +243,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         ?>
                         @foreach ($controls as $control)
                             <?php
-                            if (($control->score == 3) && ($control->status != 1) && ($control->realisation_date != null) && (\Carbon\Carbon::parse($control->plan_date)->between($first, $second))) { $count++; }
+                            if (($control->score == 3) && ($control->status != 1) && (\Carbon\Carbon::parse($control->plan_date)->between($first, $second))) { $count++; }
                             ?>
                         @endforeach
                         {{ $count }},
@@ -263,7 +263,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         ?>
                         @foreach ($controls as $control)
                             <?php
-                            if (($control->score == 2) && ($control->status != 1) && ($control->realisation_date != null) && (\Carbon\Carbon::parse($control->plan_date)->between($first, $second))) { $count++; }
+                            if (($control->score == 2) && ($control->status != 1) && (\Carbon\Carbon::parse($control->plan_date)->between($first, $second))) { $count++; }
                             ?>
                         @endforeach
                         {{ $count }},
@@ -283,7 +283,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         ?>
                         @foreach ($controls as $control)
                             <?php
-                            if (($control->score == 1) && ($control->status != 1) && ($control->realisation_date != null) && (\Carbon\Carbon::parse($control->plan_date)->between($first, $second))) { $count++; }
+                            if (($control->score == 1) && ($control->status != 1) && (\Carbon\Carbon::parse($control->plan_date)->between($first, $second))) { $count++; }
                             ?>
                         @endforeach
                         {{ $count }},
@@ -323,7 +323,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         ?>
                         @foreach ($controls as $control)
                             <?php
-                            if (($control->realisation_date == null) && (\Carbon\Carbon::parse($control->plan_date)->between($first, $second))) {
+                            if (($control->realisation_date == null) && ($control->score == null) && (\Carbon\Carbon::parse($control->plan_date)->between($first, $second))) {
                                 $count++;
                             }
                             ?>
