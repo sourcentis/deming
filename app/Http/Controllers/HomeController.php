@@ -401,11 +401,7 @@ class HomeController extends Controller
     private function getExpandedControls()
     {
         $query = DB::table('measures')
-            ->select(
-                'measures.id', 'measures.score', 'measures.status', 'measures.realisation_date',
-                'measures.plan_date', 'measures.periodicity', 'prev.score as prev_score'
-            )
-            ->leftJoin('measures as prev', 'prev.next_id', '=', 'measures.id');
+            ->select('id', 'score', 'status', 'realisation_date', 'plan_date', 'periodicity');
 
         // Filtrer sauf si l'utilisateur voit toutes les données
         if (!Auth::user()->seesAllData()) {
@@ -428,21 +424,9 @@ class HomeController extends Controller
         }
 
         $measures = $query->get();
-        $today = Carbon::today();
 
-        // A late control has not been performed yet: the last known result
-        // remains the one of the previous control
-        $applyPreviousScore = function ($measure) use ($today) {
-            if ($measure->realisation_date === null
-                && $measure->prev_score !== null
-                && Carbon::parse($measure->plan_date)->lt($today)) {
-                $measure->score = $measure->prev_score;
-            }
-            return $measure;
-        };
-
-        return $measures->flatMap(function ($measure) use ($applyPreviousScore) {
-            $expanded = collect([$applyPreviousScore(clone $measure)]);
+        return $measures->flatMap(function ($measure) {
+            $expanded = collect([$measure]);
 
             if ($measure->realisation_date === null) {
                 if ($measure->periodicity === -1) {
@@ -453,7 +437,7 @@ class HomeController extends Controller
                         $repeatedMeasure->observations = null;
                         $repeatedMeasure->realisation_date = null;
                         $repeatedMeasure->plan_date = Carbon::parse($measure->plan_date)->addDays($i * 7);
-                        $expanded->push($applyPreviousScore($repeatedMeasure));
+                        $expanded->push($repeatedMeasure);
                     }
                 }
                 else if ($measure->periodicity > 0 && $measure->periodicity <= 12) {
@@ -464,7 +448,7 @@ class HomeController extends Controller
                         $repeatedMeasure->observations = null;
                         $repeatedMeasure->realisation_date = null;
                         $repeatedMeasure->plan_date = Carbon::parse($measure->plan_date)->addMonthsNoOverflow($i * $measure->periodicity);
-                        $expanded->push($applyPreviousScore($repeatedMeasure));
+                        $expanded->push($repeatedMeasure);
                     }
                 }
             }
