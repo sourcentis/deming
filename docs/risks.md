@@ -61,7 +61,7 @@ It contains:
     - **Probability** with its label and comment (standard formulas);
     - **Exposure** and **vulnerability** with the calculated likelihood (BSI 200-3 formula);
     - **Impact** with its label and comment;
-    - The calculated **score** and the **risk level**;
+    - The calculated **score** and the **risk level**, with the **calculation formula** used below them;
 - The treatment:
     - The **treatment status** with its comment;
     - **Linked controls** (if status = Mitigated);
