@@ -4,6 +4,16 @@
     <div class="card">
     <div class="card-header">@include('partials.help', ['page' => 'measures.index'])<i class="bi bi-clipboard-check"></i> {{ trans("cruds.measure.list")}}</div>
     <div class="card-body">
+    @if ($monitoring !== null)
+    <div class="alert alert-info d-flex justify-content-between align-items-center py-2">
+        <span><i class="bi bi-activity"></i> {{ trans('cruds.monitoring.filtered_by') }} : <strong>{{ trans('cruds.monitoring.priorities.' . $monitoring) }}</strong></span>
+        <span>
+            <a href="{{ route('radar.monitoring') }}">{{ trans('cruds.monitoring.title') }}</a>
+            &nbsp;·&nbsp;
+            <a href="/bob/index">{{ trans('cruds.monitoring.remove_filter') }}</a>
+        </span>
+    </div>
+    @endif
     <div class="container-fluid px-0 mb-2">
         <div class="row align-items-center">
             <div class="col-lg-2 col-md-6">
@@ -249,6 +259,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const next = new URL(location.href);
     next.pathname = '/bob/index';
 
+    // Changing a filter leaves the Monitoring population
+    next.searchParams.delete('monitoring');
     const all = { ...snapshotFilters(), ...patch };
     for (const [k,v] of Object.entries(all)) {
       if (v == null || String(v) === '') next.searchParams.delete(k);

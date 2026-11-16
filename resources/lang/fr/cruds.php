@@ -263,6 +263,8 @@ return [
         'meaning_non_security' => 'Hors Sécurité : :overdue des :live contrôles live / actifs sont en retard (:rate).',
         'meaning_total' => 'Ensemble : :overdue des :live contrôles live / actifs sont en retard (:rate).',
         'priorities_title' => 'Priorités d\'action des contributeurs',
+        'filtered_by' => 'Filtré sur la population',
+        'remove_filter' => 'Retirer le filtre',
         'priority' => 'Priorité',
         'population' => 'Population',
         'count' => 'Nombre',

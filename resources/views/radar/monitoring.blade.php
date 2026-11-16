@@ -136,7 +136,7 @@
             @foreach ($priorities as $priority)
             <tr>
                 <td>{{ $loop->iteration }}</td>
-                <td>{{ trans('cruds.monitoring.priorities.' . $priority['key']) }}</td>
+                <td><a href="/bob/index?monitoring={{ $priority['key'] }}">{{ trans('cruds.monitoring.priorities.' . $priority['key']) }}</a></td>
                 <td class="text-end" @if (in_array($priority['key'], ['security_overdue', 'non_security_overdue'], true) && $priority['count'] > 0) style="background-color:#D94F45;color:{{ contrast_color('#D94F45') }}" @elseif ($priority['key'] === 'not_yet_due' && $priority['count'] > 0) style="background-color:#3AB87A;color:{{ contrast_color('#3AB87A') }}" @endif>{{ $priority['count'] }}</td>
                 <td class="text-end">{{ $pct($priority['percent']) }}</td>
                 <td>{{ trans('cruds.monitoring.actions.' . $priority['key']) }}</td>

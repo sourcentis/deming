@@ -127,6 +127,7 @@ class MonitoringService
             self::PRIORITY_PENDING => 0,
             self::PRIORITY_NOT_YET_DUE => 0,
         ];
+        $priorityIds = array_fill_keys(array_keys($priorities), []);
         $combinations = [];
         $individuals = [];
         $groupStats = [];
@@ -171,12 +172,14 @@ class MonitoringService
 
             // Priorities
             if ($kind === 'overdue') {
-                $priorities[$isSecurity ? self::PRIORITY_SECURITY_OVERDUE : self::PRIORITY_NON_SECURITY_OVERDUE]++;
+                $priority = $isSecurity ? self::PRIORITY_SECURITY_OVERDUE : self::PRIORITY_NON_SECURITY_OVERDUE;
             } elseif ($kind === 'pending') {
-                $priorities[self::PRIORITY_PENDING]++;
+                $priority = self::PRIORITY_PENDING;
             } else {
-                $priorities[self::PRIORITY_NOT_YET_DUE]++;
+                $priority = self::PRIORITY_NOT_YET_DUE;
             }
+            $priorities[$priority]++;
+            $priorityIds[$priority][] = $measureId;
 
             // A. Exact assignment combinations (users then groups, by name)
             $names = [];
@@ -292,10 +295,22 @@ class MonitoringService
             'ownership_all' => $ownershipAll,
             'ownership' => $ownership,
             'priorities' => $priorityRows,
+            'priority_ids' => $priorityIds,
             'combinations' => $combinationRows,
             'individuals' => $individualRows,
             'groups' => $groupRows,
         ];
+    }
+
+    /**
+     * Ids of the live measures belonging to a priority population
+     * (see the PRIORITY_* constants), or null when the key is unknown.
+     *
+     * @return array<int>|null
+     */
+    public function priorityMeasureIds(?int $scopeUserId, string $priority): ?array
+    {
+        return $this->compute($scopeUserId)['priority_ids'][$priority] ?? null;
     }
 
     /**
