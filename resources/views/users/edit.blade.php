@@ -48,6 +48,7 @@
 	    			<select class="form-select select2" name='language'>
 	    				<option {{ (old('language',$user->language) =='de') ? 'selected' : ''}} >de</option>
 	    				<option {{ (old('language',$user->language) =='en') ? 'selected' : ''}} >en</option>
+	    				<option {{ (old('language',$user->language) =='es') ? 'selected' : ''}} >es</option>
                         <option {{ (old('language',$user->language) =='fr') ? 'selected' : ''}} >fr</option>
 	    			</select>
 				</div>

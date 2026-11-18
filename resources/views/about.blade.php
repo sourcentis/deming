@@ -41,6 +41,21 @@
 <h2>Open Source</h2>
 
 <p>Unter der <a href="https://www.gnu.org/licenses/licenses.html">GPL-Lizenz</a> vertrieben, passt sich Deming den Bedürfnissen von Unternehmen an, die eine kontinuierliche Verbesserung ihrer Informationssicherheit anstreben. Weitere Informationen zur Nutzung und den Funktionen finden Sie in der <a href="https://sourcentis.github.io/deming/de/">Benutzerdokumentation</a> und auf dem <a href="https://github.com/sourcentis">GitHub-Projekt</a>.</p>
+@elseif(Auth::User()->language==="es")
+    <h1>Acerca de Deming</h1>
+
+    <p><strong>Deming</strong> es un proyecto de código abierto diseñado para facilitar la gestión de la seguridad de la información. Proporciona a las organizaciones las herramientas necesarias para supervisar y medir de forma eficaz sus controles de seguridad, a la vez que optimiza la gestión de su Sistema de Gestión de Seguridad de la Información (SGSI).</p>
+
+    <h2>Funciones principales</h2>
+    <ul>
+        <li>Seguimiento del rendimiento de la seguridad de la información.</li>
+        <li>Planificación y gestión de los controles de seguridad.</li>
+        <li>Generación de informes detallados para tomar decisiones fundamentadas.</li>
+    </ul>
+
+    <h2>Código abierto</h2>
+
+    <p>Distribuido bajo la licencia <a href="https://www.gnu.org/licenses/licenses.html">GPL</a>, Deming se adapta a las necesidades de las empresas que buscan la mejora continua de su seguridad de la información. Para obtener más información sobre su uso y sus funciones, consulta la <a href="https://sourcentis.github.io/deming/">documentación de usuario</a> (en inglés) y el <a href="https://github.com/sourcentis">GitHub</a> del proyecto.</p>
 @else
     <h1>About Deming</h1>
 

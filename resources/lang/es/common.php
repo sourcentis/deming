@@ -1,0 +1,61 @@
+<?php
+return [
+    'confirm' => 'Confirmar eliminación',
+
+    'accept' => 'Aceptar',
+    'active' => 'Activa',
+    'cancel' => 'Cancelar',
+    'check' => 'Comprobar',
+    'create' => 'Crear',
+    'clone' => 'Duplicar',
+    'close' => 'Cerrar',
+    'delete' => 'Eliminar',
+    'download' => 'Descargar',
+    'edit' => 'Editar',
+    'export' => 'Exportar',
+    'history' => 'Historial',
+    'import' => 'Importar',
+    'make' => 'Realizar',
+    'manage' => 'Gestionar',
+    'new' => 'Nuevo',
+    'plan' => 'Planificar',
+    'reject' => 'Rechazar',
+    'save' => 'Guardar',
+    'search_results' => 'Resultados de la búsqueda',
+    'show' => 'Ver',
+    'test' => 'Probar',
+    'unplan' => 'Desplanificar',
+    'validate' => 'Validar',
+
+    'once' => 'Una vez',
+    'weekly' => 'Semanal',
+    'monthly' => 'Mensual',
+    'quarterly' => 'Trimestral',
+    'biannually' => 'Semestral',
+    'annually' => 'Anual',
+
+    'next' => 'Siguiente',
+    'previous' => 'Anterior',
+    'more_info' => 'Más información',
+
+    'green' => 'Verde',
+    'orange' => 'Naranja',
+    'red' => 'Rojo',
+
+    'fail' => 'Fallo',
+    'alert' => 'Alerta',
+    'success' => 'Correcto',
+    'unknown' => 'Desconocido',
+    'to_validate' => 'Por validar',
+
+    'date' => 'Fecha',
+
+    'never' => 'Nunca',
+    'day' => 'Diariamente',
+    'week' => 'Semanalmente',
+    'month' => 'Mensualmente',
+    'months' => 'Meses',
+
+    'my_data' => 'Mis datos',
+    'all_data' => 'Todos los datos',
+];

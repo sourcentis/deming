@@ -67,6 +67,19 @@ const dtLanguages = {
         paginate: { first: '«', last: '»', next: '›', previous: '‹' },
         buttons: { colvis: 'Spalten', copy: 'Kopieren', excel: 'Exportieren' },
     },
+    es: {
+        decimal: ',',
+        emptyTable: 'No hay datos disponibles',
+        info: '_START_ a _END_ de _TOTAL_ elementos',
+        infoEmpty: '0 elementos',
+        infoFiltered: '(filtrado de _MAX_ elementos en total)',
+        lengthMenu: '_MENU_ elementos por página',
+        loadingRecords: 'Cargando...',
+        search: 'Buscar:',
+        zeroRecords: 'No se han encontrado elementos coincidentes',
+        paginate: { first: '«', last: '»', next: '›', previous: '‹' },
+        buttons: { colvis: 'Columnas', copy: 'Copiar', excel: 'Exportar' },
+    },
 };
 const lang = (document.documentElement.lang || 'en').substring(0, 2);
 if (dtLanguages[lang]) {
