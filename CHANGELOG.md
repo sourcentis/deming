@@ -18,6 +18,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   `.env.example`). When updating, the policy is only reported while
   `CSP_REPORT_ONLY` is missing from the `.env` file: check the browser console,
   then add `CSP_REPORT_ONLY=false` to enforce it.
+- Risks: the risk page shows the calculation formula of the active scoring
+  configuration under the score.
 
 ### Changed
 

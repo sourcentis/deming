@@ -62,7 +62,7 @@ Il contient :
     - La **probabilité** avec son libellé et son commentaire (formules standard) ;
     - L'**exposition** et la **vulnérabilité** avec la vraisemblance calculée (formule BSI 200-3) ;
     - L'**impact** avec son libellé et son commentaire ;
-    - Le **score** calculé et le **niveau de risque** ;
+    - Le **score** calculé et le **niveau de risque**, avec en dessous la **formule de calcul** utilisée ;
 - Le traitement :
     - Le **statut de traitement** avec son commentaire ;
     - Les **contrôles liés** (si statut = Mitigé) ;

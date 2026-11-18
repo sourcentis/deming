@@ -60,7 +60,7 @@ Sie enthält:
     - die **Wahrscheinlichkeit** mit ihrer Bezeichnung und ihrem Kommentar (Standardformeln);
     - die **Exposition** und die **Verwundbarkeit** mit der berechneten Eintrittswahrscheinlichkeit (Formel BSI 200-3);
     - die **Auswirkung** mit ihrer Bezeichnung und ihrem Kommentar;
-    - den berechneten **Score** und die **Risikostufe**;
+    - den berechneten **Score** und die **Risikostufe**, darunter die verwendete **Berechnungsformel**;
 - die Behandlung:
     - den **Behandlungsstatus** mit seinem Kommentar;
     - die **verknüpften Maßnahmen** (bei Status = Gemindert);

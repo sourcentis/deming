@@ -186,6 +186,10 @@
             </span>
             &nbsp;
             <strong>{{ $threshold['label'] }}</strong>
+            <div class="text-muted">
+                {{ trans('cruds.risk_scoring.fields.formula') }} :
+                {{ trans('cruds.risk_scoring.formulas.' . $scoringConfig->formula) }}
+            </div>
         </div>
     </div>
 
