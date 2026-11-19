@@ -1,5 +1,5 @@
 {
-  "version": "2026.11.09",
+  "version": "2026.11.19",
   "license": "GPL-3.0",
   "author": "Didier Barzin",
   "repository": "https://www.github.com/sourcentis/deming",
@@ -48,7 +48,6 @@
     "less": "^4.3.0",
     "moment": "^2.30.1",
     "select2": "^4.1.0-rc.0",
-    "select2-bootstrap-5-theme": "^1.3.0",
-    "simplemde": "^1.11.2"
+    "select2-bootstrap-5-theme": "^1.3.0"
   }
 }
