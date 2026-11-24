@@ -2,7 +2,10 @@
 
 ## Configuration recommandée
 
-- OS : Debian 12 (stable) — recommandé. Également testé sur Ubuntu 24.04 LTS et les distributions de la famille RedHat (RHEL, Rocky Linux, AlmaLinux 9).
+- OS : Debian 13 (stable) — recommandé. Fonctionne aussi sur Ubuntu LTS et les distributions de la famille RedHat (RHEL, Rocky Linux, AlmaLinux).
+- PHP : 8.4 ou supérieur (exigé par les dépendances verrouillées). Debian 13 fournit PHP 8.4 ; sur Debian 12 ou Ubuntu 24.04,
+  dont la version de PHP par défaut est plus ancienne, installez PHP 8.4 depuis le dépôt [sury.org](https://deb.sury.org/) / le PPA `ondrej/php`,
+  et sur les distributions de la famille RedHat depuis le dépôt [Remi](https://rpms.remirepo.net/).
 - RAM : 2G
 - Disque : 20G
 - VCPU 2
@@ -202,14 +205,14 @@ Ajouter les lignes suivantes :
     CustomLog ${APACHE_LOG_DIR}/access.log combined
     </VirtualHost>
 
-Enregistrez et fermez le fichier lorsque vous avez terminé. Ensuite, activez l'hôte virtuel Apache et le module de réécriture avec les commandes suivantes (remplacez `8.2` par votre version de PHP installée — `php -v` — par exemple `8.3` sur Ubuntu 24.04) :
+Enregistrez et fermez le fichier lorsque vous avez terminé. Ensuite, activez l'hôte virtuel Apache et le module de réécriture avec les commandes suivantes (remplacez `8.4` par votre version de PHP installée — `php -v`) :
 
     sudo a2enmod rewrite
     sudo a2dissite 000-default.conf
     sudo a2ensite deming.conf
-    sudo a2dismod php8.2
+    sudo a2dismod php8.4
     sudo a2enmod proxy_fcgi setenvif
-    sudo a2enconf php8.2-fpm
+    sudo a2enconf php8.4-fpm
 
 Enfin, redémarrez le service Apache pour activer les modifications :
 
@@ -246,7 +249,7 @@ Ajouter les lignes suivantes :
 
  	    # Si vous utilisez php-fpm (chemin de la socket et version PHP à adapter à votre cas)
 	    #<FilesMatch \.php$>
-	    #    SetHandler "proxy:unix:/var/run/php/php8.2-fpm.sock|fcgi://localhost/"
+	    #    SetHandler "proxy:unix:/var/run/php/php8.4-fpm.sock|fcgi://localhost/"
 	    #</FilesMatch>
 
     	    ErrorLog ${APACHE_LOG_DIR}/error.log
@@ -272,7 +275,7 @@ Dans le cadre de cette configuration servant l'application en HTTPS, il pourra �
 ## PHP
 
 Vous devez définir les valeurs de upload_max_filesize et post_max_size dans votre php.ini
-(/etc/php/8.2/fpm/php.ini — adaptez la version à `php -v`) :
+(/etc/php/8.4/fpm/php.ini — adaptez la version à `php -v`) :
 
     ; Taille maximale autorisée pour les fichiers téléchargés.
     upload_max_filesize = 10M

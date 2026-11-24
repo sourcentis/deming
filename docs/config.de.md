@@ -137,7 +137,7 @@ Dokumente und zur Konfiguration ihrer Aufbewahrungsdauer.
 
 In diesem Teil der Registerkarte kann die Integrität der in der Anwendung gespeicherten Dokumente überprüft werden.
 
-Durch Klicken auf „Prüfen“ startet Deming die Integritätsprüfung der in der Anwendung gespeicherten Dokumente mithilfe eines CRC32.
+Durch Klicken auf „Prüfen“ startet Deming die Integritätsprüfung der in der Anwendung gespeicherten Dokumente mithilfe eines SHA-256-Hashwerts.
 
 ### Aufbewahrung
 

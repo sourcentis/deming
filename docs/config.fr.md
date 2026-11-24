@@ -135,7 +135,7 @@ configurer leur durée de conservation.
 
 Cette partie de l'onglet permet de vérifier l'intégrité des documents conservés dans l'application.
 
-En cliquant sur « Vérifier », Deming lance le contrôle d'intégrité des documents conservés dans l'application en utilisant un CRC32.
+En cliquant sur « Vérifier », Deming lance le contrôle d'intégrité des documents conservés dans l'application en utilisant une empreinte SHA-256.
 
 ### Conservation
 

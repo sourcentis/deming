@@ -11,11 +11,11 @@ Les boutons « Colonnes », « Copier » et « Exporter » permettent de choisir
 
 En cliquant sur :
 
-* le domaine, vous arrivez sur la [définition du domaine choisi](config.fr.md/#domains)
+* le domaine, vous arrivez sur la [définition du domaine choisi](config.fr.md#domains)
 
 * la clause, vous arrivez sur la [description de la mesure de sécurité](#show)
 
-* le nombre de contrôle, vous arrivez sur la [liste des contrôles](controls.fr.md/#list) de cette mesure de sécurité
+* le nombre de contrôle, vous arrivez sur la [liste des contrôles](controls.fr.md#list) de cette mesure de sécurité
 
 * le bouton « Planifier », vous arrivez sur la [planification de la mesure de sécurité](#plan)
 

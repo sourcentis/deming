@@ -404,16 +404,18 @@ configured in `APP_URL` (typically HAProxy's public HTTPS URL), or
 See [INSTALL.md](INSTALL.md) for details on how these default credentials are seeded.
 
 > **Important:** Change the default password immediately after first login via
-> **Settings → My profile → Change password**.
+> the user edit screen (**Configuration → Users**, then edit the `admin` user).
 
 ### Role hierarchy
 
 | Role | Access level |
 |---|---|
-| Admin | Full access, user management |
-| User | Controls, measures, actions |
-| Auditee | Read-only on assigned controls |
-| Auditor | Audit workflow access |
+| Administrator | Full access, user management and configuration |
+| User | Controls, measurements, action plans and risks, without modifying measurements already carried out |
+| Auditee | Carries out only the measurements assigned to them (see [Delegation](https://sourcentis.github.io/deming/delegation/)) |
+| Auditor | Read-only access to all the information |
+| API | Access to the [REST API](https://sourcentis.github.io/deming/api/) only |
+| Disabled | Account kept for history, can no longer log in |
 
 ---
 

@@ -2,7 +2,7 @@
 
 Deming can be modified or updated via a REST API.
 
-A REST API ([Representational State Transfer](https://fr.wikipedia.org/wiki/Representational_state_transfer))
+A REST API ([Representational State Transfer](https://en.wikipedia.org/wiki/REST))
 is an application programming interface that respects the constraints of the REST
 architecture and enables interaction with RESTful web services.
 
@@ -47,7 +47,8 @@ Requests and URIs for each API are shown in the table below.
 ## Access rights
 
 To access the APIs, you need to identify yourself as a Deming application user.
-This user must have the "API" role.
+This user must have the "API" role. No API account is created by default: create one from the
+[user management screen](config.md#users). The examples below use `api@admin.localhost` / `12345678`.
 
 When authentication is successful, the API sends a "token" which must be passed in the "Authorization" header of the API request.
 
@@ -55,7 +56,7 @@ When authentication is successful, the API sends a "token" which must be passed 
 
 ### GET /api/controls/{id} — security measure
 
-Returns the security measure fields plus a `controls` key containing the IDs of the
+Returns the security measure fields plus a `measures` key containing the IDs of the
 audit instances that verify this measure:
 
 ```json
@@ -65,13 +66,13 @@ audit instances that verify this measure:
   "clause": "NIS2-Art.21.2.a",
   "name": "Risk Analysis",
   "objective": "...",
-  "controls": [1, 2, 3]
+  "measures": [1, 2, 3]
 }
 ```
 
 ### GET /api/measures/{id} — audit instance
 
-Returns the audit instance fields plus a `measures` key containing the IDs of the
+Returns the audit instance fields plus a `controls` key containing the IDs of the
 security measures covered by this audit instance:
 
 ```json
@@ -82,7 +83,7 @@ security measures covered by this audit instance:
   "realisation_date": null,
   "status": 0,
   "periodicity": 12,
-  "measures": [1]
+  "controls": [1]
 }
 ```
 
@@ -107,6 +108,12 @@ of the linked security controls and action plan items:
 }
 ```
 
+### POST/PUT /api/controls — optional related fields
+
+| Key | Effect |
+|---|---|
+| `measures` | Sync the list of audit instance IDs verifying this security measure |
+
 ### POST/PUT /api/risks — optional related fields
 
 | Key | Effect |
@@ -121,7 +128,7 @@ update related records:
 
 | Key | Effect |
 |---|---|
-| `measures` | Sync the list of security measure IDs linked to this audit instance |
+| `controls` | Sync the list of security measure IDs linked to this audit instance |
 | `actions` | Assign action IDs to this audit instance |
 | `documents` | Assign document IDs to this audit instance |
 | `users` | Sync the list of assigned user IDs |
@@ -145,7 +152,7 @@ Here are a few examples of how to use the API with PHP:
         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
         CURLOPT_CUSTOMREQUEST => "POST",
         CURLOPT_POSTFIELDS => http_build_query(
-            array("email" => "api@admin.com",
+            array("email" => "api@admin.localhost",
                   "password" => "12345678")),
         CURLOPT_HTTPHEADER => array(
             "accept: application/json",

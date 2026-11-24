@@ -29,8 +29,8 @@ flowchart LR
     controls <-->|"control_measure (N:N)"| measures
     attributes -.-o |"optional"| controls
     attributes -.-o |"optional"| measures
-    measures -->|"measure_id (0:1)"| measures
-    documents -->|"document_id (1:1)"| measures
+    measures -->|"next_id (0:1)"| measures
+    documents -->|"measure_id (N:1)"| measures
     risks -->|"owner_id (0:1)"| users
     risks <-->|"control_risk (N:N)"| controls
     actions -->|"measure_id (0:1)"| measures
@@ -86,7 +86,7 @@ erDiagram
         string clause
         string objective
         array measures
-        array attributes
+        string attributes
         array risks
     }
     measures {
@@ -98,7 +98,7 @@ erDiagram
         date realisation_date
         int status
         array controls
-        array attributes
+        string attributes
     }
     documents {
         int id PK
@@ -143,12 +143,12 @@ The relationships are as follows:
 | --- | --- | --- |
 | `domains` → `controls` | Foreign key (1:N) | Each security measure references its domain via `domain_id` |
 | `frameworks` → `domains` | Optional (1:N) via the code | A domain's `framework` field holds the `code` of its framework; the `frameworks` row adds its metadata |
-| `controls` ↔ `measures` | Many-to-many (bidirectional) | Each security measure lists its audit instances in `measures[]`; each audit instance lists its security measures in `controls[]` |
-| `attributes` → `controls` | Optional | The `attributes` field of a security measure may contain a list of attribute IDs |
+| `controls` ↔ `measures` | Many-to-many (bidirectional) | Stored in the `control_measure` pivot table; the API exposes it as `measures[]` on a security measure and `controls[]` on an audit instance |
+| `attributes` → `controls` | Optional | The `attributes` field of a security measure may contain a space-separated list of attribute values (tags prefixed with `#`) |
 | `attributes` → `measures` | Optional | Same for audit instances |
 | `measures` → `measures` | Self-reference via `next_id` | Allows chaining successive campaigns of the same audit |
 | `documents` → `measures` | Optional (1:N) | Documents and evidence are attached to audit instances via `measure_id` |
-| `risks` ↔ `controls` | Many-to-many via `control_risk` | A mitigated risk must be linked to one or more security controls; the list is stored in `controls[]` on the risk |
+| `risks` ↔ `controls` | Many-to-many via `control_risk` | A mitigated risk must be linked to one or more security controls; the API exposes the list as `controls[]` on the risk |
 | `users` → `risks` | Optional (1:N) | Each risk can be assigned an owner (`owner_id`) responsible for the periodic review |
 | `measures` → `actions` | Optional (1:N) | An action plan created when making a measurement references it via `measure_id` |
 | `actions` ↔ `controls` | Many-to-many via `action_control` | Security measures (clauses) concerned by the action plan |
@@ -157,10 +157,12 @@ The relationships are as follows:
 | `controls` → `exceptions` | Optional (1:N) | Each exception references the security measure it waives via `control_id` |
 | `users` → `exceptions` | Optional (1:N) | Author (`created_by`), submitter (`submitted_by`) and reviewer (`approved_by`) of the exception |
 
-> **Note:** There is no exposed join table for the controls/measures relationship.  
-> IDs are directly embedded in each object on both sides.  
+> **Note:** The `control_measure` pivot table links security measures to audit instances. The `measures[]` and
+> `controls[]` arrays shown below are not columns: the API adds them to its responses from this pivot table.  
 > The `control_risk` pivot table links risks to security controls.  
-> The `action_control`, `action_risk` and `action_user` pivot tables link action plans to security measures, risks and owners.
+> The `action_control`, `action_risk` and `action_user` pivot tables link action plans to security measures, risks and owners.  
+> The `measure_user` and `measure_user_group` pivot tables assign audit instances to users and groups;
+> `user_user_group` lists the members of each group (`user_groups`).
 
 ---
 
@@ -279,8 +281,8 @@ Each security measure belongs to a domain and is verified by one or more audit i
 | `model` | string \| null | Recommended operational model or method |
 | `indicator` | string \| null | Structured performance indicator (Target, Frequency, Owner) |
 | `action_plan` | string \| null | Associated action or treatment plan |
-| `attributes` | array \| null | List of associated attribute IDs; `null` if none |
-| `measures` | array | List of audit instance IDs verifying this security measure |
+| `attributes` | string \| null | Space-separated list of attribute values (e.g., `#Preventive #Confidentiality`); `null` if none |
+| `measures` | array | List of audit instance IDs verifying this security measure (API only, from `control_measure`) |
 | `created_at` | datetime | Creation date |
 | `updated_at` | datetime | Last modification date |
 
@@ -326,9 +328,9 @@ It contains planning, execution, and result data.
 | `note` | number \| null | Additional qualitative note |
 | `status` | integer | Current status of the audit instance (see below) |
 | `next_id` | integer \| null | ID of the next audit instance in the historical chain (self FK) |
-| `attributes` | array \| null | List of associated attribute IDs; `null` if none |
+| `attributes` | string \| null | Space-separated list of attribute values (e.g., `#Preventive #Confidentiality`); `null` if none |
 | `scope` | string \| null | Scope of application (entity, site, system) |
-| `controls` | array | List of security measure IDs verified by this audit instance |
+| `controls` | array | List of security measure IDs verified by this audit instance (API only, from `control_measure`) |
 | `created_at` | datetime | Creation date |
 | `updated_at` | datetime | Last modification date |
 
@@ -392,7 +394,7 @@ A risk with *Mitigated* status must be linked to at least one security control v
 | `status_comment` | string \| null | Free comment on the treatment decision |
 | `review_frequency` | integer | Interval in months between two reviews (default: 12) |
 | `next_review_at` | date \| null | Scheduled date of the next review |
-| `controls` | array | List of security control IDs linked to this risk (via `control_risk`) |
+| `controls` | array | List of security control IDs linked to this risk (API only, from `control_risk`) |
 | `created_at` | datetime | Creation date |
 | `updated_at` | datetime | Last modification date |
 | `deleted_at` | datetime \| null | Soft-deletion date |

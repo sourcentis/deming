@@ -1,7 +1,7 @@
 # Délégation
 
 Deming permet de déléguer la réalisation des contrôles de sécurité à des utilisateurs qui ont le rôle *audité*.
-L'assignation du rôle audité à un utilisateur se fait via l'écran de [gestion des utilisateurs](config.fr.md/#users).
+L'assignation du rôle audité à un utilisateur se fait via l'écran de [gestion des utilisateurs](config.fr.md#users).
 
 Cette délégation respecte les règles suivantes :
 

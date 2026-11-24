@@ -21,9 +21,9 @@ buttons copy the displayed list or export it to Excel.
 
 When you click:
 
-* The domain, you arrive at the [security domain display](config.md/#domains) screen
+* The domain, you arrive at the [security domain display](config.md#domains) screen
 
-* Clause, you arrive at the [security measure display](measures.md/#show) screen.
+* Clause, you arrive at the [security measure display](measures.md#show) screen.
 
 * The date of completion, planning or the date of the next check, you arrive at the [security check display](#show) screen.
 
@@ -43,7 +43,7 @@ This screen contains the information of a measurement:
 
 * The dates of planning, completion and the date of the next inspection;
 
-* The score assigned to the measurement; And
+* The note assigned to the measurement; and
 
 * The score attributed to the measurement (green, orange or red).
 
@@ -207,4 +207,4 @@ This form allows you to describe the observations made, to add screenshots or ta
 
 [![Screenshot](images/report3.png)](images/report3.png)
 
-The checklist can be [adapted](config.md/#documents) to match your organization's document model.
+The measurement sheet can be [adapted](config.md#templates) to match your organization's document model.

@@ -2,12 +2,12 @@ docs_dir: docs
 
 # Project information
 site_name: Deming
-site_description: Information System made easy !
-site_url: https://sourcentis.githubs.io/deming/
+site_description: Open source tool to plan, track and report on the controls of an ISO 27001 ISMS
+site_url: https://sourcentis.github.io/deming/
 
 # Repository
 repo_url: https://github.com/sourcentis/deming
-edit_uri: edit/master/docs
+edit_uri: edit/main/docs
 
 # Copyright
 copyright: Copyright <a href="https://www.gnu.org/licenses/licenses.en.html">GPL</a>.

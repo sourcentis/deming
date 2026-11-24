@@ -135,7 +135,7 @@ configure their retention period.
 
 This part of the tab lets you check the integrity of documents stored in the application.
 
-By clicking on “Check”, Deming launches the integrity check of documents stored in the application, using a CRC32.
+By clicking on “Check”, Deming launches the integrity check of documents stored in the application, using a SHA-256 hash.
 
 ### Retention
 

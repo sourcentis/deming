@@ -21,11 +21,11 @@ permettent de copier la liste affichée ou de l'exporter vers Excel.
 
 Lorsque vous cliquez sur :
 
-* Le domaine, vous arrivez à l'écran d'[affichage du domaine de sécurité](config.fr.md/#domains)
+* Le domaine, vous arrivez à l'écran d'[affichage du domaine de sécurité](config.fr.md#domains)
 
-* La clause, vous arrivez à l'écran d'[affichage de la mesure de sécurité](measures.fr.md/#show).
+* La clause, vous arrivez à l'écran d'[affichage de la mesure de sécurité](measures.fr.md#show).
 
-* La date de réalisation, de planification ou la date du contrôle suivant, vous arrivez l'écran d'[affichage du contrôle de sécurité](controls.fr.md/#show).
+* La date de réalisation, de planification ou la date du contrôle suivant, vous arrivez l'écran d'[affichage du contrôle de sécurité](#show).
 
 ## Afficher un contrôle {#show}
 
@@ -149,9 +149,11 @@ Cet écran contient les informations d'un contrôle :
 
 Lorsque vous cliquez sur :
 
-* « Plan », la date de planification, la récurrence et les responsables sont mis à jour et vous êtes renvoyés vers l'[écran d'affichage du contrôle](controls.fr.md/#show)
+* « Planifier », la date de planification, la récurrence et les responsables sont mis à jour et vous êtes renvoyés vers l'[écran d'affichage du contrôle](#show)
 
-* « Annuler », vous êtes renvoyés vers l'[écran d'affichage du contrôle](controls.fr.md/#show)
+* « Déplanifier », le contrôle est supprimé et vous êtes renvoyés vers la [liste des contrôles](#list)
+
+* « Annuler », vous êtes renvoyés vers l'[écran d'affichage du contrôle](#show)
 
 
 ## Réaliser un contrôle {#make}
@@ -205,4 +207,4 @@ Cette fiche permet de décrire les observations réalisées, d'ajouter des captu
 
 [![Screenshot](images/report3.png)](images/report3.png)
 
-La fiche de contrôle peut être [adaptée](config.fr.md/#documents) afin de respecter le modèle de document de votre organisation.
+La fiche de contrôle peut être [adaptée](config.fr.md#templates) afin de respecter le modèle de document de votre organisation.

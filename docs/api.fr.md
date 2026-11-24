@@ -47,7 +47,8 @@ Les requêtes et URI de chaque API sont représentées dans le tableau ci-dessou
 ## Droits d'accès
 
 Il faut s'identifier avec un utilisateur de l'application Deming pour pouvoir accéder aux API.
-Cet utilisateur doit disposer du rôle "API".
+Cet utilisateur doit disposer du rôle "API". Aucun compte API n'est créé par défaut : créez-en un depuis
+l'[écran de gestion des utilisateurs](config.fr.md#users). Les exemples ci-dessous utilisent `api@admin.localhost` / `12345678`.
 
 Lorsque l'authentification réussit, l'API envoie un "token" qui doit être passé dans l'entête "Authorization" de la requête de l'API.
 
@@ -55,7 +56,7 @@ Lorsque l'authentification réussit, l'API envoie un "token" qui doit être pass
 
 ### GET /api/controls/{id} — mesure de sécurité
 
-Retourne les champs de la mesure de sécurité ainsi qu'une clé `controls` contenant les IDs
+Retourne les champs de la mesure de sécurité ainsi qu'une clé `measures` contenant les IDs
 des instances d'audit qui vérifient cette mesure :
 
 ```json
@@ -65,13 +66,13 @@ des instances d'audit qui vérifient cette mesure :
   "clause": "NIS2-Art.21.2.a",
   "name": "Analyse de Risques",
   "objective": "...",
-  "controls": [1, 2, 3]
+  "measures": [1, 2, 3]
 }
 ```
 
 ### GET /api/measures/{id} — instance d'audit
 
-Retourne les champs de l'instance d'audit ainsi qu'une clé `measures` contenant les IDs
+Retourne les champs de l'instance d'audit ainsi qu'une clé `controls` contenant les IDs
 des mesures de sécurité couvertes par cette instance :
 
 ```json
@@ -82,7 +83,7 @@ des mesures de sécurité couvertes par cette instance :
   "realisation_date": null,
   "status": 0,
   "periodicity": 12,
-  "measures": [1]
+  "controls": [1]
 }
 ```
 
@@ -107,6 +108,12 @@ les identifiants des mesures de sécurité et des actions du plan d'action liée
 }
 ```
 
+### POST/PUT /api/controls — champs liés optionnels
+
+| Clé | Effet |
+|---|---|
+| `measures` | Synchronise la liste des IDs des instances d'audit qui vérifient cette mesure de sécurité |
+
 ### POST/PUT /api/risks — champs liés optionnels
 
 | Clé | Effet |
@@ -121,7 +128,7 @@ acceptées pour mettre à jour les enregistrements liés :
 
 | Clé | Effet |
 |---|---|
-| `measures` | Synchronise la liste des IDs de mesures de sécurité liées à cette instance |
+| `controls` | Synchronise la liste des IDs de mesures de sécurité liées à cette instance |
 | `actions` | Assigne des IDs d'actions à cette instance d'audit |
 | `documents` | Assigne des IDs de documents à cette instance d'audit |
 | `users` | Synchronise la liste des IDs d'utilisateurs assignés |
@@ -145,7 +152,7 @@ Voici quelques exemples d'utilisation de l'API avec PHP :
         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
         CURLOPT_CUSTOMREQUEST => "POST",
         CURLOPT_POSTFIELDS => http_build_query(
-            array("email" => "api@admin.com",
+            array("email" => "api@admin.localhost",
                   "password" => "12345678")),
         CURLOPT_HTTPHEADER => array(
             "accept: application/json",

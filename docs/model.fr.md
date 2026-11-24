@@ -29,8 +29,8 @@ flowchart LR
     controls <-->|"control_measure (N:N)"| measures
     attributes -.-o |"optional"| controls
     attributes -.-o |"optional"| measures
-    measures -->|"measure_id (0:1)"| measures
-    documents -->|"document_id (1:1)"| measures
+    measures -->|"next_id (0:1)"| measures
+    documents -->|"measure_id (N:1)"| measures
     risks -->|"owner_id (0:1)"| users
     risks <-->|"control_risk (N:N)"| controls
     actions -->|"measure_id (0:1)"| measures
@@ -86,7 +86,7 @@ erDiagram
         string clause
         string objective
         array measures
-        array attributes
+        string attributes
         array risks
     }
     measures {
@@ -98,7 +98,7 @@ erDiagram
         date realisation_date
         int status
         array controls
-        array attributes
+        string attributes
     }
     documents {
         int id PK
@@ -143,12 +143,12 @@ Les relations sont les suivantes :
 | --- | --- | --- |
 | `domains` → `controls` | Clé étrangère (1:N) | Chaque mesure de sécurité référence son domaine via `domain_id` |
 | `frameworks` → `domains` | Optionnel (1:N) via le code | Le champ `framework` d'un domaine contient le `code` de son référentiel ; la ligne de `frameworks` y ajoute ses métadonnées |
-| `controls` ↔ `measures` | Many-to-many (bidirectionnel) | Chaque mesure de sécurité liste ses instances d'audit dans `measures[]` ; chaque instance d'audit liste ses mesures de sécurité dans `controls[]` |
-| `attributes` → `controls` | Optionnel | Le champ `attributes` d'une mesure de sécurité peut contenir une liste d'IDs d'attributs |
+| `controls` ↔ `measures` | Many-to-many (bidirectionnel) | Stockée dans la table pivot `control_measure` ; l'API l'expose en `measures[]` sur une mesure de sécurité et en `controls[]` sur une instance d'audit |
+| `attributes` → `controls` | Optionnel | Le champ `attributes` d'une mesure de sécurité peut contenir une liste de valeurs d'attributs séparées par des espaces (tags préfixés par `#`) |
 | `attributes` → `measures` | Optionnel | Idem pour les instances d'audit |
 | `measures` → `measures` | Auto-référence via `next_id` | Permet de chaîner les campagnes successives d'un même audit |
 | `documents` → `measures` | Optionnel (1:N) | Les documents et preuves sont attachés aux instances d'audit via `measure_id` |
-| `risks` ↔ `controls` | Many-to-many via `control_risk` | Un risque mitigé doit être lié à au moins un contrôle de sécurité ; la liste est stockée dans `controls[]` du risque |
+| `risks` ↔ `controls` | Many-to-many via `control_risk` | Un risque mitigé doit être lié à au moins un contrôle de sécurité ; l'API expose la liste en `controls[]` sur le risque |
 | `users` → `risks` | Optionnel (1:N) | Chaque risque peut être attribué à un propriétaire (`owner_id`) responsable de la revue périodique |
 | `measures` → `actions` | Optionnel (1:N) | Un plan d'action créé lors de la réalisation d'un contrôle le référence via `measure_id` |
 | `actions` ↔ `controls` | Many-to-many via `action_control` | Mesures de sécurité (clauses) concernées par le plan d'action |
@@ -157,10 +157,12 @@ Les relations sont les suivantes :
 | `controls` → `exceptions` | Optionnel (1:N) | Chaque exception référence la mesure de sécurité à laquelle elle déroge via `control_id` |
 | `users` → `exceptions` | Optionnel (1:N) | Auteur (`created_by`), demandeur (`submitted_by`) et valideur (`approved_by`) de l'exception |
 
-> **Note :** il n'y a pas de table de jonction exposée pour la relation controls/measures.  
-> Les IDs sont directement embarqués dans chaque objet des deux côtés.  
+> **Note :** la table pivot `control_measure` relie les mesures de sécurité aux instances d'audit. Les tableaux
+> `measures[]` et `controls[]` décrits ci-dessous ne sont pas des colonnes : l'API les ajoute à ses réponses à partir de cette table pivot.  
 > La table pivot `control_risk` relie les risques aux mesures de sécurité.  
-> Les tables pivot `action_control`, `action_risk` et `action_user` relient les plans d'action aux mesures de sécurité, aux risques et aux responsables.
+> Les tables pivot `action_control`, `action_risk` et `action_user` relient les plans d'action aux mesures de sécurité, aux risques et aux responsables.  
+> Les tables pivot `measure_user` et `measure_user_group` affectent les instances d'audit aux utilisateurs et aux groupes ;
+> `user_user_group` liste les membres de chaque groupe (`user_groups`).
 
 ---
 
@@ -279,8 +281,8 @@ Chaque mesure de sécurité appartient à un domaine et est vérifiée par une o
 | `model` | string \| null | Modèle ou méthode opérationnelle recommandée |
 | `indicator` | string \| null | Indicateur de performance structuré (Target, Frequency, Owner) |
 | `action_plan` | string \| null | Plan d'action ou traitement associé |
-| `attributes` | array \| null | Liste d'IDs d'attributs associés ; `null` si aucun |
-| `measures` | array | Liste des IDs d'instances d'audit qui vérifient cette mesure de sécurité |
+| `attributes` | string \| null | Liste de valeurs d'attributs séparées par des espaces (ex. `#Préventive #Confidentialité`) ; `null` si aucun |
+| `measures` | array | Liste des IDs d'instances d'audit qui vérifient cette mesure de sécurité (API uniquement, depuis `control_measure`) |
 | `created_at` | datetime | Date de création |
 | `updated_at` | datetime | Date de dernière modification |
 
@@ -326,9 +328,9 @@ Elle porte les données de planification, de réalisation et de résultat.
 | `note` | number \| null | Note qualitative complémentaire |
 | `status` | integer | État courant de l'instance d'audit (voir ci-dessous) |
 | `next_id` | integer \| null | ID de l'instance suivante dans la chaîne historique (FK self) |
-| `attributes` | array \| null | Liste d'IDs d'attributs associés ; `null` si aucun |
+| `attributes` | string \| null | Liste de valeurs d'attributs séparées par des espaces (ex. `#Préventive #Confidentialité`) ; `null` si aucun |
 | `scope` | string \| null | Périmètre d'application (entité, site, système) |
-| `controls` | array | Liste des IDs de mesures de sécurité vérifiées par cette instance d'audit |
+| `controls` | array | Liste des IDs de mesures de sécurité vérifiées par cette instance d'audit (API uniquement, depuis `control_measure`) |
 | `created_at` | datetime | Date de création |
 | `updated_at` | datetime | Date de dernière modification |
 
@@ -392,7 +394,7 @@ Un risque avec le statut *Mitigé* doit être lié à au moins un contrôle de s
 | `status_comment` | string \| null | Commentaire libre sur la décision de traitement |
 | `review_frequency` | integer | Intervalle en mois entre deux revues (défaut : 12) |
 | `next_review_at` | date \| null | Date prévue de la prochaine revue |
-| `controls` | array | Liste des IDs de contrôles de sécurité liés à ce risque (via `control_risk`) |
+| `controls` | array | Liste des IDs de contrôles de sécurité liés à ce risque (API uniquement, depuis `control_risk`) |
 | `created_at` | datetime | Date de création |
 | `updated_at` | datetime | Date de dernière modification |
 | `deleted_at` | datetime \| null | Date de suppression logique |
