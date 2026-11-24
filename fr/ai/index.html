@@ -6,11 +6,11 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Information System made easy !">
+        <meta name="description" content="Open source tool to plan, track and report on the controls of an ISO 27001 ISMS">
       
       
       
-        <link rel="canonical" href="https://sourcentis.githubs.io/deming/fr/ai/">
+        <link rel="canonical" href="https://sourcentis.github.io/deming/fr/ai/">
       
       
         <link rel="prev" href="../crosswalk/">
@@ -841,7 +841,7 @@
                   
 
   
-    <a href="https://github.com/sourcentis/deming/edit/master/docs/ai.fr.md" title="Editer cette page" class="md-content__button md-icon">
+    <a href="https://github.com/sourcentis/deming/edit/main/docs/ai.fr.md" title="Editer cette page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4v-2m10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1 2.1 2.1Z"/></svg>
     </a>
@@ -850,7 +850,7 @@
     
       
     
-    <a href="https://github.com/sourcentis/deming/raw/master/docs/ai.fr.md" title="Consulter la source de cette page" class="md-content__button md-icon">
+    <a href="https://github.com/sourcentis/deming/raw/main/docs/ai.fr.md" title="Consulter la source de cette page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.15 8.15 0 0 1-1.23-2Z"/></svg>
     </a>
@@ -930,7 +930,13 @@ inchangée depuis ». Sinon, une nouvelle analyse est lancée ; elle peut prendr
 <p>la <strong>synthèse</strong> ;</p>
 </li>
 <li>
-<p>les <strong>constats</strong> : forces, faiblesses, manques de preuve et incohérences ;</p>
+<p>pour une mesure de sécurité, les <strong>bonnes pratiques et leur couverture</strong> : les éléments qu'une bonne mise en œuvre
+  devrait couvrir selon l'ISO/IEC 27002:2022, et pour chacun s'il est couvert, partiellement couvert ou non couvert
+  par les contrôles de Deming ;</p>
+</li>
+<li>
+<p>les <strong>constats</strong> : forces, faiblesses, lacunes (élément attendu qu'aucun contrôle ne vérifie), manques de preuve
+  et incohérences ;</p>
 </li>
 <li>
 <p>les <strong>recommandations</strong>, avec leur priorité, leur justification, une échéance suggérée et une référence
@@ -1065,7 +1071,7 @@ le serveur à chaque demande.</p>
 <td>✓ si assigné</td>
 <td>✓ si assigné</td>
 <td>—</td>
-<td>✓ (tous les risques)</td>
+<td>—</td>
 </tr>
 <tr>
 <td>Auditeur</td>
@@ -1091,10 +1097,8 @@ le serveur à chaque demande.</p>
   <a href="../config/#groups">groupes</a> ;</p>
 </li>
 <li>
-<p>l'audité n'a pas accès aux plans d'action, ni à leur analyse ;</p>
-</li>
-<li>
-<p>l'audité peut afficher, et donc analyser, tous les risques ;</p>
+<p>l'audité n'a pas accès aux plans d'action et aux risques, ni à leur analyse ; les risques liés ne sont pas envoyés
+  lorsqu'il analyse une mesure de sécurité ;</p>
 </li>
 <li>
 <p>l'auditeur n'a accès ni à l'icône, ni au panneau, ni aux analyses enregistrées, même pour un objet qu'il peut
@@ -1122,12 +1126,13 @@ par la passerelle.</p>
 <p>Les champs texte longs de l'objet analysé sont limités à 4 000 caractères ; ceux des objets liés (observations,
 justifications…) à 300 caractères.</p>
 <p><strong>Mesure de sécurité</strong> : clause, nom, domaine (référentiel et titre), objectif, attributs, données d'entrée, modèle,
-indicateur, plan d'action, périodicité, les 5 derniers contrôles réalisés (date de réalisation, score, observations
-et plan d'action résumés), les 5 prochains contrôles planifiés (date planifiée, statut, en retard ou non), les plans
-d'action ouverts liés (référence, nom, type, criticité, statut, avancement, échéance, en retard ou non), les risques
-liés (nom, niveau, statut de traitement), les exceptions (nom, statut, dates de début et de fin, expirée ou non,
-justification et mesures compensatoires résumées) et jusqu'à 10 correspondances avec d'autres référentiels
-(référentiel, clause, nom, type et couverture).</p>
+indicateur, plan d'action, périodicité, jusqu'à 15 contrôles rattachés, un par contrôle distinct (nom, périmètre,
+objectif, données d'entrée, modèle et indicateur résumés, périodicité, dernier résultat avec sa date, son score et ses
+observations résumées, les 3 derniers scores, prochaine date planifiée, en retard ou non), les 5 prochains contrôles
+planifiés (date planifiée, statut, en retard ou non), les plans d'action ouverts liés (référence, nom, type,
+criticité, statut, avancement, échéance, en retard ou non), les risques liés (nom, niveau, statut de traitement ; non envoyés si l'analyse est
+lancée par un audité), les exceptions (nom, statut, dates de début et de fin, expirée ou non, justification et mesures compensatoires résumées)
+et jusqu'à 10 correspondances avec d'autres référentiels (référentiel, clause, nom, type et couverture).</p>
 <p><strong>Contrôle</strong> : nom, périmètre, mesures de sécurité couvertes (clause et nom), objectif, attributs, données d'entrée,
 modèle, indicateur, périodicité, statut, date planifiée, date de réalisation, en retard ou non, score, note,
 observations, plan d'action, documents (<strong>nombre et noms de fichiers uniquement</strong>), plans d'action issus du contrôle

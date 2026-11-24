@@ -6,11 +6,11 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Information System made easy !">
+        <meta name="description" content="Open source tool to plan, track and report on the controls of an ISO 27001 ISMS">
       
       
       
-        <link rel="canonical" href="https://sourcentis.githubs.io/deming/api/">
+        <link rel="canonical" href="https://sourcentis.github.io/deming/api/">
       
       
         <link rel="prev" href="../config/">
@@ -670,6 +670,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#postput-apicontrols-optional-related-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      POST/PUT /api/controls — optional related fields
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#postput-apirisks-optional-related-fields" class="md-nav__link">
     <span class="md-ellipsis">
       POST/PUT /api/risks — optional related fields
@@ -853,7 +862,7 @@
                   
 
   
-    <a href="https://github.com/sourcentis/deming/edit/master/docs/api.md" title="Edit this page" class="md-content__button md-icon">
+    <a href="https://github.com/sourcentis/deming/edit/main/docs/api.md" title="Edit this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4v-2m10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1 2.1 2.1Z"/></svg>
     </a>
@@ -862,7 +871,7 @@
     
       
     
-    <a href="https://github.com/sourcentis/deming/raw/master/docs/api.md" title="View source of this page" class="md-content__button md-icon">
+    <a href="https://github.com/sourcentis/deming/raw/main/docs/api.md" title="View source of this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.15 8.15 0 0 1-1.23-2Z"/></svg>
     </a>
@@ -871,7 +880,7 @@
 
 <h1 id="api">API<a class="headerlink" href="#api" title="Permanent link">&para;</a></h1>
 <p>Deming can be modified or updated via a REST API.</p>
-<p>A REST API (<a href="https://fr.wikipedia.org/wiki/Representational_state_transfer">Representational State Transfer</a>)
+<p>A REST API (<a href="https://en.wikipedia.org/wiki/REST">Representational State Transfer</a>)
 is an application programming interface that respects the constraints of the REST
 architecture and enables interaction with RESTful web services.</p>
 <h2 id="installing-the-api">Installing the API<a class="headerlink" href="#installing-the-api" title="Permanent link">&para;</a></h2>
@@ -966,11 +975,12 @@ architecture and enables interaction with RESTful web services.</p>
 </table>
 <h2 id="access-rights">Access rights<a class="headerlink" href="#access-rights" title="Permanent link">&para;</a></h2>
 <p>To access the APIs, you need to identify yourself as a Deming application user.
-This user must have the "API" role.</p>
+This user must have the "API" role. No API account is created by default: create one from the
+<a href="../config/#users">user management screen</a>. The examples below use <code>api@admin.localhost</code> / <code>12345678</code>.</p>
 <p>When authentication is successful, the API sends a "token" which must be passed in the "Authorization" header of the API request.</p>
 <h2 id="response-structure-for-show-endpoints">Response structure for show endpoints<a class="headerlink" href="#response-structure-for-show-endpoints" title="Permanent link">&para;</a></h2>
 <h3 id="get-apicontrolsid-security-measure">GET /api/controls/{id} — security measure<a class="headerlink" href="#get-apicontrolsid-security-measure" title="Permanent link">&para;</a></h3>
-<p>Returns the security measure fields plus a <code>controls</code> key containing the IDs of the
+<p>Returns the security measure fields plus a <code>measures</code> key containing the IDs of the
 audit instances that verify this measure:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
@@ -978,11 +988,11 @@ audit instances that verify this measure:</p>
 <span class="w">  </span><span class="nt">&quot;clause&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;NIS2-Art.21.2.a&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Risk Analysis&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;objective&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;controls&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">]</span>
+<span class="w">  </span><span class="nt">&quot;measures&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">]</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="get-apimeasuresid-audit-instance">GET /api/measures/{id} — audit instance<a class="headerlink" href="#get-apimeasuresid-audit-instance" title="Permanent link">&para;</a></h3>
-<p>Returns the audit instance fields plus a <code>measures</code> key containing the IDs of the
+<p>Returns the audit instance fields plus a <code>controls</code> key containing the IDs of the
 security measures covered by this audit instance:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
@@ -991,7 +1001,7 @@ security measures covered by this audit instance:</p>
 <span class="w">  </span><span class="nt">&quot;realisation_date&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;periodicity&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;measures&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="w">  </span><span class="nt">&quot;controls&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="get-apirisksid-risk">GET /api/risks/{id} — risk<a class="headerlink" href="#get-apirisksid-risk" title="Permanent link">&para;</a></h3>
@@ -1011,6 +1021,21 @@ of the linked security controls and action plan items:</p>
 <span class="w">  </span><span class="nt">&quot;actions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 <span class="p">}</span>
 </code></pre></div>
+<h3 id="postput-apicontrols-optional-related-fields">POST/PUT /api/controls — optional related fields<a class="headerlink" href="#postput-apicontrols-optional-related-fields" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>measures</code></td>
+<td>Sync the list of audit instance IDs verifying this security measure</td>
+</tr>
+</tbody>
+</table>
 <h3 id="postput-apirisks-optional-related-fields">POST/PUT /api/risks — optional related fields<a class="headerlink" href="#postput-apirisks-optional-related-fields" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -1042,7 +1067,7 @@ update related records:</p>
 </thead>
 <tbody>
 <tr>
-<td><code>measures</code></td>
+<td><code>controls</code></td>
 <td>Sync the list of security measure IDs linked to this audit instance</td>
 </tr>
 <tr>
@@ -1077,7 +1102,7 @@ update related records:</p>
         <span class="nx">CURLOPT_HTTP_VERSION</span> <span class="o">=&gt;</span> <span class="nx">CURL_HTTP_VERSION_1_1</span><span class="p">,</span>
         <span class="nx">CURLOPT_CUSTOMREQUEST</span> <span class="o">=&gt;</span> <span class="s2">&quot;POST&quot;</span><span class="p">,</span>
         <span class="nx">CURLOPT_POSTFIELDS</span> <span class="o">=&gt;</span> <span class="nb">http_build_query</span><span class="p">(</span>
-            <span class="k">array</span><span class="p">(</span><span class="s2">&quot;email&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;api@admin.com&quot;</span><span class="p">,</span>
+            <span class="k">array</span><span class="p">(</span><span class="s2">&quot;email&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;api@admin.localhost&quot;</span><span class="p">,</span>
                   <span class="s2">&quot;password&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;12345678&quot;</span><span class="p">)),</span>
         <span class="nx">CURLOPT_HTTPHEADER</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
             <span class="s2">&quot;accept: application/json&quot;</span><span class="p">,</span>

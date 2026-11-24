@@ -6,11 +6,11 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Information System made easy !">
+        <meta name="description" content="Open source tool to plan, track and report on the controls of an ISO 27001 ISMS">
       
       
       
-        <link rel="canonical" href="https://sourcentis.githubs.io/deming/ai/">
+        <link rel="canonical" href="https://sourcentis.github.io/deming/ai/">
       
       
         <link rel="prev" href="../crosswalk/">
@@ -841,7 +841,7 @@
                   
 
   
-    <a href="https://github.com/sourcentis/deming/edit/master/docs/ai.md" title="Edit this page" class="md-content__button md-icon">
+    <a href="https://github.com/sourcentis/deming/edit/main/docs/ai.md" title="Edit this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4v-2m10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1 2.1 2.1Z"/></svg>
     </a>
@@ -850,7 +850,7 @@
     
       
     
-    <a href="https://github.com/sourcentis/deming/raw/master/docs/ai.md" title="View source of this page" class="md-content__button md-icon">
+    <a href="https://github.com/sourcentis/deming/raw/main/docs/ai.md" title="View source of this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.15 8.15 0 0 1-1.23-2Z"/></svg>
     </a>
@@ -926,7 +926,13 @@ unchanged since". Otherwise, a new analysis is run; it may take up to a minute.<
 <p>the <strong>summary</strong>;</p>
 </li>
 <li>
-<p>the <strong>findings</strong>: strengths, weaknesses, missing evidence and inconsistencies;</p>
+<p>for a control, the <strong>good practices and their coverage</strong>: the elements a sound implementation should cover
+  according to ISO/IEC 27002:2022, and for each one whether the measurements in Deming cover it fully, partially
+  or not at all;</p>
+</li>
+<li>
+<p>the <strong>findings</strong>: strengths, weaknesses, gaps (expected element that no measurement checks), missing evidence
+  and inconsistencies;</p>
 </li>
 <li>
 <p>the <strong>recommendations</strong>, with their priority, rationale, a suggested deadline and a standard reference;</p>
@@ -1059,7 +1065,7 @@ the server on every request.</p>
 <td>✓ if assigned</td>
 <td>✓ if assigned</td>
 <td>—</td>
-<td>✓ (all risks)</td>
+<td>—</td>
 </tr>
 <tr>
 <td>Auditor</td>
@@ -1084,10 +1090,8 @@ the server on every request.</p>
   measurement is available if the user is assigned to it directly or through one of their <a href="../config/#groups">groups</a>;</p>
 </li>
 <li>
-<p>the auditee has no access to action plans, nor to their analysis;</p>
-</li>
-<li>
-<p>the auditee can display, and therefore analyse, all risks;</p>
+<p>the auditee has no access to action plans and risks, nor to their analysis; the related risks are not sent when
+  they analyse a control;</p>
 </li>
 <li>
 <p>the auditor has access neither to the icon, nor to the panel, nor to the saved analyses, even for an object they
@@ -1114,12 +1118,13 @@ and the DPO.</p>
 gateway.</p>
 <p>Long text fields of the analysed object are limited to 4,000 characters; those of related objects (observations,
 justifications…) to 300 characters.</p>
-<p><strong>Control</strong>: clause, name, domain (framework and title), objective, attributes, input data, model,
-indicator, action plan, periodicity, the last 5 measurements made (date, score, summarized observations and action plan),
-the next 5 planned measurements (planned date, status, late or not), related open action plans (reference, name, type,
-criticality, status, progress, due date, late or not), related risks (name, level, treatment status), exceptions
-(name, status, start and end dates, expired or not, summarized justification and compensating controls) and up to 10
-mappings to other frameworks (framework, clause, name, type and coverage).</p>
+<p><strong>Control</strong>: clause, name, domain (framework and title), objective, attributes, input data, model, indicator, action
+plan, periodicity, up to 15 related measurements, one per distinct measurement (summarized name, scope, objective,
+input data, model and indicator, periodicity, last result with its date, score and summarized observations, the last 3
+scores, next planned date, late or not), the next 5 planned measurements (planned date, status, late or not), related
+open action plans (reference, name, type, criticality, status, progress, due date, late or not), related risks (name,
+level, treatment status; not sent when the analysis is run by an auditee), exceptions (name, status, start and end dates, expired or not, summarized justification and
+compensating controls) and up to 10 mappings to other frameworks (framework, clause, name, type and coverage).</p>
 <p><strong>Measurement</strong>: name, scope, covered controls (clause and name), objective, attributes, input data, model,
 indicator, periodicity, status, planned date, completion date, late or not, score, grade, observations, action plan,
 documents (<strong>number and file names only</strong>), action plans raised by the measurement (reference, name, type, criticality,

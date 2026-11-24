@@ -6,11 +6,11 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Information System made easy !">
+        <meta name="description" content="Open source tool to plan, track and report on the controls of an ISO 27001 ISMS">
       
       
       
-        <link rel="canonical" href="https://sourcentis.githubs.io/deming/de/api/">
+        <link rel="canonical" href="https://sourcentis.github.io/deming/de/api/">
       
       
         <link rel="prev" href="../config/">
@@ -670,6 +670,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#postput-apicontrols-optionale-verknupfte-felder" class="md-nav__link">
+    <span class="md-ellipsis">
+      POST/PUT /api/controls — optionale verknüpfte Felder
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#postput-apirisks-optionale-verknupfte-felder" class="md-nav__link">
     <span class="md-ellipsis">
       POST/PUT /api/risks — optionale verknüpfte Felder
@@ -853,7 +862,7 @@
                   
 
   
-    <a href="https://github.com/sourcentis/deming/edit/master/docs/api.de.md" title="Seite editieren" class="md-content__button md-icon">
+    <a href="https://github.com/sourcentis/deming/edit/main/docs/api.de.md" title="Seite editieren" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4v-2m10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1 2.1 2.1Z"/></svg>
     </a>
@@ -862,7 +871,7 @@
     
       
     
-    <a href="https://github.com/sourcentis/deming/raw/master/docs/api.de.md" title="Quellcode der Seite anzeigen" class="md-content__button md-icon">
+    <a href="https://github.com/sourcentis/deming/raw/main/docs/api.de.md" title="Quellcode der Seite anzeigen" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.15 8.15 0 0 1-1.23-2Z"/></svg>
     </a>
@@ -966,11 +975,12 @@ und die Interaktion mit RESTful-Webdiensten ermöglicht.</p>
 </table>
 <h2 id="zugriffsrechte">Zugriffsrechte<a class="headerlink" href="#zugriffsrechte" title="Permanent link">&para;</a></h2>
 <p>Um auf die APIs zuzugreifen, müssen Sie sich als Benutzer der Anwendung Deming anmelden.
-Dieser Benutzer muss die Rolle „API“ haben.</p>
+Dieser Benutzer muss die Rolle „API“ haben. Standardmäßig wird kein API-Konto angelegt: Legen Sie eines über die
+<a href="../config/#users">Benutzerverwaltung</a> an. Die folgenden Beispiele verwenden <code>api@admin.localhost</code> / <code>12345678</code>.</p>
 <p>Bei erfolgreicher Authentifizierung sendet die API ein „Token“, das im Header „Authorization“ der API-Anfrage übergeben werden muss.</p>
 <h2 id="struktur-der-antworten-der-endpunkte-show">Struktur der Antworten der Endpunkte show<a class="headerlink" href="#struktur-der-antworten-der-endpunkte-show" title="Permanent link">&para;</a></h2>
 <h3 id="get-apicontrolsid-sicherheitsmanahme">GET /api/controls/{id} — Sicherheitsmaßnahme<a class="headerlink" href="#get-apicontrolsid-sicherheitsmanahme" title="Permanent link">&para;</a></h3>
-<p>Gibt die Felder der Sicherheitsmaßnahme sowie einen Schlüssel <code>controls</code> mit den IDs der
+<p>Gibt die Felder der Sicherheitsmaßnahme sowie einen Schlüssel <code>measures</code> mit den IDs der
 Kontrollen zurück, die diese Maßnahme überprüfen:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
@@ -978,11 +988,11 @@ Kontrollen zurück, die diese Maßnahme überprüfen:</p>
 <span class="w">  </span><span class="nt">&quot;clause&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;NIS2-Art.21.2.a&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Risk Analysis&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;objective&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;controls&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">]</span>
+<span class="w">  </span><span class="nt">&quot;measures&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">]</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="get-apimeasuresid-kontrolle">GET /api/measures/{id} — Kontrolle<a class="headerlink" href="#get-apimeasuresid-kontrolle" title="Permanent link">&para;</a></h3>
-<p>Gibt die Felder der Kontrolle sowie einen Schlüssel <code>measures</code> mit den IDs der
+<p>Gibt die Felder der Kontrolle sowie einen Schlüssel <code>controls</code> mit den IDs der
 von dieser Kontrolle abgedeckten Sicherheitsmaßnahmen zurück:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
@@ -991,7 +1001,7 @@ von dieser Kontrolle abgedeckten Sicherheitsmaßnahmen zurück:</p>
 <span class="w">  </span><span class="nt">&quot;realisation_date&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;periodicity&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;measures&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="w">  </span><span class="nt">&quot;controls&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="get-apirisksid-risiko">GET /api/risks/{id} — Risiko<a class="headerlink" href="#get-apirisksid-risiko" title="Permanent link">&para;</a></h3>
@@ -1011,6 +1021,21 @@ der verknüpften Sicherheitsmaßnahmen und Aktionspläne zurück:</p>
 <span class="w">  </span><span class="nt">&quot;actions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 <span class="p">}</span>
 </code></pre></div>
+<h3 id="postput-apicontrols-optionale-verknupfte-felder">POST/PUT /api/controls — optionale verknüpfte Felder<a class="headerlink" href="#postput-apicontrols-optionale-verknupfte-felder" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Schlüssel</th>
+<th>Wirkung</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>measures</code></td>
+<td>Synchronisiert die Liste der IDs der Kontrollen, die diese Sicherheitsmaßnahme überprüfen</td>
+</tr>
+</tbody>
+</table>
 <h3 id="postput-apirisks-optionale-verknupfte-felder">POST/PUT /api/risks — optionale verknüpfte Felder<a class="headerlink" href="#postput-apirisks-optionale-verknupfte-felder" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -1042,7 +1067,7 @@ um die verknüpften Datensätze zu aktualisieren:</p>
 </thead>
 <tbody>
 <tr>
-<td><code>measures</code></td>
+<td><code>controls</code></td>
 <td>Synchronisiert die Liste der mit dieser Kontrolle verknüpften Sicherheitsmaßnahmen-IDs</td>
 </tr>
 <tr>
@@ -1077,7 +1102,7 @@ um die verknüpften Datensätze zu aktualisieren:</p>
         <span class="nx">CURLOPT_HTTP_VERSION</span> <span class="o">=&gt;</span> <span class="nx">CURL_HTTP_VERSION_1_1</span><span class="p">,</span>
         <span class="nx">CURLOPT_CUSTOMREQUEST</span> <span class="o">=&gt;</span> <span class="s2">&quot;POST&quot;</span><span class="p">,</span>
         <span class="nx">CURLOPT_POSTFIELDS</span> <span class="o">=&gt;</span> <span class="nb">http_build_query</span><span class="p">(</span>
-            <span class="k">array</span><span class="p">(</span><span class="s2">&quot;email&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;api@admin.com&quot;</span><span class="p">,</span>
+            <span class="k">array</span><span class="p">(</span><span class="s2">&quot;email&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;api@admin.localhost&quot;</span><span class="p">,</span>
                   <span class="s2">&quot;password&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;12345678&quot;</span><span class="p">)),</span>
         <span class="nx">CURLOPT_HTTPHEADER</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
             <span class="s2">&quot;accept: application/json&quot;</span><span class="p">,</span>

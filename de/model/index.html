@@ -6,11 +6,11 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Information System made easy !">
+        <meta name="description" content="Open source tool to plan, track and report on the controls of an ISO 27001 ISMS">
       
       
       
-        <link rel="canonical" href="https://sourcentis.githubs.io/deming/de/model/">
+        <link rel="canonical" href="https://sourcentis.github.io/deming/de/model/">
       
       
         <link rel="prev" href="../api/">
@@ -838,7 +838,7 @@
                   
 
   
-    <a href="https://github.com/sourcentis/deming/edit/master/docs/model.de.md" title="Seite editieren" class="md-content__button md-icon">
+    <a href="https://github.com/sourcentis/deming/edit/main/docs/model.de.md" title="Seite editieren" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4v-2m10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1 2.1 2.1Z"/></svg>
     </a>
@@ -847,7 +847,7 @@
     
       
     
-    <a href="https://github.com/sourcentis/deming/raw/master/docs/model.de.md" title="Quellcode der Seite anzeigen" class="md-content__button md-icon">
+    <a href="https://github.com/sourcentis/deming/raw/main/docs/model.de.md" title="Quellcode der Seite anzeigen" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.15 8.15 0 0 1-1.23-2Z"/></svg>
     </a>
@@ -882,8 +882,8 @@
     controls &lt;--&gt;|"control_measure (N:N)"| measures
     attributes -.-o |"optional"| controls
     attributes -.-o |"optional"| measures
-    measures --&gt;|"measure_id (0:1)"| measures
-    documents --&gt;|"document_id (1:1)"| measures
+    measures --&gt;|"next_id (0:1)"| measures
+    documents --&gt;|"measure_id (N:1)"| measures
     risks --&gt;|"owner_id (0:1)"| users
     risks &lt;--&gt;|"control_risk (N:N)"| controls
     actions --&gt;|"measure_id (0:1)"| measures
@@ -935,7 +935,7 @@
         string clause
         string objective
         array measures
-        array attributes
+        string attributes
         array risks
     }
     measures {
@@ -947,7 +947,7 @@
         date realisation_date
         int status
         array controls
-        array attributes
+        string attributes
     }
     documents {
         int id PK
@@ -1007,12 +1007,12 @@
 <tr>
 <td><code>controls</code> ↔ <code>measures</code></td>
 <td>Viele-zu-viele (bidirektional)</td>
-<td>Jede Sicherheitsmaßnahme listet ihre Kontrollen in <code>measures[]</code>; jede Kontrolle listet ihre Sicherheitsmaßnahmen in <code>controls[]</code></td>
+<td>Gespeichert in der Pivot-Tabelle <code>control_measure</code>; die API stellt sie als <code>measures[]</code> bei einer Sicherheitsmaßnahme und als <code>controls[]</code> bei einer Kontrolle bereit</td>
 </tr>
 <tr>
 <td><code>attributes</code> → <code>controls</code></td>
 <td>Optional</td>
-<td>Das Feld <code>attributes</code> einer Sicherheitsmaßnahme kann eine Liste von Attribut-IDs enthalten</td>
+<td>Das Feld <code>attributes</code> einer Sicherheitsmaßnahme kann eine durch Leerzeichen getrennte Liste von Attributwerten enthalten (mit <code>#</code> beginnende Tags)</td>
 </tr>
 <tr>
 <td><code>attributes</code> → <code>measures</code></td>
@@ -1032,7 +1032,7 @@
 <tr>
 <td><code>risks</code> ↔ <code>controls</code></td>
 <td>Viele-zu-viele über <code>control_risk</code></td>
-<td>Ein gemindertes Risiko muss mit einer oder mehreren Sicherheitsmaßnahmen verknüpft sein; die Liste wird im Risiko in <code>controls[]</code> gespeichert</td>
+<td>Ein gemindertes Risiko muss mit einer oder mehreren Sicherheitsmaßnahmen verknüpft sein; die API stellt die Liste beim Risiko als <code>controls[]</code> bereit</td>
 </tr>
 <tr>
 <td><code>users</code> → <code>risks</code></td>
@@ -1072,10 +1072,12 @@
 </tbody>
 </table>
 <blockquote>
-<p><strong>Hinweis:</strong> Für die Beziehung controls/measures gibt es keine offengelegte Verknüpfungstabelle.<br />
-Die IDs sind auf beiden Seiten direkt in jedem Objekt enthalten.<br />
+<p><strong>Hinweis:</strong> Die Pivot-Tabelle <code>control_measure</code> verknüpft die Sicherheitsmaßnahmen mit den Kontrollen. Die unten
+beschriebenen Arrays <code>measures[]</code> und <code>controls[]</code> sind keine Spalten: Die API fügt sie ihren Antworten aus dieser Pivot-Tabelle hinzu.<br />
 Die Pivot-Tabelle <code>control_risk</code> verknüpft die Risiken mit den Sicherheitsmaßnahmen.<br />
-Die Pivot-Tabellen <code>action_control</code>, <code>action_risk</code> und <code>action_user</code> verknüpfen die Aktionspläne mit den Sicherheitsmaßnahmen, den Risiken und den Verantwortlichen.</p>
+Die Pivot-Tabellen <code>action_control</code>, <code>action_risk</code> und <code>action_user</code> verknüpfen die Aktionspläne mit den Sicherheitsmaßnahmen, den Risiken und den Verantwortlichen.<br />
+Die Pivot-Tabellen <code>measure_user</code> und <code>measure_user_group</code> weisen die Kontrollen Benutzern und Gruppen zu;
+<code>user_user_group</code> enthält die Mitglieder jeder Gruppe (<code>user_groups</code>).</p>
 </blockquote>
 <hr />
 <h2 id="attributes"><strong>attributes</strong><a class="headerlink" href="#attributes" title="Permanent link">&para;</a></h2>
@@ -1338,13 +1340,13 @@ Jede Sicherheitsmaßnahme gehört zu einer Domäne und wird durch eine oder mehr
 </tr>
 <tr>
 <td><code>attributes</code></td>
-<td>array | null</td>
-<td>Liste der zugeordneten Attribut-IDs; <code>null</code>, wenn keine</td>
+<td>string | null</td>
+<td>Durch Leerzeichen getrennte Liste von Attributwerten (z. B. <code>#Präventiv #Vertraulichkeit</code>); <code>null</code>, wenn keine</td>
 </tr>
 <tr>
 <td><code>measures</code></td>
 <td>array</td>
-<td>Liste der IDs der Kontrollen, die diese Sicherheitsmaßnahme überprüfen</td>
+<td>Liste der IDs der Kontrollen, die diese Sicherheitsmaßnahme überprüfen (nur API, aus <code>control_measure</code>)</td>
 </tr>
 <tr>
 <td><code>created_at</code></td>
@@ -1459,8 +1461,8 @@ Sie enthält Planungs-, Durchführungs- und Ergebnisdaten.</p>
 </tr>
 <tr>
 <td><code>attributes</code></td>
-<td>array | null</td>
-<td>Liste der zugeordneten Attribut-IDs; <code>null</code>, wenn keine</td>
+<td>string | null</td>
+<td>Durch Leerzeichen getrennte Liste von Attributwerten (z. B. <code>#Präventiv #Vertraulichkeit</code>); <code>null</code>, wenn keine</td>
 </tr>
 <tr>
 <td><code>scope</code></td>
@@ -1470,7 +1472,7 @@ Sie enthält Planungs-, Durchführungs- und Ergebnisdaten.</p>
 <tr>
 <td><code>controls</code></td>
 <td>array</td>
-<td>Liste der IDs der von dieser Kontrolle überprüften Sicherheitsmaßnahmen</td>
+<td>Liste der IDs der von dieser Kontrolle überprüften Sicherheitsmaßnahmen (nur API, aus <code>control_measure</code>)</td>
 </tr>
 <tr>
 <td><code>created_at</code></td>
@@ -1620,7 +1622,7 @@ Ein Risiko mit Status <em>Gemindert</em> muss über die Pivot-Tabelle <code>cont
 <tr>
 <td><code>controls</code></td>
 <td>array</td>
-<td>Liste der mit diesem Risiko verknüpften Sicherheitsmaßnahmen-IDs (über <code>control_risk</code>)</td>
+<td>Liste der mit diesem Risiko verknüpften Sicherheitsmaßnahmen-IDs (nur API, aus <code>control_risk</code>)</td>
 </tr>
 <tr>
 <td><code>created_at</code></td>

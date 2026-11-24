@@ -6,11 +6,11 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Information System made easy !">
+        <meta name="description" content="Open source tool to plan, track and report on the controls of an ISO 27001 ISMS">
       
       
       
-        <link rel="canonical" href="https://sourcentis.githubs.io/deming/model/">
+        <link rel="canonical" href="https://sourcentis.github.io/deming/model/">
       
       
         <link rel="prev" href="../api/">
@@ -838,7 +838,7 @@
                   
 
   
-    <a href="https://github.com/sourcentis/deming/edit/master/docs/model.md" title="Edit this page" class="md-content__button md-icon">
+    <a href="https://github.com/sourcentis/deming/edit/main/docs/model.md" title="Edit this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4v-2m10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1 2.1 2.1Z"/></svg>
     </a>
@@ -847,7 +847,7 @@
     
       
     
-    <a href="https://github.com/sourcentis/deming/raw/master/docs/model.md" title="View source of this page" class="md-content__button md-icon">
+    <a href="https://github.com/sourcentis/deming/raw/main/docs/model.md" title="View source of this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.15 8.15 0 0 1-1.23-2Z"/></svg>
     </a>
@@ -882,8 +882,8 @@
     controls &lt;--&gt;|"control_measure (N:N)"| measures
     attributes -.-o |"optional"| controls
     attributes -.-o |"optional"| measures
-    measures --&gt;|"measure_id (0:1)"| measures
-    documents --&gt;|"document_id (1:1)"| measures
+    measures --&gt;|"next_id (0:1)"| measures
+    documents --&gt;|"measure_id (N:1)"| measures
     risks --&gt;|"owner_id (0:1)"| users
     risks &lt;--&gt;|"control_risk (N:N)"| controls
     actions --&gt;|"measure_id (0:1)"| measures
@@ -935,7 +935,7 @@
         string clause
         string objective
         array measures
-        array attributes
+        string attributes
         array risks
     }
     measures {
@@ -947,7 +947,7 @@
         date realisation_date
         int status
         array controls
-        array attributes
+        string attributes
     }
     documents {
         int id PK
@@ -1007,12 +1007,12 @@
 <tr>
 <td><code>controls</code> ↔ <code>measures</code></td>
 <td>Many-to-many (bidirectional)</td>
-<td>Each security measure lists its audit instances in <code>measures[]</code>; each audit instance lists its security measures in <code>controls[]</code></td>
+<td>Stored in the <code>control_measure</code> pivot table; the API exposes it as <code>measures[]</code> on a security measure and <code>controls[]</code> on an audit instance</td>
 </tr>
 <tr>
 <td><code>attributes</code> → <code>controls</code></td>
 <td>Optional</td>
-<td>The <code>attributes</code> field of a security measure may contain a list of attribute IDs</td>
+<td>The <code>attributes</code> field of a security measure may contain a space-separated list of attribute values (tags prefixed with <code>#</code>)</td>
 </tr>
 <tr>
 <td><code>attributes</code> → <code>measures</code></td>
@@ -1032,7 +1032,7 @@
 <tr>
 <td><code>risks</code> ↔ <code>controls</code></td>
 <td>Many-to-many via <code>control_risk</code></td>
-<td>A mitigated risk must be linked to one or more security controls; the list is stored in <code>controls[]</code> on the risk</td>
+<td>A mitigated risk must be linked to one or more security controls; the API exposes the list as <code>controls[]</code> on the risk</td>
 </tr>
 <tr>
 <td><code>users</code> → <code>risks</code></td>
@@ -1072,10 +1072,12 @@
 </tbody>
 </table>
 <blockquote>
-<p><strong>Note:</strong> There is no exposed join table for the controls/measures relationship.<br />
-IDs are directly embedded in each object on both sides.<br />
+<p><strong>Note:</strong> The <code>control_measure</code> pivot table links security measures to audit instances. The <code>measures[]</code> and
+<code>controls[]</code> arrays shown below are not columns: the API adds them to its responses from this pivot table.<br />
 The <code>control_risk</code> pivot table links risks to security controls.<br />
-The <code>action_control</code>, <code>action_risk</code> and <code>action_user</code> pivot tables link action plans to security measures, risks and owners.</p>
+The <code>action_control</code>, <code>action_risk</code> and <code>action_user</code> pivot tables link action plans to security measures, risks and owners.<br />
+The <code>measure_user</code> and <code>measure_user_group</code> pivot tables assign audit instances to users and groups;
+<code>user_user_group</code> lists the members of each group (<code>user_groups</code>).</p>
 </blockquote>
 <hr />
 <h2 id="attributes"><strong>attributes</strong><a class="headerlink" href="#attributes" title="Permanent link">&para;</a></h2>
@@ -1338,13 +1340,13 @@ Each security measure belongs to a domain and is verified by one or more audit i
 </tr>
 <tr>
 <td><code>attributes</code></td>
-<td>array | null</td>
-<td>List of associated attribute IDs; <code>null</code> if none</td>
+<td>string | null</td>
+<td>Space-separated list of attribute values (e.g., <code>#Preventive #Confidentiality</code>); <code>null</code> if none</td>
 </tr>
 <tr>
 <td><code>measures</code></td>
 <td>array</td>
-<td>List of audit instance IDs verifying this security measure</td>
+<td>List of audit instance IDs verifying this security measure (API only, from <code>control_measure</code>)</td>
 </tr>
 <tr>
 <td><code>created_at</code></td>
@@ -1459,8 +1461,8 @@ It contains planning, execution, and result data.</p>
 </tr>
 <tr>
 <td><code>attributes</code></td>
-<td>array | null</td>
-<td>List of associated attribute IDs; <code>null</code> if none</td>
+<td>string | null</td>
+<td>Space-separated list of attribute values (e.g., <code>#Preventive #Confidentiality</code>); <code>null</code> if none</td>
 </tr>
 <tr>
 <td><code>scope</code></td>
@@ -1470,7 +1472,7 @@ It contains planning, execution, and result data.</p>
 <tr>
 <td><code>controls</code></td>
 <td>array</td>
-<td>List of security measure IDs verified by this audit instance</td>
+<td>List of security measure IDs verified by this audit instance (API only, from <code>control_measure</code>)</td>
 </tr>
 <tr>
 <td><code>created_at</code></td>
@@ -1620,7 +1622,7 @@ A risk with <em>Mitigated</em> status must be linked to at least one security co
 <tr>
 <td><code>controls</code></td>
 <td>array</td>
-<td>List of security control IDs linked to this risk (via <code>control_risk</code>)</td>
+<td>List of security control IDs linked to this risk (API only, from <code>control_risk</code>)</td>
 </tr>
 <tr>
 <td><code>created_at</code></td>
