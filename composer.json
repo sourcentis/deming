@@ -5,7 +5,7 @@
     "keywords": ["laravel", "framework"],
     "license": "GPLv3",
     "require": {
-        "php": "^8.2",
+        "php": "^8.4",
         "firebase/php-jwt": "^7.0",
         "directorytree/ldaprecord-laravel": "^3.4",
         "erusev/parsedown": "^1.7",
