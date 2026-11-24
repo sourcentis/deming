@@ -180,34 +180,36 @@ window.initSelect2 = initSelect2;
 
 window.editors = {};
 
-const easyMdeIcons = {
-    'bold': 'bi bi-type-bold',
-    'italic': 'bi bi-type-italic',
-    'strikethrough': 'bi bi-type-strikethrough',
-    'heading': 'bi bi-type-h1',
-    'heading-smaller': 'bi bi-type-h2',
-    'heading-bigger': 'bi bi-type-h1',
-    'heading-1': 'bi bi-type-h1',
-    'heading-2': 'bi bi-type-h2',
-    'heading-3': 'bi bi-type-h3',
-    'code': 'bi bi-code',
-    'quote': 'bi bi-quote',
-    'ordered-list': 'bi bi-list-ol',
-    'unordered-list': 'bi bi-list-ul',
-    'check-list': 'bi bi-check2-square',
-    'clean-block': 'bi bi-eraser',
-    'link': 'bi bi-link-45deg',
-    'image': 'bi bi-image',
-    'upload-image': 'bi bi-image',
-    'table': 'bi bi-table',
-    'horizontal-rule': 'bi bi-dash-lg',
-    'preview': 'bi bi-eye',
-    'side-by-side': 'bi bi-layout-split',
-    'fullscreen': 'bi bi-arrows-fullscreen',
-    'guide': 'bi bi-question-circle',
-    'undo': 'bi bi-arrow-counterclockwise',
-    'redo': 'bi bi-arrow-clockwise',
-};
+// Barre d'outils EasyMDE avec des icônes Bootstrap Icons.
+// Font Awesome n'est pas chargé (CDN bloqué par la CSP) et EasyMDE 2.21 ne propose pas
+// d'option pour changer ses classes d'icônes : chaque bouton est donc décrit ici avec son
+// icône (option « icon »), en reprenant l'ordre, les actions et les titres par défaut.
+function easyMdeToolbar() {
+    const button = (name, action, icon, title) => ({
+        name,
+        action,
+        title,
+        icon: `<i class="bi ${icon}" aria-hidden="true"></i>`,
+    });
+    return [
+        button('bold', EasyMDE.toggleBold, 'bi-type-bold', 'Bold'),
+        button('italic', EasyMDE.toggleItalic, 'bi-type-italic', 'Italic'),
+        button('heading', EasyMDE.toggleHeadingSmaller, 'bi-type-h1', 'Heading'),
+        '|',
+        button('quote', EasyMDE.toggleBlockquote, 'bi-quote', 'Quote'),
+        button('unordered-list', EasyMDE.toggleUnorderedList, 'bi-list-ul', 'Generic List'),
+        button('ordered-list', EasyMDE.toggleOrderedList, 'bi-list-ol', 'Numbered List'),
+        '|',
+        button('link', EasyMDE.drawLink, 'bi-link-45deg', 'Create Link'),
+        button('image', EasyMDE.drawImage, 'bi-image', 'Insert Image'),
+        '|',
+        { ...button('preview', EasyMDE.togglePreview, 'bi-eye', 'Toggle Preview'), noDisable: true },
+        { ...button('side-by-side', EasyMDE.toggleSideBySide, 'bi-layout-split', 'Toggle Side by Side'), noDisable: true },
+        { ...button('fullscreen', EasyMDE.toggleFullScreen, 'bi-arrows-fullscreen', 'Toggle Fullscreen'), noDisable: true },
+        '|',
+        { ...button('guide', 'https://www.markdownguide.org/basic-syntax/', 'bi-question-circle', 'Markdown Guide'), noDisable: true },
+    ];
+}
 document.addEventListener("DOMContentLoaded", function () {
     // EasyMDE
     document.querySelectorAll('.easymde').forEach(function (textarea) {
@@ -221,7 +223,7 @@ document.addEventListener("DOMContentLoaded", function () {
             sideBySideFullscreen: false,
             // Pas de Font Awesome depuis un CDN (bloqué par la CSP) : icônes Bootstrap Icons
             autoDownloadFontAwesome: false,
-            iconClassMap: easyMdeIcons,
+            toolbar: easyMdeToolbar(),
         });
         // Stocke l'instance par id pour un accès futur
         if (textarea.id) {

@@ -47,7 +47,8 @@ Die Anfragen und URIs jeder API sind in der folgenden Tabelle aufgeführt.
 ## Zugriffsrechte
 
 Um auf die APIs zuzugreifen, müssen Sie sich als Benutzer der Anwendung Deming anmelden.
-Dieser Benutzer muss die Rolle „API“ haben.
+Dieser Benutzer muss die Rolle „API“ haben. Standardmäßig wird kein API-Konto angelegt: Legen Sie eines über die
+[Benutzerverwaltung](config.de.md#users) an. Die folgenden Beispiele verwenden `api@admin.localhost` / `12345678`.
 
 Bei erfolgreicher Authentifizierung sendet die API ein „Token“, das im Header „Authorization“ der API-Anfrage übergeben werden muss.
 
@@ -55,7 +56,7 @@ Bei erfolgreicher Authentifizierung sendet die API ein „Token“, das im Heade
 
 ### GET /api/controls/{id} — Sicherheitsmaßnahme
 
-Gibt die Felder der Sicherheitsmaßnahme sowie einen Schlüssel `controls` mit den IDs der
+Gibt die Felder der Sicherheitsmaßnahme sowie einen Schlüssel `measures` mit den IDs der
 Kontrollen zurück, die diese Maßnahme überprüfen:
 
 ```json
@@ -65,13 +66,13 @@ Kontrollen zurück, die diese Maßnahme überprüfen:
   "clause": "NIS2-Art.21.2.a",
   "name": "Risk Analysis",
   "objective": "...",
-  "controls": [1, 2, 3]
+  "measures": [1, 2, 3]
 }
 ```
 
 ### GET /api/measures/{id} — Kontrolle
 
-Gibt die Felder der Kontrolle sowie einen Schlüssel `measures` mit den IDs der
+Gibt die Felder der Kontrolle sowie einen Schlüssel `controls` mit den IDs der
 von dieser Kontrolle abgedeckten Sicherheitsmaßnahmen zurück:
 
 ```json
@@ -82,7 +83,7 @@ von dieser Kontrolle abgedeckten Sicherheitsmaßnahmen zurück:
   "realisation_date": null,
   "status": 0,
   "periodicity": 12,
-  "measures": [1]
+  "controls": [1]
 }
 ```
 
@@ -107,6 +108,12 @@ der verknüpften Sicherheitsmaßnahmen und Aktionspläne zurück:
 }
 ```
 
+### POST/PUT /api/controls — optionale verknüpfte Felder
+
+| Schlüssel | Wirkung |
+|---|---|
+| `measures` | Synchronisiert die Liste der IDs der Kontrollen, die diese Sicherheitsmaßnahme überprüfen |
+
 ### POST/PUT /api/risks — optionale verknüpfte Felder
 
 | Schlüssel | Wirkung |
@@ -121,7 +128,7 @@ um die verknüpften Datensätze zu aktualisieren:
 
 | Schlüssel | Wirkung |
 |---|---|
-| `measures` | Synchronisiert die Liste der mit dieser Kontrolle verknüpften Sicherheitsmaßnahmen-IDs |
+| `controls` | Synchronisiert die Liste der mit dieser Kontrolle verknüpften Sicherheitsmaßnahmen-IDs |
 | `actions` | Weist dieser Kontrolle Aktions-IDs zu |
 | `documents` | Weist dieser Kontrolle Dokument-IDs zu |
 | `users` | Synchronisiert die Liste der zugewiesenen Benutzer-IDs |
@@ -145,7 +152,7 @@ Hier einige Beispiele für die Verwendung der API mit PHP:
         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
         CURLOPT_CUSTOMREQUEST => "POST",
         CURLOPT_POSTFIELDS => http_build_query(
-            array("email" => "api@admin.com",
+            array("email" => "api@admin.localhost",
                   "password" => "12345678")),
         CURLOPT_HTTPHEADER => array(
             "accept: application/json",

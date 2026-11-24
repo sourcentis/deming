@@ -28,7 +28,7 @@ This screen displays the information for an exception:
 
 * The current status;
 
-* The linked control (with a link to the corresponding [security measure](measures.md/#show));
+* The linked control (with a link to the corresponding [security measure](measures.md#show));
 
 * The exception description;
 

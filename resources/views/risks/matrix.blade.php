@@ -23,7 +23,6 @@
             </div>
 
             {{-- Propriétaire --}}
-            @if (Auth::user()->role !== 3)
             <div class="col-lg-2 col-md-3">
                 <select class="form-select select2" id="filter-owner">
                     <option value="none">-- {{ trans("cruds.risk.fields.choose_owner") }} --</option>
@@ -35,7 +34,6 @@
                     @endforeach
                 </select>
             </div>
-            @endif
 
             {{-- En retard --}}
             <div class="col-lg-2 col-md-3 mt-2">

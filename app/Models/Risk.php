@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\DB;
 
 /**
  * Risque de sécurité de l'information.
@@ -120,17 +119,12 @@ class Risk extends Model
     // -------------------------------------------------------------------------
 
     /**
-     * Access rule of RiskController@show: an auditor only sees the risks he owns.
-     * Every other authenticated role sees all risks.
+     * Access rule of the risk register: administrators, users and auditors
+     * (read-only) see all risks; auditees and API accounts have no access.
      */
     public static function isViewableBy(User $user, int $id): bool
     {
-        if ($user->isAuditor()) {
-            $ownerId = DB::table('risks')->where('id', $id)->value('owner_id');
-            return $ownerId !== null && (int) $ownerId === $user->id;
-        }
-
-        return true;
+        return in_array($user->role, [User::ROLE_ADMIN, User::ROLE_USER, User::ROLE_AUDITOR], true);
     }
 
     /** @return BelongsTo<User, $this> */

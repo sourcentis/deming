@@ -34,18 +34,15 @@ class RiskController extends Controller
 
     public function index(Request $request): View
     {
-        $user  = Auth::user();
-        $query = Risk::with(['owner'])->orderByDesc('updated_at');
+        $this->authorizeRead();
 
-        if ($user->role === 3) {
-            $query->ownedBy($user->id);
-        }
+        $query = Risk::with(['owner'])->orderByDesc('updated_at');
 
         if ($request->filled('status') && array_key_exists($request->status, Risk::availableStatuses())) {
             $query->byStatus($request->status);
         }
 
-        if ($request->filled('owner') && $user->role !== 3) {
+        if ($request->filled('owner')) {
             $query->ownedBy((int) $request->owner);
         }
 
@@ -98,6 +95,8 @@ class RiskController extends Controller
 
     public function create(): View
     {
+        $this->authorizeWrite();
+
         $users         = User::query()->orderBy('name')->get();
         $controls      = Control::query()->orderBy('name')->get();
         $actions       = Action::query()->orderBy('name')->get();
@@ -110,6 +109,8 @@ class RiskController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
+        $this->authorizeWrite();
+
         $validated = $this->validateRisk($request);
 
         $risk = Risk::query()->create($validated);
@@ -132,8 +133,9 @@ class RiskController extends Controller
 
     public function show(int $id): View
     {
+        $this->authorizeRead();
+
         $risk = Risk::query()->findOrFail($id);
-        $this->authorizeView($risk);
 
         $risk->load(['owner', 'controls', 'actions']);
 
@@ -148,6 +150,8 @@ class RiskController extends Controller
 
     public function edit(int $id): View
     {
+        $this->authorizeWrite();
+
         $risk     = Risk::query()->findOrFail($id);
         $users    = User::query()->orderBy('name')->get();
         $controls = Control::query()->orderBy('name')->get();
@@ -163,6 +167,8 @@ class RiskController extends Controller
 
     public function update(Request $request): RedirectResponse
     {
+        $this->authorizeWrite();
+
         $risk      = Risk::query()->findOrFail($request->input('id'));
         $validated = $this->validateRisk($request);
 
@@ -206,6 +212,8 @@ class RiskController extends Controller
 
     public function matrix(Request $request): View
     {
+        $this->authorizeRead();
+
         $query = Risk::with('owner');
 
         if ($request->filled('status') && array_key_exists($request->status, Risk::availableStatuses())) {
@@ -331,11 +339,25 @@ class RiskController extends Controller
         }
     }
 
-    private function authorizeView(Risk $risk): void
+    /**
+     * Read access: administrators, users and auditors (read-only).
+     * Auditees and API accounts have no access to the risk register.
+     */
+    private function authorizeRead(): void
     {
-        if (! Risk::isViewableBy(Auth::user(), $risk->id)) {
-            abort(403);
-        }
+        abort_unless(Risk::isViewableBy(Auth::user(), 0), Response::HTTP_FORBIDDEN, '403 Forbidden');
+    }
+
+    /**
+     * Write access: administrators and users only.
+     */
+    private function authorizeWrite(): void
+    {
+        abort_unless(
+            Auth::user()->isAdmin() || Auth::user()->isUser(),
+            Response::HTTP_FORBIDDEN,
+            '403 Forbidden'
+        );
     }
 
     public function export()

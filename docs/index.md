@@ -6,7 +6,7 @@ Deming is an Open Source tool designed to help CISOs maintain their information 
 
 
 Deming offers features such as [security measures management](measures.md),
-the [planning of controls](plan.md), the creation of [control sheets](controls.md/#sheet), the recording of evidence,
+the [planning of controls](plan.md), the creation of [control sheets](controls.md#sheet), the recording of evidence,
 monitoring [action plans](actions.md) as well as [dashboards](dashboards.md) and
 [ISMS management reports](config.md#reports) to help CISOs monitor the maintenance of information security measures.
 

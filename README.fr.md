@@ -4,7 +4,7 @@
 
 [![Latest Release](https://img.shields.io/github/release/sourcentis/deming.svg?style=flat-square)](https://github.com/sourcentis/deming/releases/latest)
 [![License](https://img.shields.io/badge/license-GPL--3.0-blue.svg?style=flat-square)](https://github.com/sourcentis/deming/blob/main/LICENSE)
-[![PHP](https://img.shields.io/badge/PHP-8.2%2B-777BB4.svg?style=flat-square&logo=php)](https://www.php.net)
+[![PHP](https://img.shields.io/badge/PHP-8.4%2B-777BB4.svg?style=flat-square&logo=php)](https://www.php.net)
 [![Laravel](https://img.shields.io/badge/Laravel-13-FF2D20.svg?style=flat-square&logo=laravel)](https://laravel.com)
 [![CI](https://img.shields.io/github/actions/workflow/status/sourcentis/deming/ci.yaml?style=flat-square&label=CI)](https://github.com/sourcentis/deming/actions/workflows/ci.yaml)
 [![Docker](https://img.shields.io/github/actions/workflow/status/sourcentis/deming/docker.yaml?style=flat-square&label=Docker)](https://github.com/sourcentis/deming/actions/workflows/docker.yaml)
@@ -21,7 +21,7 @@ Reconnu pour sa qualité et son impact, Deming est aujourd’hui le meilleur out
 
 ### :question: Qu’est-ce que Deming ?
 
-**Deming** est un outil puissant et intuitif conçu pour la gestion, la planification, le suivi et le reporting de l’efficacité des mesures de sécurité. Conformément à la norme ISO/IEC 27001:2013, chapitre 9, **Deming** vous aide à garantir une sécurité adaptée et proportionnée, tout en respectant les standards les plus exigeants.
+**Deming** est un outil puissant et intuitif conçu pour la gestion, la planification, le suivi et le reporting de l’efficacité des mesures de sécurité. Conformément à la norme ISO/IEC 27001:2022, chapitre 9, **Deming** vous aide à garantir une sécurité adaptée et proportionnée, tout en respectant les standards les plus exigeants.
 
 ### :dart: Pourquoi contrôler ?
 
@@ -78,16 +78,22 @@ Selon la norme ISO 27001, chapitre 9.1, il est impératif d'évaluer les perform
 
 | File                                 | Description                                                                    |
 |--------------------------------------|--------------------------------------------------------------------------------|
-| DORA.en.xlsx                         | [Digital Operational Resilience Act](https://www.esma.europa.eu/esmas-activities/digital-finance-and-innovation/digital-operational-resilience-act-dora)                                             |
+| DORA_en.xlsx                         | [Digital Operational Resilience Act, in English](https://www.esma.europa.eu/esmas-activities/digital-finance-and-innovation/digital-operational-resilience-act-dora) |
+| DORA_fr.xlsx                         | [Digital Operational Resilience Act, in French](https://www.esma.europa.eu/esmas-activities/digital-finance-and-innovation/digital-operational-resilience-act-dora) |
+| HDS.fr.xlsx                          | [Hébergeur de Données de Santé](https://esante.gouv.fr/services/hebergeurs-de-donnees-de-sante/les-referentiels-de-la-procedure-de-certification) |
+| HDS-V2.fr.xlsx                       | [Hébergeur de Données de Santé, v2](https://esante.gouv.fr/services/hebergeurs-de-donnees-de-sante/les-referentiels-de-la-procedure-de-certification) |
+| ISO22301-2019.fr.xlsx                | ISO/IEC 22301, 2019, in French                                                 |
 | ISO27001-2013.fr.xlsx                | ISO/IEC 27001, 2013, in French                                                 |
 | ISO27001-2022.en.xlsx                | [ISO/IEC 27001, 2022, in English](https://www.iso.org/standard/27001)          |
 | ISO27001-2022.fr.xlsx                | [ISO/IEC 27001, 2022, in French](https://www.iso.org/fr/standard/27001)        |
 | ISO27001-2023.de.xlsx                | [ISO/IEC 27001, 2023, in German](https://www.dinmedia.de/de/norm/din-en-iso-iec-27001/370680635) |
 | MPA-5.2-Best-Practices.xlsx          | [Motion Picture Association Best Practices, v5.2](https://www.ttpn.org/wp-content/uploads/2023/08/MPA-Content-Security-Best-Practices-v5.2_Aug30_2023-Release.xlsx) |
 | MPA-5.3-Best-Practices.xlsx          | [Motion Picture Association Best Practices, v5.3](https://www.ttpn.org/wp-content/uploads/2025/01/MPA-Content-Security-Best-Practices-v5.3_Jan6_2025_English.xlsx) |
+| mvsp-3.0.xlsx                        | [Minimum Viable Security Product, v3.0](https://mvsp.dev/mvsp.en/)             |
 | NIS2.en.xlsx                         | [NIS 2 directive requirements](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32022L2555) |
+| NIS2.de.xlsx                         | [NIS 2 directive requirements](https://www.recht.bund.de/bgbl/1/2025/301/VO) |
 | NIS2.fr.xlsx                         | [NIS 2 directive requirements](https://eur-lex.europa.eu/legal-content/FR/TXT/?uri=CELEX%3A32022L2555) |
-| MVSP-3.0.xlsx                        | [Minimum Viable Security Product, v3.0](https://mvsp.dev/mvsp.en/)             |
+| NIS2-ReCyF-2.5-FR.xlsx               | [ANSSI ReCyF 2.5 (NIS 2 requirements, France)](https://messervices.cyber.gouv.fr/nis2#exigences) |
 | PCI.DSS.4.0.EN.xlsx                  | [PCI DSS, v4.0, in English](https://blog.pcisecuritystandards.org/pci-dss-v4-0-resource-hub) |
 | sp800-53r5-control-catalog-full.xlsx | [NIST SP 800-53 Rev. 5](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final)    |
 

@@ -33,7 +33,7 @@ Die Liste kann gefiltert werden nach:
 - **Verantwortlicher** — die für die Überprüfung des Risikos verantwortliche Person.
 - **Überprüfung überfällig** — zeigt nur die Risiken an, deren nächstes Überprüfungsdatum überschritten ist.
 
-> Benutzer mit der Rolle **Auditierte** sehen nur die Risiken, für die sie verantwortlich sind.
+> Auditoren sehen alle Risiken, nur lesend. Benutzer mit der Rolle **Auditierte** haben keinen Zugriff auf das Risikoregister.
 
 Für jedes Risiko zeigt die Liste:
 
@@ -240,4 +240,4 @@ Die Risikoliste ist in die bestehenden Module von Deming integriert:
 | Administrator | Lesen, Erstellen, Ändern, Löschen, Konfiguration der Bewertung |
 | User | Lesen, Erstellen, Ändern |
 | Auditor | Nur Lesen (alle Risiken) |
-| Auditierte | Lesen und Ändern nur der Risiken, für die sie verantwortlich sind |
+| Auditierte | Kein Zugriff |

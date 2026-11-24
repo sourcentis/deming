@@ -147,6 +147,21 @@ test('action context counts owners and risk context flags the owner', function (
     expect(AiSubjects::context('risk', $risk)['a_un_proprietaire'])->toBeTrue();
 });
 
+test('the related risks of a security measure are not sent for an auditee', function () {
+    $control = aiCreateSubject('control');
+    $risk = Risk::factory()->create(['name' => 'Ransomware on the ERP']);
+    $risk->controls()->sync([$control->id]);
+
+    expect(AiSubjects::context('control', $control)['risques_lies'])->toHaveCount(1)
+        ->and(json_encode(AiSubjects::context('control', $control)))->toContain('Ransomware on the ERP');
+
+    $this->actingAs(User::factory()->auditee()->create());
+    $context = AiSubjects::context('control', $control);
+
+    expect($context)->not->toHaveKey('risques_lies')
+        ->and(json_encode($context))->not->toContain('Ransomware on the ERP');
+});
+
 test('documents are sent by name only', function () {
     $measure = aiCreateSubject('measure');
     DB::table('documents')->insert([

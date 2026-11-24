@@ -29,8 +29,8 @@ flowchart LR
     controls <-->|"control_measure (N:N)"| measures
     attributes -.-o |"optional"| controls
     attributes -.-o |"optional"| measures
-    measures -->|"measure_id (0:1)"| measures
-    documents -->|"document_id (1:1)"| measures
+    measures -->|"next_id (0:1)"| measures
+    documents -->|"measure_id (N:1)"| measures
     risks -->|"owner_id (0:1)"| users
     risks <-->|"control_risk (N:N)"| controls
     actions -->|"measure_id (0:1)"| measures
@@ -86,7 +86,7 @@ erDiagram
         string clause
         string objective
         array measures
-        array attributes
+        string attributes
         array risks
     }
     measures {
@@ -98,7 +98,7 @@ erDiagram
         date realisation_date
         int status
         array controls
-        array attributes
+        string attributes
     }
     documents {
         int id PK
@@ -143,12 +143,12 @@ Die Beziehungen sind wie folgt:
 | --- | --- | --- |
 | `domains` → `controls` | Fremdschlüssel (1:N) | Jede Sicherheitsmaßnahme verweist über `domain_id` auf ihre Domäne |
 | `frameworks` → `domains` | Optional (1:N) über den Code | Das Feld `framework` einer Domäne enthält den `code` ihres Rahmenwerks; die Zeile in `frameworks` ergänzt dessen Metadaten |
-| `controls` ↔ `measures` | Viele-zu-viele (bidirektional) | Jede Sicherheitsmaßnahme listet ihre Kontrollen in `measures[]`; jede Kontrolle listet ihre Sicherheitsmaßnahmen in `controls[]` |
-| `attributes` → `controls` | Optional | Das Feld `attributes` einer Sicherheitsmaßnahme kann eine Liste von Attribut-IDs enthalten |
+| `controls` ↔ `measures` | Viele-zu-viele (bidirektional) | Gespeichert in der Pivot-Tabelle `control_measure`; die API stellt sie als `measures[]` bei einer Sicherheitsmaßnahme und als `controls[]` bei einer Kontrolle bereit |
+| `attributes` → `controls` | Optional | Das Feld `attributes` einer Sicherheitsmaßnahme kann eine durch Leerzeichen getrennte Liste von Attributwerten enthalten (mit `#` beginnende Tags) |
 | `attributes` → `measures` | Optional | Ebenso für die Kontrollen |
 | `measures` → `measures` | Selbstreferenz über `next_id` | Ermöglicht die Verkettung aufeinanderfolgender Kampagnen derselben Kontrolle |
 | `documents` → `measures` | Optional (1:N) | Dokumente und Nachweise sind über `measure_id` an die Kontrollen angehängt |
-| `risks` ↔ `controls` | Viele-zu-viele über `control_risk` | Ein gemindertes Risiko muss mit einer oder mehreren Sicherheitsmaßnahmen verknüpft sein; die Liste wird im Risiko in `controls[]` gespeichert |
+| `risks` ↔ `controls` | Viele-zu-viele über `control_risk` | Ein gemindertes Risiko muss mit einer oder mehreren Sicherheitsmaßnahmen verknüpft sein; die API stellt die Liste beim Risiko als `controls[]` bereit |
 | `users` → `risks` | Optional (1:N) | Jedem Risiko kann ein Verantwortlicher (`owner_id`) für die periodische Überprüfung zugewiesen werden |
 | `measures` → `actions` | Optional (1:N) | Ein bei der Durchführung einer Kontrolle erstellter Aktionsplan verweist über `measure_id` auf sie |
 | `actions` ↔ `controls` | Viele-zu-viele über `action_control` | Vom Aktionsplan betroffene Sicherheitsmaßnahmen (Klauseln) |
@@ -157,10 +157,12 @@ Die Beziehungen sind wie folgt:
 | `controls` → `exceptions` | Optional (1:N) | Jede Ausnahme verweist über `control_id` auf die Sicherheitsmaßnahme, von der sie abweicht |
 | `users` → `exceptions` | Optional (1:N) | Ersteller (`created_by`), Einreicher (`submitted_by`) und Prüfer (`approved_by`) der Ausnahme |
 
-> **Hinweis:** Für die Beziehung controls/measures gibt es keine offengelegte Verknüpfungstabelle.  
-> Die IDs sind auf beiden Seiten direkt in jedem Objekt enthalten.  
+> **Hinweis:** Die Pivot-Tabelle `control_measure` verknüpft die Sicherheitsmaßnahmen mit den Kontrollen. Die unten
+> beschriebenen Arrays `measures[]` und `controls[]` sind keine Spalten: Die API fügt sie ihren Antworten aus dieser Pivot-Tabelle hinzu.  
 > Die Pivot-Tabelle `control_risk` verknüpft die Risiken mit den Sicherheitsmaßnahmen.  
-> Die Pivot-Tabellen `action_control`, `action_risk` und `action_user` verknüpfen die Aktionspläne mit den Sicherheitsmaßnahmen, den Risiken und den Verantwortlichen.
+> Die Pivot-Tabellen `action_control`, `action_risk` und `action_user` verknüpfen die Aktionspläne mit den Sicherheitsmaßnahmen, den Risiken und den Verantwortlichen.  
+> Die Pivot-Tabellen `measure_user` und `measure_user_group` weisen die Kontrollen Benutzern und Gruppen zu;
+> `user_user_group` enthält die Mitglieder jeder Gruppe (`user_groups`).
 
 ---
 
@@ -279,8 +281,8 @@ Jede Sicherheitsmaßnahme gehört zu einer Domäne und wird durch eine oder mehr
 | `model` | string \| null | Empfohlenes Betriebsmodell oder empfohlene Methode |
 | `indicator` | string \| null | Strukturierter Leistungsindikator (Ziel, Häufigkeit, Verantwortlicher) |
 | `action_plan` | string \| null | Zugehöriger Aktions- oder Behandlungsplan |
-| `attributes` | array \| null | Liste der zugeordneten Attribut-IDs; `null`, wenn keine |
-| `measures` | array | Liste der IDs der Kontrollen, die diese Sicherheitsmaßnahme überprüfen |
+| `attributes` | string \| null | Durch Leerzeichen getrennte Liste von Attributwerten (z. B. `#Präventiv #Vertraulichkeit`); `null`, wenn keine |
+| `measures` | array | Liste der IDs der Kontrollen, die diese Sicherheitsmaßnahme überprüfen (nur API, aus `control_measure`) |
 | `created_at` | datetime | Erstellungsdatum |
 | `updated_at` | datetime | Datum der letzten Änderung |
 
@@ -326,9 +328,9 @@ Sie enthält Planungs-, Durchführungs- und Ergebnisdaten.
 | `note` | number \| null | Zusätzliche qualitative Note |
 | `status` | integer | Aktueller Status der Kontrolle (siehe unten) |
 | `next_id` | integer \| null | ID der nächsten Kontrolle in der historischen Kette (Selbst-FK) |
-| `attributes` | array \| null | Liste der zugeordneten Attribut-IDs; `null`, wenn keine |
+| `attributes` | string \| null | Durch Leerzeichen getrennte Liste von Attributwerten (z. B. `#Präventiv #Vertraulichkeit`); `null`, wenn keine |
 | `scope` | string \| null | Geltungsbereich (Einheit, Standort, System) |
-| `controls` | array | Liste der IDs der von dieser Kontrolle überprüften Sicherheitsmaßnahmen |
+| `controls` | array | Liste der IDs der von dieser Kontrolle überprüften Sicherheitsmaßnahmen (nur API, aus `control_measure`) |
 | `created_at` | datetime | Erstellungsdatum |
 | `updated_at` | datetime | Datum der letzten Änderung |
 
@@ -392,7 +394,7 @@ Ein Risiko mit Status *Gemindert* muss über die Pivot-Tabelle `control_risk` mi
 | `status_comment` | string \| null | Freier Kommentar zur Behandlungsentscheidung |
 | `review_frequency` | integer | Intervall in Monaten zwischen zwei Überprüfungen (Standard: 12) |
 | `next_review_at` | date \| null | Geplantes Datum der nächsten Überprüfung |
-| `controls` | array | Liste der mit diesem Risiko verknüpften Sicherheitsmaßnahmen-IDs (über `control_risk`) |
+| `controls` | array | Liste der mit diesem Risiko verknüpften Sicherheitsmaßnahmen-IDs (nur API, aus `control_risk`) |
 | `created_at` | datetime | Erstellungsdatum |
 | `updated_at` | datetime | Datum der letzten Änderung |
 | `deleted_at` | datetime \| null | Datum der logischen Löschung |

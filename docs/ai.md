@@ -134,7 +134,7 @@ the server on every request.
 |---|---|---|---|---|
 | Administrator | ✓ | ✓ | ✓ | ✓ |
 | User | ✓ (depending on assignment and group view) | ✓ (same) | ✓ | ✓ |
-| Auditee | ✓ if assigned | ✓ if assigned | — | ✓ (all risks) |
+| Auditee | ✓ if assigned | ✓ if assigned | — | — |
 | Auditor | — | — | — | — |
 | API | — | — | — | — |
 
@@ -143,9 +143,8 @@ Details:
 * in group view, a control is only available if the user is directly assigned to one of its measurements; a
   measurement is available if the user is assigned to it directly or through one of their [groups](config.md#groups);
 
-* the auditee has no access to action plans, nor to their analysis;
-
-* the auditee can display, and therefore analyse, all risks;
+* the auditee has no access to action plans and risks, nor to their analysis; the related risks are not sent when
+  they analyse a control;
 
 * the auditor has access neither to the icon, nor to the panel, nor to the saved analyses, even for an object they
   can display.
@@ -176,7 +175,7 @@ plan, periodicity, up to 15 related measurements, one per distinct measurement (
 input data, model and indicator, periodicity, last result with its date, score and summarized observations, the last 3
 scores, next planned date, late or not), the next 5 planned measurements (planned date, status, late or not), related
 open action plans (reference, name, type, criticality, status, progress, due date, late or not), related risks (name,
-level, treatment status), exceptions (name, status, start and end dates, expired or not, summarized justification and
+level, treatment status; not sent when the analysis is run by an auditee), exceptions (name, status, start and end dates, expired or not, summarized justification and
 compensating controls) and up to 10 mappings to other frameworks (framework, clause, name, type and coverage).
 
 **Measurement**: name, scope, covered controls (clause and name), objective, attributes, input data, model,

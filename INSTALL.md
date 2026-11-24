@@ -2,7 +2,10 @@
 
 ## Recommended configuration
 
-- OS : Debian 12 (stable) — recommended. Also tested on Ubuntu 24.04 LTS and RedHat-family distributions (RHEL, Rocky Linux, AlmaLinux 9).
+- OS : Debian 13 (stable) — recommended. Also works on Ubuntu LTS and RedHat-family distributions (RHEL, Rocky Linux, AlmaLinux).
+- PHP : 8.4 or later (required by the locked dependencies). Debian 13 ships PHP 8.4; on Debian 12 or Ubuntu 24.04,
+  whose default PHP is older, install PHP 8.4 from the [sury.org](https://deb.sury.org/) repository / `ondrej/php` PPA,
+  and on RedHat-family distributions from the [Remi](https://rpms.remirepo.net/) repository.
 - RAM : 2G
 - Disk : 20G
 - VCPU 2
@@ -197,14 +200,14 @@ Add the following lines:
     CustomLog ${APACHE_LOG_DIR}/access.log combined
     </VirtualHost>
 
-Save and close the file when finished. Next, activate the Apache virtual host and rewrite module with the following commands (replace `8.2` with your installed PHP version — `php -v` — e.g. `8.3` on Ubuntu 24.04):
+Save and close the file when finished. Next, activate the Apache virtual host and rewrite module with the following commands (replace `8.4` with your installed PHP version — `php -v`):
 
     sudo a2enmod rewrite
     sudo a2dissite 000-default.conf
     sudo a2ensite deming.conf
-    sudo a2dismod php8.2
+    sudo a2dismod php8.4
     sudo a2enmod proxy_fcgi setenvif
-    sudo a2enconf php8.2-fpm
+    sudo a2enconf php8.4-fpm
 
 Finally, restart the Apache service to activate the changes:
 
@@ -241,7 +244,7 @@ and add the following content:
 
  	    # If you use php-fpm, adapt the socket's path (PHP version) below and uncomment
 	    #<FilesMatch \.php$>
-	    #    SetHandler "proxy:unix:/var/run/php/php8.2-fpm.sock|fcgi://localhost/"
+	    #    SetHandler "proxy:unix:/var/run/php/php8.4-fpm.sock|fcgi://localhost/"
 	    #</FilesMatch>
 
     	    ErrorLog ${APACHE_LOG_DIR}/error.log
@@ -265,7 +268,7 @@ and add the following content:
 ## PHP
 
 You need to set the value of upload_max_filesize and post_max_size in your php.ini
-(/etc/php/8.2/fpm/php.ini — adjust the version to match `php -v`) :
+(/etc/php/8.4/fpm/php.ini — adjust the version to match `php -v`) :
 
     ; Maximum allowed size for uploaded files.
     upload_max_filesize = 10M

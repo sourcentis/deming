@@ -207,4 +207,4 @@ Mit diesem Blatt können die gemachten Beobachtungen beschrieben, Bildschirmfoto
 
 [![Screenshot](images/report3.png)](images/report3.png)
 
-Das Kontrollblatt kann an die Dokumentvorlage Ihrer Organisation [angepasst](config.de.md#documents) werden.
+Das Kontrollblatt kann an die Dokumentvorlage Ihrer Organisation [angepasst](config.de.md#templates) werden.

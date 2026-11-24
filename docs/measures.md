@@ -11,11 +11,11 @@ The "Column visibility", "Copy" and "Export" buttons let you choose the displaye
 
 Clicking on :
 
-* the domain, you arrive at the [chosen domain definition](config.md/#domains)
+* the domain, you arrive at the [chosen domain definition](config.md#domains)
 
 * the clause, you arrive on the [description of the control](#show)
 
-* the number of measurements, you arrive to the [list of measurements](controls.md/#list) of this control
+* the number of measurements, you arrive to the [list of measurements](controls.md#list) of this control
 
 * the "plan" button takes you to the [control planning](#plan)
 
@@ -46,7 +46,7 @@ A control consists of:
 
 * an indicator (green, orange, red); and
 
-* an action plan to be applied if control of this control fails.
+* an action plan to be applied if a measurement of this control fails.
 
 The screen also lists the measurements of this control (scope, planning date, completion date and score), and the
 [correspondences](crosswalk.md) of this control with the controls of other frameworks.
@@ -102,7 +102,7 @@ When you click:
 
 ## Schedule a control <a name="plan"></a>
 
-This screen is used to plan a control based on a control.
+This screen is used to plan a measurement based on a control.
 
 The screen contains:
 

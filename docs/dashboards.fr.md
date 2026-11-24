@@ -45,7 +45,7 @@ L'écran contient :
 
 * **Définitions** des indicateurs utilisés dans l'écran.
 
-La propriété d'un contrôle est déduite du [type de groupe](config.md#groups) : un contrôle est pris en charge par
+La propriété d'un contrôle est déduite du [type de groupe](config.fr.md#groups) : un contrôle est pris en charge par
 l'équipe Sécurité si au moins un de ses groupes est de type *Sécurité*, ou si au moins un de ses utilisateurs affectés
 est membre d'un groupe *Sécurité*. Tous les autres contrôles, y compris ceux non affectés, sont hors Sécurité.
 

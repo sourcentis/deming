@@ -28,7 +28,7 @@ Cet écran contient les informations d'une exception :
 
 * Le statut courant ;
 
-* Le contrôle lié (avec un lien vers la [mesure de sécurité](measures.fr.md/#show) correspondante) ;
+* Le contrôle lié (avec un lien vers la [mesure de sécurité](measures.fr.md#show) correspondante) ;
 
 * La description de l'exception ;
 

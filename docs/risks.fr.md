@@ -35,7 +35,7 @@ La liste peut être filtrée par :
 - **Propriétaire** — la personne responsable de la revue du risque.
 - **En retard** — affiche uniquement les risques dont la date de prochaine revue est dépassée.
 
-> Les utilisateurs avec le rôle **Audité** ne voient que les risques dont ils sont propriétaires.
+> Les auditeurs voient tous les risques, en lecture seule. Les utilisateurs avec le rôle **Audité** n'ont pas accès au registre des risques.
 
 Pour chaque risque, la liste affiche :
 
@@ -242,4 +242,4 @@ Le registre des risques s'intègre avec les modules existants de Deming :
 | Administrateur | Lecture, création, modification, suppression, configuration du scoring |
 | Utilisateur | Lecture, création, modification |
 | Auditeur | Lecture seule (tous les risques) |
-| Audité | Lecture et modification des risques dont il est propriétaire uniquement |
+| Audité | Aucun accès |
