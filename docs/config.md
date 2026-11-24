@@ -41,7 +41,7 @@ There are six different roles:
 * Users: users can use the application without being able to modify the measurements, attributes and controls already carried out.
 
 * Auditee: Auditees can only carry out and see the measurements that have been assigned to them or that they have
-  carried out previously (see [Delegation](delegation.md)).
+  carried out previously (see [Delegation](delegation.md)). The auditee cannot use the [AI agent](ai.md#access).
 
 * Auditor: the auditor has read access to all the information in the application. The auditor cannot use the [AI agent](ai.md#access).
 

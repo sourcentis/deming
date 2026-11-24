@@ -46,7 +46,7 @@ class AiController extends Controller
         abort_if(! Configuration::aiEnabled(), Response::HTTP_NOT_FOUND, '404 Not Found');
 
         $user = Auth::user();
-        abort_if($user->isAuditor() || $user->isAPI(), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if($user->isAuditor() || $user->isAuditee() || $user->isAPI(), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $object = AiSubjects::find($type, $id);
         abort_if($object === null, Response::HTTP_NOT_FOUND, '404 Not Found');

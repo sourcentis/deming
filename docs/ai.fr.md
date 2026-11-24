@@ -133,14 +133,14 @@ est conservée. Les principaux messages sont :
 
 ## Qui peut lancer une analyse {#access}
 
-On peut analyser un objet si l'on peut l'afficher, sauf avec le rôle auditeur ou API. Les droits sont vérifiés par
+On peut analyser un objet si l'on peut l'afficher, sauf avec le rôle audité, auditeur ou API. Les droits sont vérifiés par
 le serveur à chaque demande.
 
 | Rôle | Mesure de sécurité | Contrôle | Plan d'action | Risque |
 |---|---|---|---|---|
 | Administrateur | ✓ | ✓ | ✓ | ✓ |
 | Utilisateur | ✓ (selon affectation et vue groupe) | ✓ (idem) | ✓ | ✓ |
-| Audité | ✓ si assigné | ✓ si assigné | — | — |
+| Audité | — | — | — | — |
 | Auditeur | — | — | — | — |
 | API | — | — | — | — |
 
@@ -150,11 +150,8 @@ Précisions :
   contrôles ; un contrôle est accessible si l'utilisateur y est assigné directement ou par l'un de ses
   [groupes](config.fr.md#groups) ;
 
-* l'audité n'a pas accès aux plans d'action et aux risques, ni à leur analyse ; les plans d'action et les risques liés
-  ne sont pas envoyés lorsqu'il analyse une mesure de sécurité ou un contrôle (voir [Données envoyées à l'agent](#data-sent)) ;
-
-* l'auditeur n'a accès ni à l'icône, ni au panneau, ni aux analyses enregistrées, même pour un objet qu'il peut
-  afficher.
+* l'audité et l'auditeur n'ont accès ni à l'icône, ni au panneau, ni aux analyses enregistrées, même pour un objet
+  qu'ils peuvent afficher.
 
 ## Protection des données {#privacy}
 
@@ -203,10 +200,6 @@ statut de traitement et son commentaire, fréquence de revue, date de prochaine 
 **présence** d'un propriétaire (oui ou non), besoin de mesures ou d'actions selon le statut, mesures de sécurité liées
 (clause, nom, date et score du dernier contrôle) et plans d'action liés (référence, nom, criticité, avancement,
 échéance, clôturé ou non, en retard ou non).
-
-Lorsque l'analyse est lancée par un **audité**, qui n'a accès ni aux plans d'action ni aux risques, les plans d'action
-ouverts et les risques liés d'une mesure de sécurité, ainsi que les plans d'action issus d'un contrôle, ne sont pas
-envoyés.
 
 ### Données jamais envoyées
 
@@ -284,7 +277,7 @@ conservation des données chez OVHcloud relève de ses conditions et de son acco
 
 ### Sécurité de la fonction
 
-* L'analyse est soumise aux mêmes droits que l'affichage de l'objet ; l'auditeur et le rôle API en sont exclus
+* L'analyse est soumise aux mêmes droits que l'affichage de l'objet ; l'audité, l'auditeur et le rôle API en sont exclus
   (voir [Qui peut lancer une analyse](#access)).
 
 * Les requêtes sont protégées contre le CSRF et limitées à 10 par minute.

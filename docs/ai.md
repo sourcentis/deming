@@ -127,14 +127,14 @@ main messages are:
 
 ## Who can run an analysis {#access}
 
-An object can be analysed by anyone who can display it, except for the auditor and API roles. Rights are checked by
+An object can be analysed by anyone who can display it, except for the auditee, auditor and API roles. Rights are checked by
 the server on every request.
 
 | Role | Control | Measurement | Action plan | Risk |
 |---|---|---|---|---|
 | Administrator | ✓ | ✓ | ✓ | ✓ |
 | User | ✓ (depending on assignment and group view) | ✓ (same) | ✓ | ✓ |
-| Auditee | ✓ if assigned | ✓ if assigned | — | — |
+| Auditee | — | — | — | — |
 | Auditor | — | — | — | — |
 | API | — | — | — | — |
 
@@ -143,11 +143,8 @@ Details:
 * in group view, a control is only available if the user is directly assigned to one of its measurements; a
   measurement is available if the user is assigned to it directly or through one of their [groups](config.md#groups);
 
-* the auditee has no access to action plans and risks, nor to their analysis; the related action plans and risks are not
-  sent when they analyse a control or a measurement (see [Data sent to the agent](#data-sent));
-
-* the auditor has access neither to the icon, nor to the panel, nor to the saved analyses, even for an object they
-  can display.
+* the auditee and the auditor have access neither to the icon, nor to the panel, nor to the saved analyses, even for
+  an object they can display.
 
 ## Data protection {#privacy}
 
@@ -195,9 +192,6 @@ status and its comment, review frequency, next review date, review overdue or no
 or no), need for measures or actions according to the status, related controls (clause, name, date and
 score of the last measurement) and related action plans (reference, name, criticality, progress, due date, closed or not,
 late or not).
-
-When the analysis is run by an **auditee**, who has no access to action plans nor to risks, the open action plans and
-related risks of a control, and the action plans raised by a measurement, are not sent.
 
 ### Data never sent
 
@@ -273,7 +267,7 @@ is governed by its terms and its data processing agreement (DPA).
 
 ### Security of the feature
 
-* The analysis is subject to the same rights as the display of the object; the auditor and API roles are excluded
+* The analysis is subject to the same rights as the display of the object; the auditee, auditor and API roles are excluded
   (see [Who can run an analysis](#access)).
 
 * Requests are protected against CSRF and limited to 10 per minute.

@@ -8,7 +8,6 @@ use App\Models\ControlMapping;
 use App\Models\Exception;
 use App\Models\Measure;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Collection;
 
 /**
@@ -63,7 +62,7 @@ class ControlContext extends ContextBuilder
             ->values()
             ->all();
 
-        $context = [
+        return [
             'clause' => $control->clause,
             'nom' => $control->name,
             'domaine' => $control->domain === null ? null : [
@@ -98,13 +97,6 @@ class ControlContext extends ContextBuilder
                 ])->all(),
             'correspondances' => $mappings,
         ];
-
-        // The auditee has no access to action plans nor to the risk register: they are not sent
-        if (Auth::user()?->isAuditee()) {
-            unset($context['actions_ouvertes'], $context['risques_lies']);
-        }
-
-        return $context;
     }
 
     /**

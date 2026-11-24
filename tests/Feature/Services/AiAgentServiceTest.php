@@ -147,42 +147,6 @@ test('action context counts owners and risk context flags the owner', function (
     expect(AiSubjects::context('risk', $risk)['a_un_proprietaire'])->toBeTrue();
 });
 
-test('the related risks and action plans of a security measure are not sent for an auditee', function () {
-    $control = aiCreateSubject('control');
-    $risk = Risk::factory()->create(['name' => 'Ransomware on the ERP']);
-    $risk->controls()->sync([$control->id]);
-    $action = Action::factory()->create(['name' => 'Patch the ERP servers', 'status' => 0]);
-    $action->controls()->sync([$control->id]);
-
-    $context = AiSubjects::context('control', $control);
-    expect($context['risques_lies'])->toHaveCount(1)
-        ->and($context['actions_ouvertes'])->toHaveCount(1)
-        ->and(json_encode($context))->toContain('Ransomware on the ERP')->toContain('Patch the ERP servers');
-
-    $this->actingAs(User::factory()->auditee()->create());
-    $context = AiSubjects::context('control', $control);
-
-    expect($context)->not->toHaveKey('risques_lies')
-        ->and($context)->not->toHaveKey('actions_ouvertes')
-        ->and(json_encode($context))->not->toContain('Ransomware on the ERP')->not->toContain('Patch the ERP servers');
-});
-
-test('the action plans raised by a control are not sent for an auditee', function () {
-    $measure = aiCreateSubject('measure');
-    Action::factory()->create(['name' => 'Patch the ERP servers', 'measure_id' => $measure->id]);
-
-    $context = AiSubjects::context('measure', $measure);
-    expect($context['actions'])->toHaveCount(1)
-        ->and(json_encode($context))->toContain('Patch the ERP servers');
-
-    $this->actingAs(User::factory()->auditee()->create());
-    $context = AiSubjects::context('measure', $measure);
-
-    expect($context)->not->toHaveKey('actions')
-        ->and($context)->toHaveKey('plan_action')
-        ->and(json_encode($context))->not->toContain('Patch the ERP servers');
-});
-
 test('documents are sent by name only', function () {
     $measure = aiCreateSubject('measure');
     DB::table('documents')->insert([

@@ -150,58 +150,38 @@ test('a user assigned through a group can analyse the control', function () {
     $this->actingAs($user)->withSession(['group_view' => false])->postJson("/ai/measure/{$measure->id}")->assertOk();
 });
 
-test('auditee can analyse an assigned control only, and no action plan', function () {
-    aiFakeGateway();
-    $auditee = User::factory()->auditee()->create();
-    $assigned = aiCreateSubject('measure');
-    $assigned->users()->sync([$auditee->id]);
-    $other = aiCreateSubject('measure');
-    $action = Action::factory()->create();
-
-    $this->actingAs($auditee)->postJson("/ai/measure/{$assigned->id}")->assertOk();
-    $this->actingAs($auditee)->postJson("/ai/measure/{$other->id}")->assertForbidden();
-    $this->actingAs($auditee)->get("/action/show/{$action->id}")->assertForbidden();
-    $this->actingAs($auditee)->postJson("/ai/action/{$action->id}")->assertForbidden();
-});
-
-test('auditee can neither display nor analyse a risk, even one they own', function () {
+test('auditee gets 403 on every AI endpoint, even for an assigned object', function (string $type) {
     Http::fake();
     $auditee = User::factory()->auditee()->create();
-    $risk = Risk::factory()->create(['owner_id' => $auditee->id]);
+    $object = aiCreateSubject($type);
+    if ($type === 'measure') {
+        $object->users()->sync([$auditee->id]);
+    } elseif ($type === 'control') {
+        $measure = Measure::factory()->create();
+        $measure->controls()->sync([$object->id]);
+        $measure->users()->sync([$auditee->id]);
+    } elseif ($type === 'risk') {
+        $object->update(['owner_id' => $auditee->id]);
+    }
+    storeAnalysis($object);
 
-    $this->actingAs($auditee)->get("/risk/show/{$risk->id}")->assertForbidden();
-    $this->actingAs($auditee)->postJson("/ai/risk/{$risk->id}")->assertForbidden();
-    $this->actingAs($auditee)->postJson("/ai/risk/{$risk->id}/preview")->assertForbidden();
+    $this->actingAs($auditee)->postJson("/ai/{$type}/{$object->id}")->assertForbidden()->assertDontSee('CACHED-ANALYSIS');
+    $this->actingAs($auditee)->postJson("/ai/{$type}/{$object->id}", ['force' => 1])->assertForbidden();
+    $this->actingAs($auditee)->postJson("/ai/{$type}/{$object->id}/preview")->assertForbidden();
     Http::assertNothingSent();
-});
+})->with(AI_ENDPOINT_TYPES);
 
-test('the data sent for an auditee never contain the related risks nor action plans', function () {
-    Http::fake();
+test('the auditee sees an assigned control but neither the icon nor the panel', function () {
     $auditee = User::factory()->auditee()->create();
-    $control = Control::factory()->create();
-    $measure = Measure::factory()->create();
-    $measure->controls()->sync([$control->id]);
+    $measure = aiCreateSubject('measure');
     $measure->users()->sync([$auditee->id]);
-    Risk::factory()->create(['name' => 'Ransomware on the ERP'])->controls()->sync([$control->id]);
-    Action::factory()->create(['name' => 'Patch the ERP servers', 'status' => 0])->controls()->sync([$control->id]);
-    Action::factory()->create(['name' => 'Rotate the ERP keys', 'measure_id' => $measure->id]);
+    storeAnalysis($measure);
 
-    $this->actingAs($this->admin)->postJson("/ai/control/{$control->id}/preview")
-        ->assertOk()->assertSee('Ransomware on the ERP')->assertSee('Patch the ERP servers');
-    $this->actingAs($this->admin)->postJson("/ai/measure/{$measure->id}/preview")
-        ->assertOk()->assertSee('Rotate the ERP keys');
-
-    $this->actingAs($auditee)->postJson("/ai/control/{$control->id}/preview")
+    $this->actingAs($auditee)->get(aiShowUrl('measure', $measure->id))
         ->assertOk()
-        ->assertJsonMissingPath('context.risques_lies')
-        ->assertJsonMissingPath('context.actions_ouvertes')
-        ->assertDontSee('Ransomware on the ERP')
-        ->assertDontSee('Patch the ERP servers');
-    $this->actingAs($auditee)->postJson("/ai/measure/{$measure->id}/preview")
-        ->assertOk()
-        ->assertJsonMissingPath('context.actions')
-        ->assertDontSee('Rotate the ERP keys');
-    Http::assertNothingSent();
+        ->assertDontSee('data-ai-type', false)
+        ->assertDontSee('id="ai-panel"', false)
+        ->assertDontSee('CACHED-ANALYSIS');
 });
 
 test('risk analysis follows RiskController@show for every role', function (string $role) {
@@ -214,7 +194,7 @@ test('risk analysis follows RiskController@show for every role', function (strin
 
     expect($show)->toBeIn([200, 403])
         ->and($ai === 200)->toBe($show === 200);
-})->with(['admin', 'user', 'auditee']);
+})->with(['admin', 'user']);
 
 // -----------------------------------------------------------------------------
 // Agent answers
