@@ -153,7 +153,8 @@ Einzelheiten:
   zugewiesen ist; eine Kontrolle ist zugänglich, wenn der Benutzer ihr direkt oder über eine seiner
   [Gruppen](config.de.md#groups) zugewiesen ist;
 
-* der Auditierte hat weder Zugriff auf Aktionspläne und Risiken noch auf deren Analyse;
+* der Auditierte hat weder Zugriff auf Aktionspläne und Risiken noch auf deren Analyse; die verknüpften Risiken werden
+  nicht gesendet, wenn er eine Sicherheitsmaßnahme analysiert;
 
 * der Auditor hat weder Zugriff auf das Symbol noch auf das Fenster noch auf gespeicherte Analysen, auch nicht für ein
   Objekt, das er anzeigen kann.
@@ -185,7 +186,7 @@ Indikator, Aktionsplan, Periodizität, bis zu 15 verknüpfte Kontrollen, eine je
 Bewertung und zusammengefassten Beobachtungen, die letzten 3 Bewertungen, nächstes geplantes Datum, verspätet oder
 nicht), die nächsten 5 geplanten Kontrollen (geplantes Datum, Status, verspätet oder nicht), verknüpfte offene
 Aktionspläne (Referenz, Name, Typ, Kritikalität, Status, Fortschritt, Frist, verspätet oder nicht), verknüpfte Risiken
-(Name, Niveau, Behandlungsstatus), Ausnahmen (Name, Status, Beginn- und Enddatum, abgelaufen oder nicht,
+(Name, Niveau, Behandlungsstatus; nicht gesendet, wenn die Analyse von einem Auditierten gestartet wird), Ausnahmen (Name, Status, Beginn- und Enddatum, abgelaufen oder nicht,
 zusammengefasste Begründung und kompensierende Maßnahmen) und bis zu 10 Zuordnungen zu anderen Rahmenwerken
 (Rahmenwerk, Klausel, Name, Typ und Abdeckung).
 

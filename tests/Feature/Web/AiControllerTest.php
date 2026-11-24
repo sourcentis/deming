@@ -175,6 +175,24 @@ test('auditee can neither display nor analyse a risk, even one they own', functi
     Http::assertNothingSent();
 });
 
+test('the data sent for an auditee never contain the related risks', function () {
+    Http::fake();
+    $auditee = User::factory()->auditee()->create();
+    $control = Control::factory()->create();
+    $measure = Measure::factory()->create();
+    $measure->controls()->sync([$control->id]);
+    $measure->users()->sync([$auditee->id]);
+    Risk::factory()->create(['name' => 'Ransomware on the ERP'])->controls()->sync([$control->id]);
+
+    $this->actingAs($this->admin)->postJson("/ai/control/{$control->id}/preview")
+        ->assertOk()->assertSee('Ransomware on the ERP');
+    $this->actingAs($auditee)->postJson("/ai/control/{$control->id}/preview")
+        ->assertOk()
+        ->assertJsonMissingPath('context.risques_lies')
+        ->assertDontSee('Ransomware on the ERP');
+    Http::assertNothingSent();
+});
+
 test('risk analysis follows RiskController@show for every role', function (string $role) {
     aiFakeGateway();
     $user = User::factory()->{$role}()->create();
