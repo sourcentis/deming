@@ -153,8 +153,8 @@ Einzelheiten:
   zugewiesen ist; eine Kontrolle ist zugänglich, wenn der Benutzer ihr direkt oder über eine seiner
   [Gruppen](config.de.md#groups) zugewiesen ist;
 
-* der Auditierte hat weder Zugriff auf Aktionspläne und Risiken noch auf deren Analyse; die verknüpften Risiken werden
-  nicht gesendet, wenn er eine Sicherheitsmaßnahme analysiert;
+* der Auditierte hat weder Zugriff auf Aktionspläne und Risiken noch auf deren Analyse; die verknüpften Aktionspläne und Risiken
+  werden nicht gesendet, wenn er eine Sicherheitsmaßnahme oder eine Kontrolle analysiert (siehe [An den Agenten gesendete Daten](#data-sent));
 
 * der Auditor hat weder Zugriff auf das Symbol noch auf das Fenster noch auf gespeicherte Analysen, auch nicht für ein
   Objekt, das er anzeigen kann.
@@ -164,7 +164,7 @@ Einzelheiten:
 Dieser Abschnitt beschreibt genau, was Deming bei einer Analyse verlässt. Er richtet sich insbesondere an den CISO und
 den Datenschutzbeauftragten.
 
-### An den Agenten gesendete Daten
+### An den Agenten gesendete Daten {#data-sent}
 
 Jede Analyse sendet dem Gateway, an die Aufgabe des Objekttyps:
 
@@ -186,7 +186,7 @@ Indikator, Aktionsplan, Periodizität, bis zu 15 verknüpfte Kontrollen, eine je
 Bewertung und zusammengefassten Beobachtungen, die letzten 3 Bewertungen, nächstes geplantes Datum, verspätet oder
 nicht), die nächsten 5 geplanten Kontrollen (geplantes Datum, Status, verspätet oder nicht), verknüpfte offene
 Aktionspläne (Referenz, Name, Typ, Kritikalität, Status, Fortschritt, Frist, verspätet oder nicht), verknüpfte Risiken
-(Name, Niveau, Behandlungsstatus; nicht gesendet, wenn die Analyse von einem Auditierten gestartet wird), Ausnahmen (Name, Status, Beginn- und Enddatum, abgelaufen oder nicht,
+(Name, Niveau, Behandlungsstatus), Ausnahmen (Name, Status, Beginn- und Enddatum, abgelaufen oder nicht,
 zusammengefasste Begründung und kompensierende Maßnahmen) und bis zu 10 Zuordnungen zu anderen Rahmenwerken
 (Rahmenwerk, Klausel, Name, Typ und Abdeckung).
 
@@ -209,6 +209,10 @@ nächsten Überprüfung, Überprüfung überfällig oder nicht, **ob** ein Eigen
 Maßnahmen oder Aktionen je nach Status, verknüpfte Sicherheitsmaßnahmen (Klausel, Name, Datum und Bewertung der letzten
 Kontrolle) und verknüpfte Aktionspläne (Referenz, Name, Kritikalität, Fortschritt, Frist, abgeschlossen oder nicht,
 verspätet oder nicht).
+
+Wird die Analyse von einem **Auditierten** gestartet, der weder auf Aktionspläne noch auf Risiken Zugriff hat, werden
+die offenen Aktionspläne und verknüpften Risiken einer Sicherheitsmaßnahme sowie die aus einer Kontrolle
+hervorgegangenen Aktionspläne nicht gesendet.
 
 ### Niemals gesendete Daten
 

@@ -175,7 +175,7 @@ test('auditee can neither display nor analyse a risk, even one they own', functi
     Http::assertNothingSent();
 });
 
-test('the data sent for an auditee never contain the related risks', function () {
+test('the data sent for an auditee never contain the related risks nor action plans', function () {
     Http::fake();
     $auditee = User::factory()->auditee()->create();
     $control = Control::factory()->create();
@@ -183,13 +183,24 @@ test('the data sent for an auditee never contain the related risks', function ()
     $measure->controls()->sync([$control->id]);
     $measure->users()->sync([$auditee->id]);
     Risk::factory()->create(['name' => 'Ransomware on the ERP'])->controls()->sync([$control->id]);
+    Action::factory()->create(['name' => 'Patch the ERP servers', 'status' => 0])->controls()->sync([$control->id]);
+    Action::factory()->create(['name' => 'Rotate the ERP keys', 'measure_id' => $measure->id]);
 
     $this->actingAs($this->admin)->postJson("/ai/control/{$control->id}/preview")
-        ->assertOk()->assertSee('Ransomware on the ERP');
+        ->assertOk()->assertSee('Ransomware on the ERP')->assertSee('Patch the ERP servers');
+    $this->actingAs($this->admin)->postJson("/ai/measure/{$measure->id}/preview")
+        ->assertOk()->assertSee('Rotate the ERP keys');
+
     $this->actingAs($auditee)->postJson("/ai/control/{$control->id}/preview")
         ->assertOk()
         ->assertJsonMissingPath('context.risques_lies')
-        ->assertDontSee('Ransomware on the ERP');
+        ->assertJsonMissingPath('context.actions_ouvertes')
+        ->assertDontSee('Ransomware on the ERP')
+        ->assertDontSee('Patch the ERP servers');
+    $this->actingAs($auditee)->postJson("/ai/measure/{$measure->id}/preview")
+        ->assertOk()
+        ->assertJsonMissingPath('context.actions')
+        ->assertDontSee('Rotate the ERP keys');
     Http::assertNothingSent();
 });
 

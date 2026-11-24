@@ -5,6 +5,7 @@ namespace App\Services\Ai\Context;
 use App\Models\Action;
 use App\Models\Measure;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -32,7 +33,7 @@ class MeasureContext extends ContextBuilder
 
         $documents = DB::table('documents')->where('measure_id', $measure->id)->orderBy('filename')->pluck('filename');
 
-        return [
+        $context = [
             'nom' => $measure->name,
             'perimetre' => $measure->scope,
             'mesures' => $measure->controls()->orderBy('clause')->get()
@@ -64,5 +65,12 @@ class MeasureContext extends ContextBuilder
                 'plan_action' => $this->text($m->action_plan, self::SUMMARY_LIMIT),
             ])->all(),
         ];
+
+        // The auditee has no access to action plans: those raised by the control are not sent
+        if (Auth::user()?->isAuditee()) {
+            unset($context['actions']);
+        }
+
+        return $context;
     }
 }

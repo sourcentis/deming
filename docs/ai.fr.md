@@ -150,8 +150,8 @@ Précisions :
   contrôles ; un contrôle est accessible si l'utilisateur y est assigné directement ou par l'un de ses
   [groupes](config.fr.md#groups) ;
 
-* l'audité n'a pas accès aux plans d'action et aux risques, ni à leur analyse ; les risques liés ne sont pas envoyés
-  lorsqu'il analyse une mesure de sécurité ;
+* l'audité n'a pas accès aux plans d'action et aux risques, ni à leur analyse ; les plans d'action et les risques liés
+  ne sont pas envoyés lorsqu'il analyse une mesure de sécurité ou un contrôle (voir [Données envoyées à l'agent](#data-sent)) ;
 
 * l'auditeur n'a accès ni à l'icône, ni au panneau, ni aux analyses enregistrées, même pour un objet qu'il peut
   afficher.
@@ -161,7 +161,7 @@ Précisions :
 Cette section décrit précisément ce qui sort de Deming lors d'une analyse. Elle s'adresse en particulier au RSSI et
 au DPO.
 
-### Données envoyées à l'agent
+### Données envoyées à l'agent {#data-sent}
 
 Chaque analyse envoie à la passerelle, sur la tâche du type d'objet :
 
@@ -182,8 +182,8 @@ indicateur, plan d'action, périodicité, jusqu'à 15 contrôles rattachés, un 
 objectif, données d'entrée, modèle et indicateur résumés, périodicité, dernier résultat avec sa date, son score et ses
 observations résumées, les 3 derniers scores, prochaine date planifiée, en retard ou non), les 5 prochains contrôles
 planifiés (date planifiée, statut, en retard ou non), les plans d'action ouverts liés (référence, nom, type,
-criticité, statut, avancement, échéance, en retard ou non), les risques liés (nom, niveau, statut de traitement ; non envoyés si l'analyse est
-lancée par un audité), les exceptions (nom, statut, dates de début et de fin, expirée ou non, justification et mesures compensatoires résumées)
+criticité, statut, avancement, échéance, en retard ou non), les risques liés (nom, niveau, statut de traitement), les
+exceptions (nom, statut, dates de début et de fin, expirée ou non, justification et mesures compensatoires résumées)
 et jusqu'à 10 correspondances avec d'autres référentiels (référentiel, clause, nom, type et couverture).
 
 **Contrôle** : nom, périmètre, mesures de sécurité couvertes (clause et nom), objectif, attributs, données d'entrée,
@@ -203,6 +203,10 @@ statut de traitement et son commentaire, fréquence de revue, date de prochaine 
 **présence** d'un propriétaire (oui ou non), besoin de mesures ou d'actions selon le statut, mesures de sécurité liées
 (clause, nom, date et score du dernier contrôle) et plans d'action liés (référence, nom, criticité, avancement,
 échéance, clôturé ou non, en retard ou non).
+
+Lorsque l'analyse est lancée par un **audité**, qui n'a accès ni aux plans d'action ni aux risques, les plans d'action
+ouverts et les risques liés d'une mesure de sécurité, ainsi que les plans d'action issus d'un contrôle, ne sont pas
+envoyés.
 
 ### Données jamais envoyées
 

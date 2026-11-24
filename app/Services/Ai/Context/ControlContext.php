@@ -99,9 +99,9 @@ class ControlContext extends ContextBuilder
             'correspondances' => $mappings,
         ];
 
-        // The auditee has no access to the risk register: the related risks are not sent
+        // The auditee has no access to action plans nor to the risk register: they are not sent
         if (Auth::user()?->isAuditee()) {
-            unset($context['risques_lies']);
+            unset($context['actions_ouvertes'], $context['risques_lies']);
         }
 
         return $context;

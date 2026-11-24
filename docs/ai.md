@@ -143,8 +143,8 @@ Details:
 * in group view, a control is only available if the user is directly assigned to one of its measurements; a
   measurement is available if the user is assigned to it directly or through one of their [groups](config.md#groups);
 
-* the auditee has no access to action plans and risks, nor to their analysis; the related risks are not sent when
-  they analyse a control;
+* the auditee has no access to action plans and risks, nor to their analysis; the related action plans and risks are not
+  sent when they analyse a control or a measurement (see [Data sent to the agent](#data-sent));
 
 * the auditor has access neither to the icon, nor to the panel, nor to the saved analyses, even for an object they
   can display.
@@ -154,7 +154,7 @@ Details:
 This section describes precisely what leaves Deming during an analysis. It is intended in particular for the CISO
 and the DPO.
 
-### Data sent to the agent
+### Data sent to the agent {#data-sent}
 
 Every analysis sends the gateway, on the task of the object type:
 
@@ -175,7 +175,7 @@ plan, periodicity, up to 15 related measurements, one per distinct measurement (
 input data, model and indicator, periodicity, last result with its date, score and summarized observations, the last 3
 scores, next planned date, late or not), the next 5 planned measurements (planned date, status, late or not), related
 open action plans (reference, name, type, criticality, status, progress, due date, late or not), related risks (name,
-level, treatment status; not sent when the analysis is run by an auditee), exceptions (name, status, start and end dates, expired or not, summarized justification and
+level, treatment status), exceptions (name, status, start and end dates, expired or not, summarized justification and
 compensating controls) and up to 10 mappings to other frameworks (framework, clause, name, type and coverage).
 
 **Measurement**: name, scope, covered controls (clause and name), objective, attributes, input data, model,
@@ -195,6 +195,9 @@ status and its comment, review frequency, next review date, review overdue or no
 or no), need for measures or actions according to the status, related controls (clause, name, date and
 score of the last measurement) and related action plans (reference, name, criticality, progress, due date, closed or not,
 late or not).
+
+When the analysis is run by an **auditee**, who has no access to action plans nor to risks, the open action plans and
+related risks of a control, and the action plans raised by a measurement, are not sent.
 
 ### Data never sent
 
