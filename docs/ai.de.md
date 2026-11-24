@@ -143,7 +143,7 @@ Anfrage vom Server geprüft.
 |---|---|---|---|---|
 | Administrator | ✓ | ✓ | ✓ | ✓ |
 | Benutzer | ✓ (je nach Zuweisung und Gruppenansicht) | ✓ (ebenso) | ✓ | ✓ |
-| Auditierter | ✓ wenn zugewiesen | ✓ wenn zugewiesen | — | ✓ (alle Risiken) |
+| Auditierter | ✓ wenn zugewiesen | ✓ wenn zugewiesen | — | — |
 | Auditor | — | — | — | — |
 | API | — | — | — | — |
 
@@ -153,9 +153,7 @@ Einzelheiten:
   zugewiesen ist; eine Kontrolle ist zugänglich, wenn der Benutzer ihr direkt oder über eine seiner
   [Gruppen](config.de.md#groups) zugewiesen ist;
 
-* der Auditierte hat weder Zugriff auf Aktionspläne noch auf deren Analyse;
-
-* der Auditierte kann alle Risiken anzeigen und damit analysieren;
+* der Auditierte hat weder Zugriff auf Aktionspläne und Risiken noch auf deren Analyse;
 
 * der Auditor hat weder Zugriff auf das Symbol noch auf das Fenster noch auf gespeicherte Analysen, auch nicht für ein
   Objekt, das er anzeigen kann.

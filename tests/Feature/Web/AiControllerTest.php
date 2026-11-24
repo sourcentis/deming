@@ -164,6 +164,17 @@ test('auditee can analyse an assigned control only, and no action plan', functio
     $this->actingAs($auditee)->postJson("/ai/action/{$action->id}")->assertForbidden();
 });
 
+test('auditee can neither display nor analyse a risk, even one they own', function () {
+    Http::fake();
+    $auditee = User::factory()->auditee()->create();
+    $risk = Risk::factory()->create(['owner_id' => $auditee->id]);
+
+    $this->actingAs($auditee)->get("/risk/show/{$risk->id}")->assertForbidden();
+    $this->actingAs($auditee)->postJson("/ai/risk/{$risk->id}")->assertForbidden();
+    $this->actingAs($auditee)->postJson("/ai/risk/{$risk->id}/preview")->assertForbidden();
+    Http::assertNothingSent();
+});
+
 test('risk analysis follows RiskController@show for every role', function (string $role) {
     aiFakeGateway();
     $user = User::factory()->{$role}()->create();

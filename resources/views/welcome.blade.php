@@ -65,6 +65,7 @@
             </div>
         </div>
 
+        @if (! Auth::user()->isAuditee())
         <div class="col-lg-2 col-md-6 mt-2">
             {{-- Risques — rouge profond : criticité --}}
             <div class="more-info-box text-white" style="background-color: #D94F45 !important;">
@@ -80,6 +81,7 @@
                 <a href="/risk/index" class="more stretched-link"> {{ trans('common.more_info') }} <span class="bi bi-arrow-right"></span></a>
             </div>
         </div>
+        @endif
 
         <div class="col-lg-2 col-md-6 mt-2">
             {{-- Exceptions — violet : statut dérogatoire --}}

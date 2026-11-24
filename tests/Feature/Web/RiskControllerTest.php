@@ -110,14 +110,74 @@ test('admin can view any risk', function () {
     $this->actingAs($this->admin)->get("/risk/show/{$risk->id}")->assertStatus(200);
 });
 
-test('auditor can only view their own risk', function () {
-    $risk = Risk::factory()->create(['owner_id' => $this->auditor->id]);
+test('auditor can view any risk', function () {
+    $risk = Risk::factory()->create(['owner_id' => $this->admin->id]);
     $this->actingAs($this->auditor)->get("/risk/show/{$risk->id}")->assertStatus(200);
 });
 
-test('auditor cannot view someone else risk', function () {
-    $risk = Risk::factory()->create(['owner_id' => $this->admin->id]);
-    $this->actingAs($this->auditor)->get("/risk/show/{$risk->id}")->assertStatus(403);
+test('auditor sees all risks in the list and the matrix', function () {
+    Risk::factory()->create(['name' => 'Risk owned by admin', 'owner_id' => $this->admin->id]);
+    Risk::factory()->create(['name' => 'Risk without owner', 'owner_id' => null]);
+
+    $this->actingAs($this->auditor)->get('/risk/index')
+        ->assertStatus(200)
+        ->assertSee('Risk owned by admin')
+        ->assertSee('Risk without owner');
+    $this->actingAs($this->auditor)->get('/risk/matrix')->assertStatus(200);
+});
+
+test('auditor has read-only access to risks', function () {
+    $risk = Risk::factory()->create(['name' => 'Original name']);
+
+    $this->actingAs($this->auditor)->get('/risk/create')->assertStatus(403);
+    $this->actingAs($this->auditor)->post('/risk/store', [
+        'name' => 'Forged risk', 'probability' => 1, 'impact' => 1,
+        'status' => 'not_evaluated', 'review_frequency' => 12,
+    ])->assertStatus(403);
+    $this->actingAs($this->auditor)->get("/risk/edit/{$risk->id}")->assertStatus(403);
+    $this->actingAs($this->auditor)->post('/risk/save', [
+        'id' => $risk->id, 'name' => 'Forged name', 'probability' => 1, 'impact' => 1,
+        'status' => 'not_evaluated', 'review_frequency' => 12,
+    ])->assertStatus(403);
+    $this->actingAs($this->auditor)->get("/risk/delete/{$risk->id}")->assertStatus(403);
+
+    $this->assertDatabaseMissing('risks', ['name' => 'Forged risk']);
+    expect($risk->fresh()->name)->toBe('Original name');
+});
+
+test('auditor does not see the create, edit and delete buttons', function () {
+    $risk = Risk::factory()->create();
+
+    $this->actingAs($this->auditor)->get('/risk/index')
+        ->assertStatus(200)->assertDontSee('data-href="/risk/create"', false);
+    $this->actingAs($this->auditor)->get("/risk/show/{$risk->id}")
+        ->assertStatus(200)
+        ->assertDontSee("/risk/edit/{$risk->id}", false)
+        ->assertDontSee("/risk/delete/{$risk->id}", false);
+});
+
+test('auditee has no access to risks, even the ones they own', function () {
+    $auditee = User::factory()->auditee()->create();
+    $risk = Risk::factory()->create(['owner_id' => $auditee->id]);
+
+    $this->actingAs($auditee)->get('/risk/index')->assertStatus(403);
+    $this->actingAs($auditee)->get('/risk/matrix')->assertStatus(403);
+    $this->actingAs($auditee)->get("/risk/show/{$risk->id}")->assertStatus(403);
+    $this->actingAs($auditee)->get('/risk/create')->assertStatus(403);
+    $this->actingAs($auditee)->get("/risk/edit/{$risk->id}")->assertStatus(403);
+    $this->actingAs($auditee)->post('/risk/save', [
+        'id' => $risk->id, 'name' => 'Forged name', 'probability' => 1, 'impact' => 1,
+        'status' => 'not_evaluated', 'review_frequency' => 12,
+    ])->assertStatus(403);
+    $this->actingAs($auditee)->get('/export/risks')->assertStatus(403);
+});
+
+test('auditee does not see the risk counter on the home page', function () {
+    $auditee = User::factory()->auditee()->create();
+
+    $this->actingAs($auditee)->get('/')
+        ->assertStatus(200)
+        ->assertDontSee('href="/risk/index"', false);
 });
 
 test('admin can edit a risk', function () {

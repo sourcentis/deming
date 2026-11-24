@@ -140,7 +140,7 @@ le serveur à chaque demande.
 |---|---|---|---|---|
 | Administrateur | ✓ | ✓ | ✓ | ✓ |
 | Utilisateur | ✓ (selon affectation et vue groupe) | ✓ (idem) | ✓ | ✓ |
-| Audité | ✓ si assigné | ✓ si assigné | — | ✓ (tous les risques) |
+| Audité | ✓ si assigné | ✓ si assigné | — | — |
 | Auditeur | — | — | — | — |
 | API | — | — | — | — |
 
@@ -150,9 +150,7 @@ Précisions :
   contrôles ; un contrôle est accessible si l'utilisateur y est assigné directement ou par l'un de ses
   [groupes](config.fr.md#groups) ;
 
-* l'audité n'a pas accès aux plans d'action, ni à leur analyse ;
-
-* l'audité peut afficher, et donc analyser, tous les risques ;
+* l'audité n'a pas accès aux plans d'action et aux risques, ni à leur analyse ;
 
 * l'auditeur n'a accès ni à l'icône, ni au panneau, ni aux analyses enregistrées, même pour un objet qu'il peut
   afficher.

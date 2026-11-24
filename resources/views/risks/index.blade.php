@@ -33,7 +33,6 @@
                 </select>
             </div>
 
-            @if (Auth::User()->role !== 3)
             <div class="col-lg-2 col-md-3">
                 <select class="form-select select2" id="filter-owner">
                     <option value="none">-- {{ trans("cruds.risk.fields.choose_owner") }} --</option>
@@ -44,7 +43,6 @@
                     @endforeach
                 </select>
             </div>
-            @endif
 
             <div class="col-lg-2 col-md-3 mt-2">
                 <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="overdue" value="0" id="overdue0" {{ Session::get('risk_overdue','0')==='0' ? 'checked' : '' }}><label class="form-check-label" for="overdue0">{{ trans('cruds.risk.fields.overdue_all') }}</label></div>

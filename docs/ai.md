@@ -134,7 +134,7 @@ the server on every request.
 |---|---|---|---|---|
 | Administrator | ✓ | ✓ | ✓ | ✓ |
 | User | ✓ (depending on assignment and group view) | ✓ (same) | ✓ | ✓ |
-| Auditee | ✓ if assigned | ✓ if assigned | — | ✓ (all risks) |
+| Auditee | ✓ if assigned | ✓ if assigned | — | — |
 | Auditor | — | — | — | — |
 | API | — | — | — | — |
 
@@ -143,9 +143,7 @@ Details:
 * in group view, a control is only available if the user is directly assigned to one of its measurements; a
   measurement is available if the user is assigned to it directly or through one of their [groups](config.md#groups);
 
-* the auditee has no access to action plans, nor to their analysis;
-
-* the auditee can display, and therefore analyse, all risks;
+* the auditee has no access to action plans and risks, nor to their analysis;
 
 * the auditor has access neither to the icon, nor to the panel, nor to the saved analyses, even for an object they
   can display.

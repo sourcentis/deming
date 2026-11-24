@@ -34,7 +34,7 @@ The list can be filtered by:
 - **Owner** — the person responsible for reviewing the risk.
 - **Overdue** — displays only risks whose next review date has passed.
 
-> Users with the **Auditee** role only see risks they own.
+> Auditors see all risks, read-only. Users with the **Auditee** role have no access to the risk register.
 
 For each risk, the list displays:
 
@@ -241,4 +241,4 @@ The risk register integrates with Deming's existing modules:
 | Administrator | Read, create, edit, delete, scoring configuration |
 | User | Read, create, edit |
 | Auditor | Read-only (all risks) |
-| Auditee | Read and edit risks they own only |
+| Auditee | No access |
