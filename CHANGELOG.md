@@ -31,6 +31,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Markdown editor: the toolbar icons (bold, italic, lists...) are displayed
+  again, with Bootstrap Icons, since Font Awesome is no longer loaded from a
+  CDN (#782).
 - Security: the model and observations of a control, the description of a
   group and the user name in the audit log are escaped, and Markdown fields no
   longer render raw HTML nor `javascript:` links.
