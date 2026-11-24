@@ -633,7 +633,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#an-den-agenten-gesendete-daten" class="md-nav__link">
+  <a href="#data-sent" class="md-nav__link">
     <span class="md-ellipsis">
       An den Agenten gesendete Daten
     </span>
@@ -1042,7 +1042,7 @@ bleibt erhalten. Die wichtigsten Meldungen sind:</p>
 </tbody>
 </table>
 <h2 id="access">Wer eine Analyse starten kann<a class="headerlink" href="#access" title="Permanent link">&para;</a></h2>
-<p>Ein Objekt kann analysieren, wer es anzeigen darf, außer mit der Rolle Auditor oder API. Die Rechte werden bei jeder
+<p>Ein Objekt kann analysieren, wer es anzeigen darf, außer mit der Rolle Auditierter, Auditor oder API. Die Rechte werden bei jeder
 Anfrage vom Server geprüft.</p>
 <table>
 <thead>
@@ -1071,8 +1071,8 @@ Anfrage vom Server geprüft.</p>
 </tr>
 <tr>
 <td>Auditierter</td>
-<td>✓ wenn zugewiesen</td>
-<td>✓ wenn zugewiesen</td>
+<td>—</td>
+<td>—</td>
 <td>—</td>
 <td>—</td>
 </tr>
@@ -1100,18 +1100,14 @@ Anfrage vom Server geprüft.</p>
   <a href="../config/#groups">Gruppen</a> zugewiesen ist;</p>
 </li>
 <li>
-<p>der Auditierte hat weder Zugriff auf Aktionspläne und Risiken noch auf deren Analyse; die verknüpften Risiken werden
-  nicht gesendet, wenn er eine Sicherheitsmaßnahme analysiert;</p>
-</li>
-<li>
-<p>der Auditor hat weder Zugriff auf das Symbol noch auf das Fenster noch auf gespeicherte Analysen, auch nicht für ein
-  Objekt, das er anzeigen kann.</p>
+<p>der Auditierte und der Auditor haben weder Zugriff auf das Symbol noch auf das Fenster noch auf gespeicherte
+  Analysen, auch nicht für ein Objekt, das sie anzeigen können.</p>
 </li>
 </ul>
 <h2 id="privacy">Datenschutz<a class="headerlink" href="#privacy" title="Permanent link">&para;</a></h2>
 <p>Dieser Abschnitt beschreibt genau, was Deming bei einer Analyse verlässt. Er richtet sich insbesondere an den CISO und
 den Datenschutzbeauftragten.</p>
-<h3 id="an-den-agenten-gesendete-daten">An den Agenten gesendete Daten<a class="headerlink" href="#an-den-agenten-gesendete-daten" title="Permanent link">&para;</a></h3>
+<h3 id="data-sent">An den Agenten gesendete Daten<a class="headerlink" href="#data-sent" title="Permanent link">&para;</a></h3>
 <p>Jede Analyse sendet dem Gateway, an die Aufgabe des Objekttyps:</p>
 <ul>
 <li>
@@ -1134,7 +1130,7 @@ Indikator, Aktionsplan, Periodizität, bis zu 15 verknüpfte Kontrollen, eine je
 Bewertung und zusammengefassten Beobachtungen, die letzten 3 Bewertungen, nächstes geplantes Datum, verspätet oder
 nicht), die nächsten 5 geplanten Kontrollen (geplantes Datum, Status, verspätet oder nicht), verknüpfte offene
 Aktionspläne (Referenz, Name, Typ, Kritikalität, Status, Fortschritt, Frist, verspätet oder nicht), verknüpfte Risiken
-(Name, Niveau, Behandlungsstatus; nicht gesendet, wenn die Analyse von einem Auditierten gestartet wird), Ausnahmen (Name, Status, Beginn- und Enddatum, abgelaufen oder nicht,
+(Name, Niveau, Behandlungsstatus), Ausnahmen (Name, Status, Beginn- und Enddatum, abgelaufen oder nicht,
 zusammengefasste Begründung und kompensierende Maßnahmen) und bis zu 10 Zuordnungen zu anderen Rahmenwerken
 (Rahmenwerk, Klausel, Name, Typ und Abdeckung).</p>
 <p><strong>Kontrolle</strong>: Name, Geltungsbereich, abgedeckte Sicherheitsmaßnahmen (Klausel und Name), Ziel, Attribute,
@@ -1244,7 +1240,7 @@ Speicherung der Daten bei OVHcloud richtet sich nach dessen Bedingungen und Auft
 <h3 id="sicherheit-der-funktion">Sicherheit der Funktion<a class="headerlink" href="#sicherheit-der-funktion" title="Permanent link">&para;</a></h3>
 <ul>
 <li>
-<p>Die Analyse unterliegt denselben Rechten wie die Anzeige des Objekts; die Rollen Auditor und API sind ausgeschlossen
+<p>Die Analyse unterliegt denselben Rechten wie die Anzeige des Objekts; die Rollen Auditierter, Auditor und API sind ausgeschlossen
   (siehe <a href="#access">Wer eine Analyse starten kann</a>).</p>
 </li>
 <li>

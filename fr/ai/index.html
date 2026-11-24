@@ -633,7 +633,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#donnees-envoyees-a-lagent" class="md-nav__link">
+  <a href="#data-sent" class="md-nav__link">
     <span class="md-ellipsis">
       Données envoyées à l'agent
     </span>
@@ -1039,7 +1039,7 @@ est conservée. Les principaux messages sont :</p>
 </tbody>
 </table>
 <h2 id="access">Qui peut lancer une analyse<a class="headerlink" href="#access" title="Permanent link">&para;</a></h2>
-<p>On peut analyser un objet si l'on peut l'afficher, sauf avec le rôle auditeur ou API. Les droits sont vérifiés par
+<p>On peut analyser un objet si l'on peut l'afficher, sauf avec le rôle audité, auditeur ou API. Les droits sont vérifiés par
 le serveur à chaque demande.</p>
 <table>
 <thead>
@@ -1068,8 +1068,8 @@ le serveur à chaque demande.</p>
 </tr>
 <tr>
 <td>Audité</td>
-<td>✓ si assigné</td>
-<td>✓ si assigné</td>
+<td>—</td>
+<td>—</td>
 <td>—</td>
 <td>—</td>
 </tr>
@@ -1097,18 +1097,14 @@ le serveur à chaque demande.</p>
   <a href="../config/#groups">groupes</a> ;</p>
 </li>
 <li>
-<p>l'audité n'a pas accès aux plans d'action et aux risques, ni à leur analyse ; les risques liés ne sont pas envoyés
-  lorsqu'il analyse une mesure de sécurité ;</p>
-</li>
-<li>
-<p>l'auditeur n'a accès ni à l'icône, ni au panneau, ni aux analyses enregistrées, même pour un objet qu'il peut
-  afficher.</p>
+<p>l'audité et l'auditeur n'ont accès ni à l'icône, ni au panneau, ni aux analyses enregistrées, même pour un objet
+  qu'ils peuvent afficher.</p>
 </li>
 </ul>
 <h2 id="privacy">Protection des données<a class="headerlink" href="#privacy" title="Permanent link">&para;</a></h2>
 <p>Cette section décrit précisément ce qui sort de Deming lors d'une analyse. Elle s'adresse en particulier au RSSI et
 au DPO.</p>
-<h3 id="donnees-envoyees-a-lagent">Données envoyées à l'agent<a class="headerlink" href="#donnees-envoyees-a-lagent" title="Permanent link">&para;</a></h3>
+<h3 id="data-sent">Données envoyées à l'agent<a class="headerlink" href="#data-sent" title="Permanent link">&para;</a></h3>
 <p>Chaque analyse envoie à la passerelle, sur la tâche du type d'objet :</p>
 <ul>
 <li>
@@ -1130,8 +1126,8 @@ indicateur, plan d'action, périodicité, jusqu'à 15 contrôles rattachés, un 
 objectif, données d'entrée, modèle et indicateur résumés, périodicité, dernier résultat avec sa date, son score et ses
 observations résumées, les 3 derniers scores, prochaine date planifiée, en retard ou non), les 5 prochains contrôles
 planifiés (date planifiée, statut, en retard ou non), les plans d'action ouverts liés (référence, nom, type,
-criticité, statut, avancement, échéance, en retard ou non), les risques liés (nom, niveau, statut de traitement ; non envoyés si l'analyse est
-lancée par un audité), les exceptions (nom, statut, dates de début et de fin, expirée ou non, justification et mesures compensatoires résumées)
+criticité, statut, avancement, échéance, en retard ou non), les risques liés (nom, niveau, statut de traitement), les
+exceptions (nom, statut, dates de début et de fin, expirée ou non, justification et mesures compensatoires résumées)
 et jusqu'à 10 correspondances avec d'autres référentiels (référentiel, clause, nom, type et couverture).</p>
 <p><strong>Contrôle</strong> : nom, périmètre, mesures de sécurité couvertes (clause et nom), objectif, attributs, données d'entrée,
 modèle, indicateur, périodicité, statut, date planifiée, date de réalisation, en retard ou non, score, note,
@@ -1237,7 +1233,7 @@ conservation des données chez OVHcloud relève de ses conditions et de son acco
 <h3 id="securite-de-la-fonction">Sécurité de la fonction<a class="headerlink" href="#securite-de-la-fonction" title="Permanent link">&para;</a></h3>
 <ul>
 <li>
-<p>L'analyse est soumise aux mêmes droits que l'affichage de l'objet ; l'auditeur et le rôle API en sont exclus
+<p>L'analyse est soumise aux mêmes droits que l'affichage de l'objet ; l'audité, l'auditeur et le rôle API en sont exclus
   (voir <a href="#access">Qui peut lancer une analyse</a>).</p>
 </li>
 <li>

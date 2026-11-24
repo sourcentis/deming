@@ -633,7 +633,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#data-sent-to-the-agent" class="md-nav__link">
+  <a href="#data-sent" class="md-nav__link">
     <span class="md-ellipsis">
       Data sent to the agent
     </span>
@@ -1033,7 +1033,7 @@ main messages are:</p>
 </tbody>
 </table>
 <h2 id="access">Who can run an analysis<a class="headerlink" href="#access" title="Permanent link">&para;</a></h2>
-<p>An object can be analysed by anyone who can display it, except for the auditor and API roles. Rights are checked by
+<p>An object can be analysed by anyone who can display it, except for the auditee, auditor and API roles. Rights are checked by
 the server on every request.</p>
 <table>
 <thead>
@@ -1062,8 +1062,8 @@ the server on every request.</p>
 </tr>
 <tr>
 <td>Auditee</td>
-<td>✓ if assigned</td>
-<td>✓ if assigned</td>
+<td>—</td>
+<td>—</td>
 <td>—</td>
 <td>—</td>
 </tr>
@@ -1090,18 +1090,14 @@ the server on every request.</p>
   measurement is available if the user is assigned to it directly or through one of their <a href="../config/#groups">groups</a>;</p>
 </li>
 <li>
-<p>the auditee has no access to action plans and risks, nor to their analysis; the related risks are not sent when
-  they analyse a control;</p>
-</li>
-<li>
-<p>the auditor has access neither to the icon, nor to the panel, nor to the saved analyses, even for an object they
-  can display.</p>
+<p>the auditee and the auditor have access neither to the icon, nor to the panel, nor to the saved analyses, even for
+  an object they can display.</p>
 </li>
 </ul>
 <h2 id="privacy">Data protection<a class="headerlink" href="#privacy" title="Permanent link">&para;</a></h2>
 <p>This section describes precisely what leaves Deming during an analysis. It is intended in particular for the CISO
 and the DPO.</p>
-<h3 id="data-sent-to-the-agent">Data sent to the agent<a class="headerlink" href="#data-sent-to-the-agent" title="Permanent link">&para;</a></h3>
+<h3 id="data-sent">Data sent to the agent<a class="headerlink" href="#data-sent" title="Permanent link">&para;</a></h3>
 <p>Every analysis sends the gateway, on the task of the object type:</p>
 <ul>
 <li>
@@ -1123,7 +1119,7 @@ plan, periodicity, up to 15 related measurements, one per distinct measurement (
 input data, model and indicator, periodicity, last result with its date, score and summarized observations, the last 3
 scores, next planned date, late or not), the next 5 planned measurements (planned date, status, late or not), related
 open action plans (reference, name, type, criticality, status, progress, due date, late or not), related risks (name,
-level, treatment status; not sent when the analysis is run by an auditee), exceptions (name, status, start and end dates, expired or not, summarized justification and
+level, treatment status), exceptions (name, status, start and end dates, expired or not, summarized justification and
 compensating controls) and up to 10 mappings to other frameworks (framework, clause, name, type and coverage).</p>
 <p><strong>Measurement</strong>: name, scope, covered controls (clause and name), objective, attributes, input data, model,
 indicator, periodicity, status, planned date, completion date, late or not, score, grade, observations, action plan,
@@ -1227,7 +1223,7 @@ is governed by its terms and its data processing agreement (DPA).</p>
 <h3 id="security-of-the-feature">Security of the feature<a class="headerlink" href="#security-of-the-feature" title="Permanent link">&para;</a></h3>
 <ul>
 <li>
-<p>The analysis is subject to the same rights as the display of the object; the auditor and API roles are excluded
+<p>The analysis is subject to the same rights as the display of the object; the auditee, auditor and API roles are excluded
   (see <a href="#access">Who can run an analysis</a>).</p>
 </li>
 <li>
