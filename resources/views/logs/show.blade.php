@@ -44,6 +44,10 @@
                         <a href="/users/{{ $auditLog->subject_id }} ">
                             {{ $auditLog->subject_id }}
                         </a>
+                    @elseif ($auditLog->subject_type=='App\Models\Risk')
+                        <a href="/risk/show/{{ $auditLog->subject_id }} ">
+                            {{ $auditLog->subject_id }}
+                        </a>
                     @else
                         {{ $auditLog->subject_id }}
                     @endif

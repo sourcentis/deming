@@ -67,6 +67,10 @@
                             <a href="/users/{{ $log->subject_id }} ">
                                 {{ $log->subject_id }}
                             </a>
+                        @elseif ($log->subject_type=='App\Models\Risk')
+                            <a href="/risk/show/{{ $log->subject_id }} ">
+                                {{ $log->subject_id }}
+                            </a>
                         @else
                             {{ $log->subject_id }}
                         @endif
@@ -95,6 +99,8 @@
                             href="/logs/history/action/{{ $log->subject_id }}"
                         @elseif ($log->subject_type=='App\\Models\\User')
                             href="/logs/history/user/{{ $log->subject_id }}"
+                        @elseif ($log->subject_type=='App\\Models\\Risk')
+                            href="/logs/history/risk/{{ $log->subject_id }}"
                         @endif
                         >
                             {{ trans('common.history') }}

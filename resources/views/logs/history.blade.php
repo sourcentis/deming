@@ -26,6 +26,10 @@
                         <a href="/user/show/{{ $auditLogs->first()->subject_id }} ">
                             {{ $auditLogs->first()->subject_id }}
                         </a>
+                    @elseif ($auditLogs->first()->subject_type=='App\Models\Risk')
+                        <a href="/risk/show/{{ $auditLogs->first()->subject_id }} ">
+                            {{ $auditLogs->first()->subject_id }}
+                        </a>
                     @else
                         {{ $auditLogs->first()->subject_id }}
                     @endif
