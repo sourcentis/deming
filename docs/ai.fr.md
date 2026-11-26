@@ -43,7 +43,8 @@ Les champs sont les suivants :
 * **URL du fournisseur** : l'URL de base de l'API compatible OpenAI, terminée par `/v1` ; Deming y ajoute
   `/chat/completions` et `/models`. La liste « Préréglage » remplit ce champ pour les fournisseurs courants, sans rien
   changer d'autre. Il n'y a pas de valeur par défaut. Le protocole `https` est obligatoire, sauf pour `localhost`,
-  une adresse privée (`10.x.x.x`, `172.16.x.x` à `172.31.x.x`, `192.168.x.x`, `fc00::/7`) ou un nom d'hôte sans
+  une adresse de bouclage (`127.x.x.x`, `::1`), une adresse privée (`10.x.x.x`, `172.16.x.x` à `172.31.x.x`,
+  `192.168.x.x`, `fc00::/7`) ou un nom d'hôte sans
   point, comme un service Docker (`http://ollama:11434/v1`) ;
 
 * **Clé API** : la clé d'accès du fournisseur. Elle n'est jamais réaffichée ni renvoyée au navigateur : l'écran
@@ -63,7 +64,7 @@ Les champs sont les suivants :
     * **Délai** (120 secondes par défaut) : au-delà, l'analyse échoue ;
     * **Sortie structurée** : « Objet JSON » (par défaut) convient à la plupart des fournisseurs ; « Schéma JSON
       (strict) » transmet en plus le schéma de la réponse, pris en charge par OpenAI, Mistral et Ollama mais pas par
-      tous les modèles ; « Aucune » n'envoie pas de `response_format`, pour les fournisseurs qui le refusent ;
+      tous les modèles ; « Aucune (texte) » n'envoie pas de `response_format`, pour les fournisseurs qui le refusent ;
     * **Langue des réponses** : « Langue de l'utilisateur » (par défaut : français, anglais ou allemand selon son
       profil, anglais sinon), ou une langue fixe.
 
@@ -124,6 +125,13 @@ Remarques :
   par Deming : choisissez un autre modèle ;
 
 * les noms de modèles évoluent : le bouton « Charger les modèles » affiche ceux que votre clé autorise.
+
+### Mise à jour depuis une version antérieure {#upgrade}
+
+Les versions précédentes de Deming ne s'adressaient qu'à la passerelle IA Sourcentis. Lors de la mise à jour
+(`php artisan migrate`), l'URL et la clé déjà enregistrées sont conservées et, si une URL existe, le modèle
+`sourcentis-standard` est renseigné : l'agent continue de fonctionner sans intervention. Les analyses enregistrées,
+dans l'ancien format, sont supprimées ; elles sont recalculées à la prochaine ouverture du panneau.
 
 ### Supprimer toutes les analyses {#purge}
 
@@ -194,11 +202,14 @@ est conservée : rien n'est enregistré. Les principaux messages sont :
 | « Trop de demandes, réessayez dans quelques instants » | Limite de débit (HTTP 429) | Réessayer un peu plus tard |
 | « Objet trop volumineux pour être analysé par ce modèle » | Contexte trop grand pour le fournisseur (HTTP 413) | Raccourcir les textes longs de l'objet, ou choisir un modèle à plus grande fenêtre de contexte |
 | « Requête refusée par le fournisseur d'IA : vérifiez le modèle et le réglage de sortie structurée » | Modèle inconnu ou paramètre refusé (HTTP 400, 404, 405 ou 422) | Vérifier le nom du modèle ; passer la sortie structurée à « Objet JSON » ou « Aucune » |
-| « Le fournisseur d'IA a renvoyé une erreur, réessayez plus tard » | Erreur du fournisseur (HTTP 5xx) | Relancer l'analyse plus tard |
-| « Le fournisseur d'IA n'a pas répondu à temps » | Délai dépassé | Relancer l'analyse, ou augmenter le délai |
+| « Le fournisseur d'IA a renvoyé une erreur, réessayez plus tard » | Erreur du fournisseur (HTTP 5xx ou autre code) | Relancer l'analyse plus tard |
+| « Le fournisseur d'IA n'a pas répondu à temps » | Délai dépassé (ou HTTP 408 ou 504) | Relancer l'analyse, ou augmenter le délai |
+| « Le fournisseur d'IA est injoignable » | Hôte introuvable, connexion refusée, certificat invalide ou redirection | Vérifier l'URL et l'accès réseau du serveur Deming vers le fournisseur |
 | « La réponse a été tronquée : augmentez le nombre maximal de jetons » | Réponse coupée par la limite de jetons | Augmenter « Jetons max. » |
 | « Réponse invalide du modèle d'IA » | La réponse ne contient pas d'objet JSON conforme au contrat de sortie | Relancer l'analyse ; essayer « Schéma JSON (strict) » ou un modèle plus capable |
 | « L'URL ou le modèle du fournisseur d'IA n'est pas configuré » | Configuration incomplète | Compléter l'onglet IA |
+| « L'URL du fournisseur d'IA doit utiliser https » | URL en `http` vers un hôte public | Utiliser `https` |
+| « Trop de demandes, réessayez dans une minute » | Plus de 10 analyses par minute (limite de Deming) | Patienter une minute |
 
 ## Qui peut lancer une analyse {#access}
 
@@ -352,7 +363,8 @@ Le trajet et la conservation des données dépendent du fournisseur choisi :
 * L'analyse est soumise aux mêmes droits que l'affichage de l'objet ; l'audité, l'auditeur et le rôle API en sont exclus
   (voir [Qui peut lancer une analyse](#access)).
 
-* Les requêtes sont protégées contre le CSRF et limitées à 10 par minute.
+* Les requêtes sont protégées contre le CSRF et limitées à 10 par minute, de même que le test de connexion, le
+  chargement des modèles et la suppression des analyses.
 
 * Les réponses de l'IA sont affichées comme du texte, sans interprétation HTML.
 
