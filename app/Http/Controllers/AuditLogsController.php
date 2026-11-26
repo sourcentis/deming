@@ -96,7 +96,7 @@ class AuditLogsController extends Controller
                 ->join('users', 'users.id', '=', 'user_id')
                 ->where('subject_id', $id)
                 ->where('subject_type', $type)
-                ->orderBy('audit_logs.id')
+                ->orderByDesc('audit_logs.id')
                 ->get();
 
         abort_if($auditLogs->isEmpty(), 404, 'Not found');
