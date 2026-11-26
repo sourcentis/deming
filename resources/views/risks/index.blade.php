@@ -62,6 +62,7 @@
 
     <table data-order='[[{{ ($scoringConfig->usesMonarc() || $scoringConfig->usesLikelihood()) ? 5 : 4 }},"desc"]]' data-page-length="50"
         id="risks-table"
+        data-title="Deming - {{ trans('cruds.risk.list') }} - {{ now()->format('d/m/Y') }}"
         class="table table-striped table-hover table-bordered datatable">
         <thead>
             <tr>
