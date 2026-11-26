@@ -38,8 +38,8 @@ The fields are:
 
 * **Provider URL**: the base URL of the OpenAI-compatible API, ending with `/v1`; Deming appends `/chat/completions`
   and `/models`. The "Preset" list fills this field for common providers, without changing anything else. There is no
-  default value. `https` is required, except for `localhost`, a private address (`10.x.x.x`, `172.16.x.x` to
-  `172.31.x.x`, `192.168.x.x`, `fc00::/7`) or a host name without a dot, such as a Docker service
+  default value. `https` is required, except for `localhost`, a loopback address (`127.x.x.x`, `::1`), a private
+  address (`10.x.x.x`, `172.16.x.x` to `172.31.x.x`, `192.168.x.x`, `fc00::/7`) or a host name without a dot, such as a Docker service
   (`http://ollama:11434/v1`);
 
 * **API key**: the access key of the provider. It is never displayed again nor sent back to the browser: the screen
@@ -58,7 +58,7 @@ The fields are:
       before answering: if the panel reports a cut answer, increase this value;
     * **Timeout** (120 seconds by default): beyond it, the analysis fails;
     * **Structured output**: "JSON object" (default) suits most providers; "JSON schema (strict)" also sends the schema
-      of the answer, supported by OpenAI, Mistral and Ollama but not by every model; "None" sends no
+      of the answer, supported by OpenAI, Mistral and Ollama but not by every model; "None (text)" sends no
       `response_format`, for providers that refuse it;
     * **Language of the answers**: "User's language" (default: French, English or German according to the profile,
       English otherwise), or a fixed language.
@@ -187,11 +187,14 @@ nothing is saved. The main messages are:
 | "Too many requests, try again in a few moments" | Rate limit (HTTP 429) | Try again a little later |
 | "Object too large to be analysed by this model" | Context too large for the provider (HTTP 413) | Shorten the long texts of the object, or choose a model with a larger context window |
 | "Request refused by the AI provider: check the model and the structured output setting" | Unknown model or refused parameter (HTTP 400, 404, 405 or 422) | Check the model name; set the structured output to "JSON object" or "None" |
-| "The AI provider returned an error, try again later" | Error of the provider (HTTP 5xx) | Run the analysis again later |
-| "The AI provider did not answer in time" | Timeout exceeded | Run the analysis again, or increase the timeout |
+| "The AI provider returned an error, try again later" | Error of the provider (HTTP 5xx or another code) | Run the analysis again later |
+| "The AI provider did not answer in time" | Timeout exceeded (or HTTP 408 or 504) | Run the analysis again, or increase the timeout |
+| "The AI provider cannot be reached" | Unknown host, connection refused, invalid certificate or redirection | Check the URL and the network access from the Deming server to the provider |
 | "The answer was cut off: increase the max tokens" | Answer cut by the token limit | Increase "Max tokens" |
 | "Invalid answer from the AI model" | The answer contains no JSON object following the output contract | Run the analysis again; try "JSON schema (strict)" or a more capable model |
 | "The AI provider URL or model is not configured" | Incomplete configuration | Complete the AI tab |
+| "The AI provider URL must use https" | `http` URL to a public host | Use `https` |
+| "Too many requests, try again in a minute" | More than 10 analyses per minute (Deming limit) | Wait a minute |
 
 ## Who can run an analysis {#access}
 
@@ -339,7 +342,8 @@ The path and the retention of the data depend on the chosen provider:
 * The analysis is subject to the same rights as the display of the object; the auditee, auditor and API roles are excluded
   (see [Who can run an analysis](#access)).
 
-* Requests are protected against CSRF and limited to 10 per minute.
+* Requests are protected against CSRF and limited to 10 per minute, as are the connection test, the loading of the
+  models and the deletion of the analyses.
 
 * AI answers are displayed as text, without HTML interpretation.
 

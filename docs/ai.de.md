@@ -41,8 +41,8 @@ Die Felder sind:
 
 * **URL des Anbieters**: die Basis-URL der OpenAI-kompatiblen API, endet mit `/v1`; Deming hängt `/chat/completions`
   und `/models` an. Die Liste „Voreinstellung“ füllt dieses Feld für gängige Anbieter aus, ohne etwas anderes zu
-  ändern. Es gibt keinen Standardwert. `https` ist Pflicht, außer für `localhost`, eine private Adresse (`10.x.x.x`,
-  `172.16.x.x` bis `172.31.x.x`, `192.168.x.x`, `fc00::/7`) oder einen Hostnamen ohne Punkt, etwa einen
+  ändern. Es gibt keinen Standardwert. `https` ist Pflicht, außer für `localhost`, eine Loopback-Adresse (`127.x.x.x`, `::1`),
+  eine private Adresse (`10.x.x.x`, `172.16.x.x` bis `172.31.x.x`, `192.168.x.x`, `fc00::/7`) oder einen Hostnamen ohne Punkt, etwa einen
   Docker-Dienst (`http://ollama:11434/v1`);
 
 * **API-Schlüssel**: der Zugangsschlüssel des Anbieters. Er wird nie wieder angezeigt und nie an den Browser
@@ -62,7 +62,7 @@ Die Felder sind:
     * **Zeitlimit** (Standard 120 Sekunden): danach schlägt die Analyse fehl;
     * **Strukturierte Ausgabe**: „JSON-Objekt“ (Standard) passt zu den meisten Anbietern; „JSON-Schema (strikt)“
       sendet zusätzlich das Schema der Antwort, unterstützt von OpenAI, Mistral und Ollama, aber nicht von jedem
-      Modell; „Keine“ sendet kein `response_format`, für Anbieter, die es ablehnen;
+      Modell; „Keine (Text)“ sendet kein `response_format`, für Anbieter, die es ablehnen;
     * **Sprache der Antworten**: „Sprache des Benutzers“ (Standard: Französisch, Englisch oder Deutsch je nach
       Profil, sonst Englisch) oder eine feste Sprache.
 
@@ -197,11 +197,14 @@ bleibt erhalten: Es wird nichts gespeichert. Die wichtigsten Meldungen sind:
 | „Zu viele Anfragen, bitte in wenigen Augenblicken erneut versuchen“ | Ratenbegrenzung (HTTP 429) | Etwas später erneut versuchen |
 | „Objekt zu groß für eine Analyse durch dieses Modell“ | Kontext zu groß für den Anbieter (HTTP 413) | Die langen Texte des Objekts kürzen oder ein Modell mit größerem Kontextfenster wählen |
 | „Anfrage vom KI-Anbieter abgelehnt: Prüfen Sie das Modell und die Einstellung der strukturierten Ausgabe“ | Unbekanntes Modell oder abgelehnter Parameter (HTTP 400, 404, 405 oder 422) | Modellnamen prüfen; strukturierte Ausgabe auf „JSON-Objekt“ oder „Keine“ setzen |
-| „Der KI-Anbieter hat einen Fehler zurückgegeben, bitte später erneut versuchen“ | Fehler des Anbieters (HTTP 5xx) | Die Analyse später erneut starten |
-| „Der KI-Anbieter hat nicht rechtzeitig geantwortet“ | Zeitlimit überschritten | Die Analyse erneut starten oder das Zeitlimit erhöhen |
+| „Der KI-Anbieter hat einen Fehler zurückgegeben, bitte später erneut versuchen“ | Fehler des Anbieters (HTTP 5xx oder anderer Code) | Die Analyse später erneut starten |
+| „Der KI-Anbieter hat nicht rechtzeitig geantwortet“ | Zeitlimit überschritten (oder HTTP 408 oder 504) | Die Analyse erneut starten oder das Zeitlimit erhöhen |
+| „Der KI-Anbieter ist nicht erreichbar“ | Unbekannter Host, Verbindung abgelehnt, ungültiges Zertifikat oder Weiterleitung | URL und Netzwerkzugang vom Deming-Server zum Anbieter prüfen |
 | „Die Antwort wurde abgeschnitten: Erhöhen Sie die maximale Anzahl an Tokens“ | Antwort durch das Token-Limit abgeschnitten | „Max. Tokens“ erhöhen |
 | „Ungültige Antwort des KI-Modells“ | Die Antwort enthält kein JSON-Objekt gemäß dem Ausgabevertrag | Die Analyse erneut starten; „JSON-Schema (strikt)“ oder ein leistungsfähigeres Modell versuchen |
 | „URL oder Modell des KI-Anbieters ist nicht konfiguriert“ | Unvollständige Konfiguration | Die Registerkarte „KI“ vervollständigen |
+| „Die URL des KI-Anbieters muss https verwenden“ | `http`-URL zu einem öffentlichen Host | `https` verwenden |
+| „Zu viele Anfragen, bitte in einer Minute erneut versuchen“ | Mehr als 10 Analysen pro Minute (Grenze von Deming) | Eine Minute warten |
 
 ## Wer eine Analyse starten kann {#access}
 
@@ -360,7 +363,8 @@ Weg und Speicherung der Daten hängen vom gewählten Anbieter ab:
 * Die Analyse unterliegt denselben Rechten wie die Anzeige des Objekts; die Rollen Auditierter, Auditor und API sind ausgeschlossen
   (siehe [Wer eine Analyse starten kann](#access)).
 
-* Die Anfragen sind gegen CSRF geschützt und auf 10 pro Minute begrenzt.
+* Die Anfragen sind gegen CSRF geschützt und auf 10 pro Minute begrenzt, ebenso der Verbindungstest, das Laden der
+  Modelle und das Löschen der Analysen.
 
 * Die Antworten der KI werden als Text angezeigt, ohne HTML-Interpretation.
 
