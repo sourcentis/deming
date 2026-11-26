@@ -7,36 +7,15 @@ use App\Models\Risk;
 use Illuminate\Database\Eloquent\Builder;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithColumnWidths;
-use Maatwebsite\Excel\Concerns\WithCustomStartCell;
-use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithStyles;
-use Maatwebsite\Excel\Events\AfterSheet;
 use PhpOffice\PhpSpreadsheet\Cell\StringValueBinder;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class RiskExport extends StringValueBinder implements FromQuery, WithMapping, WithHeadings, WithStyles, WithColumnWidths, WithCustomStartCell, WithEvents
+class RiskExport extends StringValueBinder implements FromQuery, WithMapping, WithHeadings, WithStyles, WithColumnWidths
 {
-    /** Row 1 holds the title, row 2 is left blank, headings start on row 3. */
-    public function startCell(): string
-    {
-        return 'A3';
-    }
-
-    public function registerEvents(): array
-    {
-        return [
-            AfterSheet::class => function (AfterSheet $event) {
-                $sheet = $event->sheet->getDelegate();
-                $sheet->setCellValue('A1', 'Deming - ' . trans('cruds.risk.list') . ' - ' . now()->format('d/m/Y'));
-                $sheet->mergeCells('A1:N1');
-                $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(14);
-            },
-        ];
-    }
-
     public function headings(): array
     {
         return [
@@ -60,8 +39,8 @@ class RiskExport extends StringValueBinder implements FromQuery, WithMapping, Wi
     public function styles(Worksheet $sheet)
     {
         return [
-            // Style the headings row as bold text.
-            3 => ['font' => ['bold' => true],
+            // Style the first row as bold text.
+            1 => ['font' => ['bold' => true],
                 'alignment' => [
                     'wrapText' => true,
                     'vertical' => 'top',
