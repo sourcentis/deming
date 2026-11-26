@@ -126,13 +126,6 @@ Remarques :
 
 * les noms de modèles évoluent : le bouton « Charger les modèles » affiche ceux que votre clé autorise.
 
-### Mise à jour depuis une version antérieure {#upgrade}
-
-Les versions précédentes de Deming ne s'adressaient qu'à la passerelle IA Sourcentis. Lors de la mise à jour
-(`php artisan migrate`), l'URL et la clé déjà enregistrées sont conservées et, si une URL existe, le modèle
-`sourcentis-standard` est renseigné : l'agent continue de fonctionner sans intervention. Les analyses enregistrées,
-dans l'ancien format, sont supprimées ; elles sont recalculées à la prochaine ouverture du panneau.
-
 ### Supprimer toutes les analyses {#purge}
 
 Le bouton « Supprimer toutes les analyses IA », en bas de l'onglet, efface la dernière analyse enregistrée sur

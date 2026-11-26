@@ -125,13 +125,6 @@ Hinweise:
 
 * Modellnamen ändern sich: Die Schaltfläche „Modelle laden“ zeigt die Modelle, die Ihr Schlüssel erlaubt.
 
-### Aktualisierung von einer früheren Version {#upgrade}
-
-Frühere Versionen von Deming sprachen nur das KI-Gateway von Sourcentis an. Bei der Aktualisierung
-(`php artisan migrate`) bleiben die gespeicherte URL und der Schlüssel erhalten, und wenn eine URL vorhanden ist,
-wird das Modell `sourcentis-standard` eingetragen: Der Agent funktioniert ohne weiteres Zutun weiter. Die
-gespeicherten Analysen im alten Format werden gelöscht; sie werden beim nächsten Öffnen des Fensters neu berechnet.
-
 ### Alle Analysen löschen {#purge}
 
 Die Schaltfläche „Alle KI-Analysen löschen“ unten in der Registerkarte löscht nach Bestätigung die zuletzt gespeicherte

@@ -120,13 +120,6 @@ Notes:
 
 * model names change over time: the "Load the models" button shows the ones your key allows.
 
-### Upgrading from an earlier version {#upgrade}
-
-Earlier versions of Deming only addressed the Sourcentis AI gateway. During the upgrade (`php artisan migrate`), the
-saved URL and key are kept and, if a URL exists, the model `sourcentis-standard` is set: the agent keeps working
-without any action. The saved analyses, in the former format, are deleted; they are computed again the next time the
-panel is opened.
-
 ### Delete all analyses {#purge}
 
 The "Delete all AI analyses" button, at the bottom of the tab, erases the last analysis saved on every control,
