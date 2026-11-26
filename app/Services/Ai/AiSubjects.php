@@ -72,11 +72,11 @@ final class AiSubjects
 
     /**
      * Single access rule to the AI agent, used by the endpoints and the views:
-     * the object must be viewable by the user, who is neither auditor nor API.
+     * the object must be viewable by the user, who is neither auditor, auditee nor API.
      */
     public static function canUseAi(?User $user, string $type, Model $object): bool
     {
-        if ($user === null || $user->isAuditor() || $user->isAPI()) {
+        if ($user === null || $user->isAuditor() || $user->isAuditee() || $user->isAPI()) {
             return false;
         }
 

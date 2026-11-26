@@ -26,7 +26,7 @@ form, table {
                     <strong>{{ trans("cruds.action.fields.reference") }}</strong>
     	    	</div>
                 <div class="col-md-4 col-lg-2">
-                    {{ $action->reference==null ? ("ACT-".$action->id) : $action->reference }}
+                    {{ \App\Models\Action::displayReference($action->reference, $action->id) }}
                 </div>
                 <div class="col-md-2 col-lg-1 text-md-end">
                     <strong>{{ trans("cruds.action.fields.type") }}</strong>

@@ -12,10 +12,15 @@ validés par un humain.
 L'IA est **désactivée par défaut**. Tant qu'elle n'est pas activée par un administrateur, aucune donnée n'est
 envoyée et l'icône d'analyse n'apparaît pas.
 
-L'agent IA est fourni par la **passerelle IA Sourcentis**, un service privé qui détient les prompts, le format des
-réponses et les modèles. Deming ne lui envoie que les données de l'objet à analyser. La fonction est donc réservée
-aux clients de Sourcentis : aucun agent n'est configuré par défaut, et Deming ne peut pas s'adresser directement à un
-autre fournisseur ni à un modèle local. [Contactez-nous](#key) si vous souhaitez utiliser votre propre moteur d'IA.
+Deming s'adresse à **n'importe quel modèle de langage compatible avec l'API OpenAI Chat Completions** : la passerelle
+IA Sourcentis, OVHcloud AI Endpoints, OpenAI, Mistral AI, ou un modèle que vous hébergez (Ollama, vLLM, LM Studio…).
+Les instructions données au modèle (les *prompts*) sont livrées avec Deming et modifiables par l'administrateur ; le
+format de la réponse est fixé par Deming. Aucun fournisseur n'est configuré par défaut.
+
+!!! warning "Confidentialité"
+    Lors d'une analyse, des données de votre SMSI (mesures de sécurité, contrôles, plans d'action, risques) sont
+    envoyées au fournisseur que vous avez choisi. Choisissez-le en conséquence et lisez la section
+    [Protection des données](#privacy) avant d'activer l'IA.
 
 ## Activer et configurer {#config}
 
@@ -24,40 +29,101 @@ Paramètres »). Elle est réservée aux administrateurs.
 
 [![Screenshot](images/ai-config.fr.png)](images/ai-config.fr.png)
 
-En haut de l'écran, un encart « Obtenir l'accès à l'agent IA » indique comment obtenir une clé ou utiliser votre
-propre moteur d'IA (voir [Obtenir une clé](#key)). L'écran contient aussi un encart « Protection des données » qui rappelle ce qui est envoyé à l'agent ; lisez la section
-[Protection des données](#privacy) avant d'activer l'IA.
+En haut de l'écran, un encart « Choisir un fournisseur d'IA » rappelle les fournisseurs utilisables (voir
+[Exemples de configuration](#key)). L'écran contient aussi un encart « Protection des données » qui rappelle ce qui
+est envoyé ; lisez la section [Protection des données](#privacy) avant d'activer l'IA.
 
 Les champs sont les suivants :
 
-* **Activer l'IA** : active ou désactive l'agent. Désactivée, aucune requête ne part vers l'agent, mais les analyses
-  déjà enregistrées sont conservées (voir [Supprimer toutes les analyses](#purge)). Tant que l'IA est désactivée, les
-  autres champs sont grisés ; ils conservent leurs valeurs et redeviennent modifiables dès que l'IA est activée ;
+* **Activer l'IA** : active ou désactive l'agent. Désactivée, aucune requête ne part vers le fournisseur, y compris
+  par un appel direct, mais les analyses déjà enregistrées sont conservées (voir
+  [Supprimer toutes les analyses](#purge)). Tant que l'IA est désactivée, les autres champs sont grisés ; ils
+  conservent leurs valeurs et redeviennent modifiables dès que l'IA est activée ;
 
-* **URL de l'agent IA** : l'adresse fournie par Sourcentis, `https://ai.sourcentis.lu/v1`. Il n'y a pas de valeur
-  par défaut. Le protocole `https` est obligatoire, sauf `http://localhost` ou `http://127.0.0.1` (passerelle de
-  développement) ;
+* **URL du fournisseur** : l'URL de base de l'API compatible OpenAI, terminée par `/v1` ; Deming y ajoute
+  `/chat/completions` et `/models`. La liste « Préréglage » remplit ce champ pour les fournisseurs courants, sans rien
+  changer d'autre. Il n'y a pas de valeur par défaut. Le protocole `https` est obligatoire, sauf pour `localhost`,
+  une adresse privée (`10.x.x.x`, `172.16.x.x` à `172.31.x.x`, `192.168.x.x`, `fc00::/7`) ou un nom d'hôte sans
+  point, comme un service Docker (`http://ollama:11434/v1`) ;
 
-* **Clé API** : la clé d'accès fournie par Sourcentis. Elle n'est jamais réaffichée : l'écran indique seulement
-  « Clé enregistrée » ou « Aucune clé ». Laisser le champ vide conserve la clé actuelle ; la case « Supprimer la clé »
-  la retire. La clé est chiffrée en base de données avec la clé de l'application (`APP_KEY`) : si l'`APP_KEY` change,
-  il faut ressaisir la clé.
+* **Clé API** : la clé d'accès du fournisseur. Elle n'est jamais réaffichée ni renvoyée au navigateur : l'écran
+  indique seulement « Clé enregistrée » ou « Aucune clé ». Laisser le champ vide conserve la clé actuelle ; la case
+  « Supprimer la clé » la retire. Elle est facultative pour un modèle local sans authentification : sans clé, aucun
+  en-tête `Authorization` n'est envoyé. La clé est chiffrée en base de données avec la clé de l'application
+  (`APP_KEY`) : si l'`APP_KEY` change, il faut la ressaisir ;
 
-Il n'y a ni modèle ni prompt à régler : ils sont gérés et versionnés par le fournisseur de l'agent. Lorsque l'IA est
-activée, l'écran affiche en lecture seule les **tâches disponibles** sur la passerelle, une par type d'objet (mesure
-de sécurité, contrôle, plan d'action et risque), avec leur version. Si la passerelle est injoignable ou refuse la
-clé, un message le signale à la place de la liste.
+* **Modèle** : l'identifiant du modèle chez le fournisseur. Le bouton « Charger les modèles » interroge
+  `GET /models` avec l'URL et la clé saisies, même avant l'enregistrement, et propose la liste obtenue ; si le
+  fournisseur ne l'offre pas, saisissez le nom à la main ;
 
-Le bouton « Tester la connexion » interroge le catalogue des tâches de la passerelle, avec la configuration
-enregistrée. Cette requête est gratuite : elle ne consomme aucun token. Il affiche le statut HTTP, la latence et le
-nombre de tâches Deming trouvées : « 4/4 tâches Deming » indique que tout est en place. La clé n'est jamais affichée.
+* **Paramètres** :
+    * **Température** (de 0 à 2, 0,2 par défaut) : une valeur basse donne des réponses plus stables ;
+    * **Jetons max.** (8 000 par défaut) : taille maximale de la réponse. Un modèle de raisonnement consomme une
+      partie de ce budget avant de répondre : si le panneau signale une réponse tronquée, augmentez cette valeur ;
+    * **Délai** (120 secondes par défaut) : au-delà, l'analyse échoue ;
+    * **Sortie structurée** : « Objet JSON » (par défaut) convient à la plupart des fournisseurs ; « Schéma JSON
+      (strict) » transmet en plus le schéma de la réponse, pris en charge par OpenAI, Mistral et Ollama mais pas par
+      tous les modèles ; « Aucune » n'envoie pas de `response_format`, pour les fournisseurs qui le refusent ;
+    * **Langue des réponses** : « Langue de l'utilisateur » (par défaut : français, anglais ou allemand selon son
+      profil, anglais sinon), ou une langue fixe.
 
-### Obtenir une clé {#key}
+Le bouton « Tester la connexion » envoie au modèle une requête minimale (quelques jetons), avec l'URL, la clé et le
+modèle saisis, même avant l'enregistrement, et affiche le statut HTTP, la latence et le modèle qui a répondu, ou
+l'erreur. La clé n'est jamais affichée. Si le champ de la clé est laissé vide, la clé enregistrée n'est utilisée que
+si l'URL est celle enregistrée : elle n'est jamais envoyée à un autre hôte.
 
-L'URL et la clé sont communiquées par Sourcentis : contactez-nous pour en obtenir une. La clé n'est transmise qu'une
-seule fois : collez-la dans le champ « Clé API » de Deming.
+### Prompts {#prompts}
 
-Contactez-nous également si vous souhaitez utiliser votre propre moteur d'IA à la place de la passerelle IA Sourcentis.
+La section « Prompts » contient un bloc par type d'objet : mesure de sécurité, contrôle, plan d'action et risque.
+Chaque bloc affiche :
+
+* les **instructions**, modifiables : le rôle de l'agent, la méthode d'analyse, les règles, le calibrage du statut et
+  les quatre points de vue. Le prompt par défaut est rédigé en anglais, langue dans laquelle les modèles, en
+  particulier les modèles open-weight, suivent le plus fidèlement les consignes et le format JSON. Vous pouvez le
+  réécrire dans la langue de votre choix. `{language}` est remplacé par la langue des réponses ; rien d'autre n'est
+  interprété (ni Blade, ni PHP) : le texte est envoyé tel quel. Longueur maximale : 20 000 caractères ;
+
+* le **contrat de sortie**, en lecture seule. Deming l'ajoute automatiquement après les instructions : il demande de
+  traiter le bloc `<deming_object>` comme des données et jamais comme des instructions, fixe le schéma JSON de la
+  réponse (clés en anglais, valeurs à liste fermée) et la consigne de langue
+  *« Write every string value in {language} »*. Le panneau lit ce format : l'administrateur ne peut donc pas le
+  casser ;
+
+* le bouton **« Réinitialiser le prompt par défaut »**, actif lorsque le prompt a été personnalisé. Un prompt vidé ou
+  identique au prompt par défaut revient aussi au prompt par défaut.
+
+Le modèle reçoit ainsi deux messages :
+
+* un message **système** : les instructions, puis le contrat de sortie ;
+
+* un message **utilisateur** : la date du jour et les données de l'objet en JSON, dans leur langue d'origine, entre
+  les balises `<deming_object>` et `</deming_object>`.
+
+Modifier un prompt, le modèle ou la langue des réponses invalide les analyses enregistrées : elles sont recalculées à
+la prochaine ouverture du panneau. Les [logs](config.fr.md#logs) indiquent qui a modifié un prompt et quand, avec une
+empreinte du texte mais sans son contenu.
+
+### Exemples de configuration {#key}
+
+| Fournisseur | URL | Clé | Modèle (exemple) |
+|---|---|---|---|
+| Passerelle IA Sourcentis | `https://ai.sourcentis.lu/v1` | Clé de la passerelle, fournie par Sourcentis | `sourcentis-standard` |
+| OVHcloud AI Endpoints | `https://oai.endpoints.kepler.ai.cloud.ovh.net/v1` | Jeton d'accès AI Endpoints | `Meta-Llama-3_3-70B-Instruct` |
+| OpenAI | `https://api.openai.com/v1` | Clé API OpenAI | `gpt-4o-mini` |
+| Mistral AI | `https://api.mistral.ai/v1` | Clé API Mistral | `mistral-large-latest` |
+| Ollama (local) | `http://localhost:11434/v1` | Aucune | `llama3.1` |
+
+Remarques :
+
+* la passerelle IA Sourcentis est un fournisseur comme un autre : contactez Sourcentis pour obtenir une clé ;
+
+* pour Ollama, vLLM ou LM Studio sur une autre machine du réseau ou dans un conteneur, utilisez son adresse privée ou
+  son nom de service (`http://ollama:11434/v1`) ;
+
+* les modèles de raisonnement d'OpenAI (série o, GPT-5) refusent les paramètres `max_tokens` et `temperature` envoyés
+  par Deming : choisissez un autre modèle ;
+
+* les noms de modèles évoluent : le bouton « Charger les modèles » affiche ceux que votre clé autorise.
 
 ### Supprimer toutes les analyses {#purge}
 
@@ -103,44 +169,47 @@ La signification du statut dépend du type d'objet :
 
 | Statut | Mesure de sécurité / Contrôle | Plan d'action | Risque |
 |---|---|---|---|
-| `conforme` | Conforme | Pertinent et en bonne voie | Traitement adéquat |
-| `partiellement_conforme` | Partiellement conforme | À renforcer | Traitement partiel |
-| `non_conforme` | Non conforme | Inadapté ou à l'arrêt | Traitement inadéquat |
-| `non_evaluable` | Non évaluable | Non évaluable | Non évaluable |
+| `compliant` | Conforme | Pertinent et en bonne voie | Traitement adéquat |
+| `partially_compliant` | Partiellement conforme | À renforcer | Traitement partiel |
+| `non_compliant` | Non conforme | Inadapté ou à l'arrêt | Traitement inadéquat |
+| `not_assessable` | Non évaluable | Non évaluable | Non évaluable |
 
 Le bouton « Relancer l'analyse » force une nouvelle analyse, même si rien n'a changé. Le pied du panneau rappelle que
 l'analyse est générée par une IA et doit être validée par un humain, et indique le modèle qui l'a produite et l'hôte
 de l'agent auquel les données ont été envoyées. Le lien « Données envoyées » affiche le [contexte transmis](#preview).
 
 Seule la dernière analyse de chaque objet est conservée. Une nouvelle analyse est lancée automatiquement lorsque
-l'objet, ses objets liés ou la langue de l'utilisateur changent, ou lorsque le fournisseur publie une nouvelle version
-de la tâche (prompt, format ou modèle). Si la passerelle est momentanément injoignable, la dernière analyse reste
-affichée.
+l'objet ou ses objets liés changent, ou lorsque le prompt du type d'objet, le modèle ou la langue des réponses
+changent (voir [Prompts](#prompts)). Sinon, l'analyse enregistrée est réaffichée sans appel au fournisseur.
 
 ### Messages d'erreur {#errors}
 
-En cas d'échec, le panneau affiche un message générique, jamais la réponse de la passerelle, et l'analyse précédente
-est conservée. Les principaux messages sont :
+En cas d'échec, le panneau affiche un message générique, jamais la réponse du fournisseur, et l'analyse précédente
+est conservée : rien n'est enregistré. Les principaux messages sont :
 
 | Message | Cause | Que faire |
 |---|---|---|
-| « Clé d'accès à l'agent IA invalide, suspendue ou résiliée » | La passerelle refuse la clé (HTTP 401) ou ne l'autorise pas pour cette analyse (HTTP 403) | Vérifier la clé dans la configuration, puis contacter Sourcentis |
-| « Quota IA du mois atteint — contactez votre fournisseur » | Le budget mensuel de la clé est épuisé (HTTP 402), jusqu'au 1er du mois suivant | Contacter Sourcentis |
-| « Trop de demandes, réessayez dans quelques instants » | Limite de débit de la clé ou du fournisseur (HTTP 429) | Réessayer un peu plus tard |
-| « Objet trop volumineux pour être analysé » | Le contexte dépasse la taille admise par la passerelle (HTTP 413) | Raccourcir les textes longs de l'objet |
-| « Agent IA incompatible avec cette version de Deming » | Requête refusée ou tâche inconnue (HTTP 400 ou 404) | Mettre Deming à jour, ou contacter Sourcentis |
-| « Réponse invalide de l'agent IA » / « L'agent IA n'a pas répondu à temps » | Réponse du modèle invalide (HTTP 502) ou délai dépassé (HTTP 504) | Relancer l'analyse |
+| « Clé API refusée par le fournisseur d'IA » | Clé invalide ou non autorisée (HTTP 401 ou 403) | Vérifier la clé dans la configuration |
+| « Quota IA atteint — contactez votre fournisseur » | Budget épuisé (HTTP 402) | Contacter le fournisseur |
+| « Trop de demandes, réessayez dans quelques instants » | Limite de débit (HTTP 429) | Réessayer un peu plus tard |
+| « Objet trop volumineux pour être analysé par ce modèle » | Contexte trop grand pour le fournisseur (HTTP 413) | Raccourcir les textes longs de l'objet, ou choisir un modèle à plus grande fenêtre de contexte |
+| « Requête refusée par le fournisseur d'IA : vérifiez le modèle et le réglage de sortie structurée » | Modèle inconnu ou paramètre refusé (HTTP 400, 404, 405 ou 422) | Vérifier le nom du modèle ; passer la sortie structurée à « Objet JSON » ou « Aucune » |
+| « Le fournisseur d'IA a renvoyé une erreur, réessayez plus tard » | Erreur du fournisseur (HTTP 5xx) | Relancer l'analyse plus tard |
+| « Le fournisseur d'IA n'a pas répondu à temps » | Délai dépassé | Relancer l'analyse, ou augmenter le délai |
+| « La réponse a été tronquée : augmentez le nombre maximal de jetons » | Réponse coupée par la limite de jetons | Augmenter « Jetons max. » |
+| « Réponse invalide du modèle d'IA » | La réponse ne contient pas d'objet JSON conforme au contrat de sortie | Relancer l'analyse ; essayer « Schéma JSON (strict) » ou un modèle plus capable |
+| « L'URL ou le modèle du fournisseur d'IA n'est pas configuré » | Configuration incomplète | Compléter l'onglet IA |
 
 ## Qui peut lancer une analyse {#access}
 
-On peut analyser un objet si l'on peut l'afficher, sauf avec le rôle auditeur ou API. Les droits sont vérifiés par
+On peut analyser un objet si l'on peut l'afficher, sauf avec le rôle audité, auditeur ou API. Les droits sont vérifiés par
 le serveur à chaque demande.
 
 | Rôle | Mesure de sécurité | Contrôle | Plan d'action | Risque |
 |---|---|---|---|---|
 | Administrateur | ✓ | ✓ | ✓ | ✓ |
 | Utilisateur | ✓ (selon affectation et vue groupe) | ✓ (idem) | ✓ | ✓ |
-| Audité | ✓ si assigné | ✓ si assigné | — | — |
+| Audité | — | — | — | — |
 | Auditeur | — | — | — | — |
 | API | — | — | — | — |
 
@@ -150,29 +219,27 @@ Précisions :
   contrôles ; un contrôle est accessible si l'utilisateur y est assigné directement ou par l'un de ses
   [groupes](config.fr.md#groups) ;
 
-* l'audité n'a pas accès aux plans d'action et aux risques, ni à leur analyse ; les risques liés ne sont pas envoyés
-  lorsqu'il analyse une mesure de sécurité ;
-
-* l'auditeur n'a accès ni à l'icône, ni au panneau, ni aux analyses enregistrées, même pour un objet qu'il peut
-  afficher.
+* l'audité et l'auditeur n'ont accès ni à l'icône, ni au panneau, ni aux analyses enregistrées, même pour un objet
+  qu'ils peuvent afficher.
 
 ## Protection des données {#privacy}
 
 Cette section décrit précisément ce qui sort de Deming lors d'une analyse. Elle s'adresse en particulier au RSSI et
 au DPO.
 
-### Données envoyées à l'agent
+### Données envoyées à l'agent {#data-sent}
 
-Chaque analyse envoie à la passerelle, sur la tâche du type d'objet :
+Chaque analyse envoie au fournisseur configuré une requête `POST {URL}/chat/completions` contenant :
 
-* le **contexte** de l'objet analysé, décrit ci-dessous, après [masquage](#redaction) ;
+* le **prompt système** : les [instructions](#prompts) du type d'objet, puis le contrat de sortie ;
 
-* la **langue** de l'utilisateur (`fr`, `en` ou `de`) ;
+* la **date du jour** et le **contexte** de l'objet analysé, décrit ci-dessous, après [masquage](#redaction) ;
 
-* la **date du jour**.
+* le nom du **modèle** et les paramètres (température, nombre maximal de jetons, format de sortie).
 
-Rien d'autre n'est transmis : ni prompt, ni format de réponse, ni nom de modèle. Le prompt et le format sont ajoutés
-par la passerelle.
+Le contexte est structuré avec des clés en anglais ; les textes saisis dans Deming sont envoyés dans leur langue
+d'origine, sans traduction. L'en-tête `X-Client-App: deming/<version>` identifie l'application ; la clé API est
+envoyée dans l'en-tête `Authorization`, uniquement si elle est définie.
 
 Les champs texte longs de l'objet analysé sont limités à 4 000 caractères ; ceux des objets liés (observations,
 justifications…) à 300 caractères.
@@ -182,8 +249,8 @@ indicateur, plan d'action, périodicité, jusqu'à 15 contrôles rattachés, un 
 objectif, données d'entrée, modèle et indicateur résumés, périodicité, dernier résultat avec sa date, son score et ses
 observations résumées, les 3 derniers scores, prochaine date planifiée, en retard ou non), les 5 prochains contrôles
 planifiés (date planifiée, statut, en retard ou non), les plans d'action ouverts liés (référence, nom, type,
-criticité, statut, avancement, échéance, en retard ou non), les risques liés (nom, niveau, statut de traitement ; non envoyés si l'analyse est
-lancée par un audité), les exceptions (nom, statut, dates de début et de fin, expirée ou non, justification et mesures compensatoires résumées)
+criticité, statut, avancement, échéance, en retard ou non), les risques liés (nom, niveau, statut de traitement), les
+exceptions (nom, statut, dates de début et de fin, expirée ou non, justification et mesures compensatoires résumées)
 et jusqu'à 10 correspondances avec d'autres référentiels (référentiel, clause, nom, type et couverture).
 
 **Contrôle** : nom, périmètre, mesures de sécurité couvertes (clause et nom), objectif, attributs, données d'entrée,
@@ -250,20 +317,21 @@ avant ou après une analyse pour vérifier ce qui part réellement. Il est soumi
 
 ### Où vont les données
 
-Les données sont envoyées uniquement à l'hôte configuré dans l'URL de l'agent, affiché en bas du panneau. Deming ne
-suit aucune redirection vers un autre hôte, et le protocole `https` est obligatoire, avec vérification du certificat,
-sauf pour une passerelle de développement sur `localhost`.
+Les données sont envoyées uniquement à l'hôte configuré dans l'URL du fournisseur, affiché en bas du panneau. Deming
+ne suit aucune redirection vers un autre hôte, et le protocole `https` est obligatoire, avec vérification du
+certificat, sauf pour un modèle hébergé sur la machine ou le réseau local.
 
-Le trajet des données est le suivant :
+Le trajet et la conservation des données dépendent du fournisseur choisi :
 
-1. **Deming** minimise et masque le contexte, avant tout envoi ;
-2. la **passerelle IA Sourcentis** (sous-traitant) ajoute le prompt et le format de réponse, puis transmet la
-   requête au modèle ;
-3. **OVHcloud** (sous-traitant ultérieur) exécute le modèle.
+* avec la **passerelle IA Sourcentis** (sous-traitant), la passerelle transmet la requête au modèle, exécuté par
+  **OVHcloud** (sous-traitant ultérieur). Selon sa documentation, la passerelle ne stocke ni ne journalise le
+  contexte, le prompt ou la réponse : seuls des agrégats journaliers sont conservés pour la facturation ;
 
-Selon sa documentation, la passerelle ne stocke ni ne journalise le contexte, le prompt ou la réponse : seuls des
-agrégats journaliers sont conservés pour la facturation (client, modèle, nombre de tokens, coût et date). La
-conservation des données chez OVHcloud relève de ses conditions et de son accord de traitement des données (DPA).
+* avec un **fournisseur direct** (OVHcloud AI Endpoints, OpenAI, Mistral…), les données lui sont envoyées sans
+  intermédiaire ; leur conservation et leur localisation relèvent de ses conditions et de son accord de traitement
+  des données (DPA) ;
+
+* avec un **modèle local** (Ollama, vLLM, LM Studio), les données ne quittent pas votre infrastructure.
 
 ### Ce que Deming conserve
 
@@ -273,14 +341,15 @@ conservation des données chez OVHcloud relève de ses conditions et de son acco
 * Les analyses n'apparaissent ni dans l'[API REST](api.fr.md), ni dans les exports, ni dans les rapports, et ne sont
   pas enregistrées dans les [logs](config.fr.md#logs) : une analyse n'est pas une modification de l'objet.
 
-* Les logs applicatifs ne contiennent que des métadonnées : type et identifiant de l'objet, modèle, version de la
-  tâche, durée, nombre de tokens et statut. Ni le contexte, ni la réponse, ni la clé n'y figurent.
+* Les logs applicatifs ne contiennent que des métadonnées : type et identifiant de l'objet, modèle, durée, nombre de
+  jetons, statut et code HTTP renvoyé par le fournisseur. Ni le prompt, ni le contexte, ni la réponse, ni l'URL, ni
+  la clé n'y figurent.
 
 * La clé API est chiffrée avec l'`APP_KEY` de l'application ; changer l'`APP_KEY` impose de ressaisir la clé.
 
 ### Sécurité de la fonction
 
-* L'analyse est soumise aux mêmes droits que l'affichage de l'objet ; l'auditeur et le rôle API en sont exclus
+* L'analyse est soumise aux mêmes droits que l'affichage de l'objet ; l'audité, l'auditeur et le rôle API en sont exclus
   (voir [Qui peut lancer une analyse](#access)).
 
 * Les requêtes sont protégées contre le CSRF et limitées à 10 par minute.
@@ -299,10 +368,10 @@ Points à vérifier par le responsable de traitement. Ces recommandations ne con
 - [ ] Consulter le DPO.
 - [ ] Mettre à jour le registre des activités de traitement (RGPD, article 30) si des données personnelles peuvent
       être transmises.
-- [ ] Disposer d'un contrat de sous-traitance (DPA, RGPD article 28) avec Sourcentis, mentionnant OVHcloud comme
-      sous-traitant ultérieur.
-- [ ] Vérifier la localisation des traitements et l'absence de transfert hors de l'Union européenne, y compris chez
-      OVHcloud.
+- [ ] Disposer d'un contrat de sous-traitance (DPA, RGPD article 28) avec le fournisseur choisi (par exemple
+      Sourcentis, avec OVHcloud comme sous-traitant ultérieur), sauf pour un modèle hébergé en interne.
+- [ ] Vérifier la localisation des traitements et l'absence de transfert hors de l'Union européenne chez le
+      fournisseur choisi.
 - [ ] Évaluer le besoin d'une analyse d'impact (AIPD), en particulier dans les secteurs traitant des données
       sensibles comme la santé.
 - [ ] Informer les utilisateurs de Deming de l'existence de la fonction et de la consigne sur les textes libres.
@@ -319,6 +388,7 @@ Points à vérifier par le responsable de traitement. Ces recommandations ne con
 
 * Le coût et le temps de réponse dépendent du fournisseur et du modèle.
 
-* La fonction nécessite un abonnement à la passerelle IA Sourcentis.
+* La qualité et le coût dépendent du modèle choisi : un petit modèle local peut produire des analyses moins
+  fiables, ou ne pas respecter le format attendu.
 
 * La qualité de l'analyse dépend de la qualité des données saisies dans Deming.

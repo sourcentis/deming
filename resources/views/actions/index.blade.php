@@ -74,7 +74,7 @@
 
     <div class="row mt-3">
 
-        <table data-order="[[0,&quot;asc&quot;]]" data-page-length="100" id="actions" class="table table-striped table-hover table-bordered datatable">
+        <table data-order="[[0,&quot;asc&quot;]]" data-page-length="100" id="actions" data-title="Deming - {{ trans('cruds.action.index') }} - {{ now()->format('d/m/Y') }}" class="table table-striped table-hover table-bordered datatable">
 	    <thead>
 	    <tr>
             <th>{{ trans('cruds.action.fields.reference') }}</th>
@@ -95,7 +95,7 @@
         <tr data-href="/action/show/{{ $action->id }}">
             <td>
                 <b id="{{ $action->reference }}" style="font-size: 0.8em;">
-                    {{ $action->reference==null ? ("ACT-".$action->id) : $action->reference }}
+                    {{ \App\Models\Action::displayReference($action->reference, $action->id) }}
                 </b>
             </td>
             <td>

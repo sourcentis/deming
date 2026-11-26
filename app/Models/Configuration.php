@@ -29,7 +29,15 @@ class Configuration extends Model
     public const DEFAULTS = [
         'ai.enabled' => '0',
         'ai.api_key' => null,
+        'ai.temperature' => '0.2',
+        'ai.max_tokens' => '8000',
+        'ai.timeout' => '120',
+        'ai.structured_output' => 'json_object',
+        'ai.output_language' => 'auto',
     ];
+
+    // Keys whose content is replaced by a fingerprint in the audit log (AI prompts)
+    public const AUDIT_FINGERPRINT_PREFIX = 'ai.prompt.';
 
     // Values loaded once per request
     private static ?array $cache = null;
@@ -145,6 +153,9 @@ class Configuration extends Model
     {
         if ($value !== null && in_array($name, self::ENCRYPTED, true)) {
             $value = '***';
+        } elseif ($value !== null && str_starts_with($name, self::AUDIT_FINGERPRINT_PREFIX)) {
+            // Who changed the prompt and when, not its content
+            $value = 'sha256:' . hash('sha256', $value) . ' (' . mb_strlen($value) . ' characters)';
         }
 
         AuditLog::query()->create([

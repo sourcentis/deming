@@ -3,32 +3,57 @@
 namespace App\Services\Ai;
 
 /**
- * Defensive check of the analysis before it is stored and displayed.
+ * Reading and defensive check of the answer before it is stored and displayed.
  *
- * The response format is defined by the AI gateway (tasks/_schemas/analysis-v*.json
- * in llm-gateway), which validates the answer of the model. Deming follows
- * versions 1 and 2 of that format and does not define it: this guard only
- * protects the panel. Version 2 adds the "lacune" finding type and the optional
- * "referentiel" list (expected good practices and their coverage by the controls).
+ * The format is the output contract of AiPrompt (resources/ai/contract.json),
+ * locked in the code because the panel parses it.
  *
- * - The essential fields (synthese, statut_evalue) must be strings: otherwise 502.
+ * - The JSON object is extracted from the text of the model, tolerating a
+ *   Markdown code fence, a reasoning block or text around it.
+ * - The essential fields (summary, assessed_status) must be strings: otherwise 502.
  * - The other displayed fields are kept when they have the type the panel
  *   expects, and dropped otherwise; an absent field is simply not displayed.
- * - An unknown enum value is not an error: it is displayed as is, with a grey
- *   badge, so that the gateway can evolve its format without breaking Deming.
+ * - An unknown enum value is not an error: it is displayed as is, with a grey badge.
  * - Fields the panel does not use are dropped.
  */
 class AiResponseGuard
 {
-    // Versions of the gateway's response format followed by Deming
-    public const SCHEMAS = ['analysis-v1', 'analysis-v2'];
-
-    private const ESSENTIAL = ['synthese', 'statut_evalue'];
-    private const OPTIONAL_STRINGS = ['niveau_risque', 'confiance'];
+    private const ESSENTIAL = ['summary', 'assessed_status'];
+    private const OPTIONAL_STRINGS = ['risk_level', 'confidence'];
     private const FINDING = ['type', 'description'];
-    private const RECOMMENDATION = ['priorite', 'action', 'justification', 'echeance_suggeree', 'reference'];
-    private const VIEWPOINTS = ['ceo', 'rssi', 'dpo', 'auditeur'];
-    private const PRACTICE = ['element', 'couverture', 'controles', 'commentaire'];
+    private const RECOMMENDATION = ['priority', 'action', 'rationale', 'suggested_due_date', 'reference'];
+    private const VIEWPOINTS = ['ceo', 'ciso', 'dpo', 'auditor'];
+    private const PRACTICE = ['practice', 'coverage', 'controls', 'comment'];
+
+    /**
+     * JSON object contained in the text answered by the model.
+     *
+     * @throws AiAgentException
+     */
+    public function extract(string $content): mixed
+    {
+        // Reasoning of some open-weight models
+        $text = trim((string) preg_replace('/<think>.*?<\/think>/s', '', $content));
+
+        $candidates = [$text];
+        if (preg_match('/```(?:json)?\s*(.*?)```/si', $text, $match) === 1) {
+            $candidates[] = trim($match[1]);
+        }
+        $start = strpos($text, '{');
+        $end = strrpos($text, '}');
+        if ($start !== false && $end !== false && $end > $start) {
+            $candidates[] = substr($text, $start, $end - $start + 1);
+        }
+
+        foreach ($candidates as $candidate) {
+            $data = json_decode($candidate, true);
+            if (is_array($data)) {
+                return $data;
+            }
+        }
+
+        $this->fail();
+    }
 
     /**
      * @return array<string, mixed> the data the panel can display
@@ -55,32 +80,32 @@ class AiResponseGuard
             }
         }
 
-        $practices = $this->objects($data['referentiel'] ?? null, self::PRACTICE, ['element', 'couverture']);
+        $practices = $this->objects($data['good_practices'] ?? null, self::PRACTICE, ['practice', 'coverage']);
         if ($practices !== null) {
-            $result['referentiel'] = $practices;
+            $result['good_practices'] = $practices;
         }
 
-        $findings = $this->objects($data['constats'] ?? null, self::FINDING, ['description']);
+        $findings = $this->objects($data['findings'] ?? null, self::FINDING, ['description']);
         if ($findings !== null) {
-            $result['constats'] = $findings;
+            $result['findings'] = $findings;
         }
 
-        $recommendations = $this->objects($data['recommandations'] ?? null, self::RECOMMENDATION, ['action']);
+        $recommendations = $this->objects($data['recommendations'] ?? null, self::RECOMMENDATION, ['action']);
         if ($recommendations !== null) {
-            $result['recommandations'] = $recommendations;
+            $result['recommendations'] = $recommendations;
         }
 
-        if (self::isList($data['questions_ouvertes'] ?? null)) {
-            $result['questions_ouvertes'] = array_values(array_filter($data['questions_ouvertes'], 'is_string'));
+        if (self::isList($data['open_questions'] ?? null)) {
+            $result['open_questions'] = array_values(array_filter($data['open_questions'], 'is_string'));
         }
 
-        if (self::isObject($data['points_de_vue'] ?? null)) {
+        if (self::isObject($data['viewpoints'] ?? null)) {
             $viewpoints = array_filter(
-                array_intersect_key($data['points_de_vue'], array_flip(self::VIEWPOINTS)),
+                array_intersect_key($data['viewpoints'], array_flip(self::VIEWPOINTS)),
                 'is_string'
             );
             if ($viewpoints !== []) {
-                $result['points_de_vue'] = $viewpoints;
+                $result['viewpoints'] = $viewpoints;
             }
         }
 

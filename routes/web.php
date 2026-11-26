@@ -111,6 +111,8 @@ Route::namespace('App\\Http\\Controllers')->middleware('auth')->group(function (
     Route::post('/config/ai/save', 'AiConfigController@save');
     Route::post('/config/ai/test', 'AiConfigController@test')->middleware('throttle:10,1');
     Route::post('/config/ai/purge', 'AiConfigController@purge')->middleware('throttle:10,1');
+    Route::post('/config/ai/models', 'AiConfigController@models')->middleware('throttle:10,1');
+    Route::post('/config/ai/prompt/{type}/reset', 'AiConfigController@reset')->whereIn('type', AiSubjects::types());
 
     /* AI analysis */
     Route::post('/ai/{type}/{id}', 'AiController@analyze')

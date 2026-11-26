@@ -8,7 +8,7 @@ use RuntimeException;
  * Business error raised by the AI agent.
  *
  * The reason is a translation key suffix (ai.errors.{reason}); the message
- * shown to the browser is always generic and never contains the gateway's
+ * shown to the browser is always generic and never contains the provider's
  * response body, URL or headers.
  */
 class AiAgentException extends RuntimeException
@@ -26,12 +26,16 @@ class AiAgentException extends RuntimeException
     public const RATE_LIMITED = 'rate_limited';
     // 413: context too large for the task
     public const TOO_LARGE = 'too_large';
-    // 400 or 404: request refused or task unknown, i.e. Deming and the gateway disagree
+    // 400, 404, 405 or 422: request refused, e.g. unknown model or unsupported structured output
     public const INCOMPATIBLE = 'incompatible';
+    // Other 5xx: error of the provider
+    public const PROVIDER_ERROR = 'provider_error';
+    // Answer cut off by max_tokens
+    public const TRUNCATED = 'truncated';
 
     /**
      * @param  int  $status  HTTP status returned to the browser
-     * @param  int|null  $upstreamStatus  HTTP status returned by the gateway, for the connection test
+     * @param  int|null  $upstreamStatus  HTTP status returned by the provider, for the connection test and the log
      */
     public function __construct(
         public readonly string $reason,

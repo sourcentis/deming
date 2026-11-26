@@ -26,6 +26,10 @@
                         <a href="/user/show/{{ $auditLogs->first()->subject_id }} ">
                             {{ $auditLogs->first()->subject_id }}
                         </a>
+                    @elseif ($auditLogs->first()->subject_type=='App\Models\Risk')
+                        <a href="/risk/show/{{ $auditLogs->first()->subject_id }} ">
+                            {{ $auditLogs->first()->subject_id }}
+                        </a>
                     @else
                         {{ $auditLogs->first()->subject_id }}
                     @endif
@@ -65,18 +69,30 @@
                 </td>
                 @endforeach
             </tr>
-            @foreach($auditLog->properties as $key => $value)
+            @php
+                // Union of the property keys of all versions, in order of appearance
+                $keys = [];
+                foreach ($auditLogs as $log) {
+                    foreach ((array) $log->properties as $k => $v) {
+                        $keys[$k] = true;
+                    }
+                }
+                // Normalised representation used to detect a change between two versions
+                $fingerprint = fn ($v) => json_encode($v === '' ? null : $v);
+                $valueOf = fn ($log, $k) => (is_object($log->properties) && property_exists($log->properties, $k))
+                    ? $log->properties->{$k}
+                    : null;
+            @endphp
+            @foreach(array_keys($keys) as $key)
             <tr>
                     <th>[{{ $key }}]</th>
-                    @php $previous = null; @endphp
                     @foreach($auditLogs as $auditLog2)
                         @php
-                            if (property_exists($auditLog2->properties,$key))
-                                $value = $auditLog2->properties->{$key};
-                            else
-                                $value = null;
+                            $value = $valueOf($auditLog2, $key);
+                            // Columns go from newest to oldest: compare with the next (older) version
+                            $older = $auditLogs->get($loop->index + 1);
                         @endphp
-                    <td {!! (($loop->first)||($value==$previous)) ? "" : "class='info'" !!}>
+                    <td @if($older !== null && $fingerprint($value) !== $fingerprint($valueOf($older, $key))) class="changed" @endif>
                         @if ((gettype($value)=="string")&&(strlen($value)>100))
                             {{ substr($value,0,100) }}
                         @elseif ((gettype($value)=="array"))
@@ -87,7 +103,6 @@
                             {{ $value }}
                         @endif
                     </td>
-                        @php $previous = $value; @endphp
                     @endforeach
             </tr>
             @endforeach
@@ -126,6 +141,12 @@
 <style>
     .table {
         min-width: max-content;
+    }
+
+    .table td.changed {
+        --bs-table-bg: #d4f8d4;
+        --bs-table-bg-state: #d4f8d4;
+        background-color: #d4f8d4;
     }
 
     .table-responsive .panel-content {

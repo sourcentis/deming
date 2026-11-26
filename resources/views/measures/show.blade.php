@@ -294,7 +294,7 @@
 					</button>
 				</form>
 				&nbsp;
-				<a class="btn btn-light border" href="/logs/history/bob/{{ $measure->id }}">
+				<a class="btn btn-light border" href="/logs/history/alice/{{ $measure->id }}">
 					<span class="bi bi-journal-text"></span> {{ trans("common.history") }}
 				</a>
 				&nbsp;

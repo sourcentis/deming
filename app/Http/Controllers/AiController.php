@@ -25,7 +25,7 @@ class AiController extends Controller
         try {
             $result = $service->analyze($type, $object, $request->boolean('force'));
         } catch (AiAgentException $e) {
-            // Generic message only, never the agent's response
+            // Generic message only, never the provider's response
             return response()->json(['ok' => false, 'error' => $e->translatedMessage()], $e->status);
         }
 
@@ -43,10 +43,10 @@ class AiController extends Controller
     // Server-side checks, in this order: AI enabled, role, object exists, access rule
     private function subject(string $type, int $id): Model
     {
-        abort_if(! Configuration::aiEnabled(), Response::HTTP_NOT_FOUND, '404 Not Found');
+        abort_if(! Configuration::aiEnabled(), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $user = Auth::user();
-        abort_if($user->isAuditor() || $user->isAPI(), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if($user->isAuditor() || $user->isAuditee() || $user->isAPI(), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $object = AiSubjects::find($type, $id);
         abort_if($object === null, Response::HTTP_NOT_FOUND, '404 Not Found');

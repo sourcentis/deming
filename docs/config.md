@@ -41,7 +41,7 @@ There are six different roles:
 * Users: users can use the application without being able to modify the measurements, attributes and controls already carried out.
 
 * Auditee: Auditees can only carry out and see the measurements that have been assigned to them or that they have
-  carried out previously (see [Delegation](delegation.md)).
+  carried out previously (see [Delegation](delegation.md)). The auditee cannot use the [AI agent](ai.md#access).
 
 * Auditor: the auditor has read access to all the information in the application. The auditor cannot use the [AI agent](ai.md#access).
 
@@ -195,9 +195,8 @@ Example:
 ## AI {#ai}
 
 The "AI" tab of the [Settings](#parameters) page, restricted to administrators, is used to enable and configure the [AI agent](ai.md) that analyses
-controls, measurements, action plans and risks: activation, agent URL, API key, list of the available tasks,
-connection test and deletion of all analyses. The prompts and the models are managed by the provider of the agent,
-the Sourcentis AI gateway. AI is disabled by default.
+controls, measurements, action plans and risks: activation, OpenAI-compatible provider (URL, API key, model and
+parameters), editable prompts, connection test and deletion of all analyses. AI is disabled by default.
 
 [![Screenshot](images/ai-config.png)](images/ai-config.png)
 

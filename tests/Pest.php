@@ -8,7 +8,7 @@ pest()->extend(Tests\TestCase::class)
     ->beforeEach(function () {
         \App\Models\RiskScoringConfig::clearCache();
         \App\Models\Configuration::clearCache();
-        // No test may reach a real host (the AI settings page reads the gateway catalog)
+        // No test may reach a real host (AI provider)
         \Illuminate\Support\Facades\Http::preventStrayRequests();
     })
     ->in('Feature');
@@ -28,83 +28,80 @@ expect()->extend('toBeOne', function () {
 |--------------------------------------------------------------------------
 */
 
-/** A valid analysis, as returned by the agent. */
+/** A valid analysis, as returned by the model. */
 function aiValidAnalysis(array $overrides = []): array
 {
     return array_replace([
-        'synthese' => 'Synthèse de test.',
-        'statut_evalue' => 'partiellement_conforme',
-        'niveau_risque' => 'moyen',
-        'confiance' => 'moyenne',
-        'constats' => [['type' => 'faiblesse', 'description' => 'Preuves insuffisantes.']],
-        'recommandations' => [[
-            'priorite' => 'haute',
-            'action' => 'Documenter les preuves.',
-            'justification' => 'Constat 1.',
-            'echeance_suggeree' => '3 mois',
+        'summary' => 'Test summary.',
+        'assessed_status' => 'partially_compliant',
+        'risk_level' => 'medium',
+        'confidence' => 'medium',
+        'findings' => [['type' => 'weakness', 'description' => 'Insufficient evidence.']],
+        'recommendations' => [[
+            'priority' => 'high',
+            'action' => 'Document the evidence.',
+            'rationale' => 'Finding 1.',
+            'suggested_due_date' => '3 months',
             'reference' => 'ISO 27001:2022 9.1',
         ]],
-        'questions_ouvertes' => [],
-        'points_de_vue' => ['ceo' => 'A.', 'rssi' => 'B.', 'dpo' => 'C.', 'auditeur' => 'D.'],
+        'open_questions' => [],
+        'viewpoints' => ['ceo' => 'A.', 'ciso' => 'B.', 'dpo' => 'C.', 'auditor' => 'D.'],
     ], $overrides);
 }
 
-const AI_GATEWAY_TYPES = ['control', 'measure', 'action', 'risk'];
-
-/** Answer of POST {base_url}/deming/{type}, wrapping the given analysis. */
-function aiAgentResponse(?array $data = null, array $extra = [], int $status = 200)
+/**
+ * Chat completion answered by the provider. The content is the given analysis
+ * as JSON, or the given raw text.
+ */
+function aiAgentResponse(array|string|null $data = null, array $extra = [], int $status = 200)
 {
+    $content = is_string($data) ? $data : json_encode($data ?? aiValidAnalysis(), JSON_UNESCAPED_UNICODE);
+
     return \Illuminate\Support\Facades\Http::response(array_replace([
-        'task' => 'deming/control',
-        'task_version' => 'v1',
-        'schema' => 'analysis-v1',
-        'model' => 'sourcentis-standard',
-        'data' => $data ?? aiValidAnalysis(),
+        'id' => 'chatcmpl-test',
+        'object' => 'chat.completion',
+        'model' => 'test-model',
+        'choices' => [[
+            'index' => 0,
+            'message' => ['role' => 'assistant', 'content' => $content],
+            'finish_reason' => 'stop',
+        ]],
         'usage' => ['prompt_tokens' => 1000, 'completion_tokens' => 234, 'total_tokens' => 1234],
     ], $extra), $status);
 }
 
-/** Answer of GET {base_url}/tasks: the Deming tasks of the given types, and a task of another application. */
-function aiTasksResponse(string $version = 'v1', array $types = AI_GATEWAY_TYPES)
+/** Answer of GET {base_url}/models. */
+function aiModelsResponse(array $ids = ['test-model', 'other-model'])
 {
-    $tasks = array_map(fn (string $type) => [
-        'id' => "deming/{$type}",
-        'application' => 'deming',
-        'task' => $type,
-        'title' => ['fr' => "Analyse {$type}", 'en' => "Analysis {$type}", 'de' => "Analyse {$type} (de)"],
-        'description' => ['fr' => '…'],
-        'languages' => ['fr', 'en', 'de'],
-        'schema' => ['name' => 'analysis-v1', 'content' => ['type' => 'object']],
-        'task_version' => $version,
-    ], $types);
-    $tasks[] = ['id' => 'mercator/map', 'title' => ['fr' => 'Autre application'], 'task_version' => 'other'];
-
-    return \Illuminate\Support\Facades\Http::response(['object' => 'list', 'data' => $tasks]);
+    return \Illuminate\Support\Facades\Http::response([
+        'object' => 'list',
+        'data' => array_map(fn (string $id) => ['id' => $id, 'object' => 'model'], $ids),
+    ]);
 }
 
-/** Error of the gateway, with a body that must never reach the browser. */
+/** Error of the provider, with a body that must never reach the browser. */
 function aiGatewayError(int $status, string $code = 'error')
 {
     return \Illuminate\Support\Facades\Http::response(['error' => [
-        'message' => "secret gateway body {$code}", 'type' => 'error', 'code' => $code,
+        'message' => "secret provider body {$code}", 'type' => 'error', 'code' => $code,
     ]], $status);
 }
 
-/** Fakes the gateway: GET /tasks and POST /deming/{type}. */
-function aiFakeGateway(mixed $run = null, mixed $tasks = null): void
+/** Fakes the provider: POST /chat/completions and GET /models. */
+function aiFakeGateway(mixed $run = null, mixed $models = null): void
 {
     $run ??= aiAgentResponse();
-    $tasks ??= aiTasksResponse();
+    $models ??= aiModelsResponse();
 
-    // A single dispatcher: with URL patterns, Laravel would also feed GET /tasks to a POST sequence
-    \Illuminate\Support\Facades\Http::fake(function (\Illuminate\Http\Client\Request $request, array $options) use ($run, $tasks) {
-        $stub = $request->method() === 'GET' && str_ends_with($request->url(), '/tasks') ? $tasks : $run;
+    // A single dispatcher: with URL patterns, Laravel would also feed GET /models to a POST sequence
+    \Illuminate\Support\Facades\Http::fake(function (\Illuminate\Http\Client\Request $request, array $options) use ($run, $models) {
+        $stub = $request->method() === 'GET' ? $models : $run;
 
         return is_callable($stub) ? $stub($request, $options) : $stub;
     });
 }
 
-/** Number of analyses requested from the gateway (POST), the catalog excluded. */
+/** Number of chat completions sent to the provider. */
 function aiRunCount(): int
 {
     return \Illuminate\Support\Facades\Http::recorded(fn ($request) => $request->method() === 'POST')->count();
@@ -127,9 +124,16 @@ function aiCreateSubject(string $type): \Illuminate\Database\Eloquent\Model
     return $object->fresh();
 }
 
-// AI enabled with a test gateway (there is no default gateway URL)
+// AI configured with a test provider (there is no default provider)
+function aiConfigure(): void
+{
+    \App\Models\Configuration::set('ai.base_url', 'https://agent.example.com/v1');
+    \App\Models\Configuration::set('ai.model', 'test-model');
+}
+
+// AI enabled with a test provider
 function aiEnable(): void
 {
     \App\Models\Configuration::set('ai.enabled', '1');
-    \App\Models\Configuration::set('ai.base_url', 'https://agent.example.com/v1');
+    aiConfigure();
 }

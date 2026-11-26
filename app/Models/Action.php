@@ -62,6 +62,24 @@ class Action extends Model
         return in_array($user->role, [User::ROLE_ADMIN, User::ROLE_USER, User::ROLE_AUDITOR], true);
     }
 
+    /** Number of digits of the default reference, cached for the request. */
+    private static ?int $referenceWidth = null;
+
+    /**
+     * Reference to display: the user-defined one, or "ACT-<id>" zero-padded
+     * to the number of digits of the highest action id (ACT-01, ACT-001...).
+     */
+    public static function displayReference(?string $reference, int $id): string
+    {
+        if ($reference !== null && $reference !== '') {
+            return $reference;
+        }
+
+        self::$referenceWidth ??= strlen((string) (self::max('id') ?? 0));
+
+        return 'ACT-' . str_pad((string) $id, self::$referenceWidth, '0', STR_PAD_LEFT);
+    }
+
     public function owners() : BelongsToMany
     {
         return $this->belongsToMany(User::class, 'action_user', 'action_id')->orderBy('name');

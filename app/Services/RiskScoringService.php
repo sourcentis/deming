@@ -63,7 +63,7 @@ class RiskScoringService
             'requires_vulnerability' => false,
         ],
         'monarc' => [
-            'label'                  => 'MONARC (Impact × Menace × Vulnérabilité)',
+            'label'                  => 'Impact × Menace × Vulnérabilité',
             'description'            => 'Méthode MONARC. Score = Impact × Menace × Vulnérabilité. Max = 4 × 4 × 5 = 80.',
             'requires'               => ['probability', 'vulnerability', 'impact'],
             'requires_exposure'      => false,

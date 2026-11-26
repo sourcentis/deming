@@ -28,6 +28,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - The `AI_ACTIVATED` parameter of the `.env` file is removed: the AI tab of the
   settings is always shown. AI remains disabled until an administrator enables
   it in the settings.
+- AI agent: auditees can no longer run an analysis nor see the saved
+  analyses, like auditors.
 
 ### Fixed
 

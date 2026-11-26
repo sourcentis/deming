@@ -597,7 +597,7 @@ return [
             'likelihood_x_impact'  => 'Vraisemblance × Impact (BSI 200-3)',
             'additive'             => 'Probabilité + Impact',
             'max_pi'               => 'max(Probabilité, Impact)',
-            'monarc'               => 'MONARC (Impact × Menace × Vulnérabilité)',
+            'monarc'               => 'Impact × Menace × Vulnérabilité',
         ],
 
         // Valeurs par défaut proposées à la création d'une configuration
