@@ -1,9 +1,9 @@
 @extends("layout")
 
 @section("content")
-<form action="/radar/domains">
+<form action="/radar/actions">
     <div class="card">
-    <div class="card-header">@include('partials.help', ['page' => 'radar.actions'])<i class="bi bi-bar-chart"></i> {{ trans('cruds.domain.radar') }}</div>
+    <div class="card-header">@include('partials.help', ['page' => 'radar.actions'])<i class="bi bi-bar-chart"></i> {{ trans('cruds.action.radar') }}</div>
     <div class="card-body">
 
     <div class="row">
@@ -38,7 +38,7 @@
 
             <div class="mt-2">
                 <div class="card">
-    <div class="card-header"><i class="bi bi-bar-chart"></i> {{ trans("cruds.domain.measure_date") }} {{ date('d/m/Y')}}</div>
+    <div class="card-header"><i class="bi bi-bar-chart"></i> {{ trans("cruds.action.radar_date") }} {{ date('d/m/Y')}}</div>
     <div class="card-body">
                     <div class="p-8">
                         <canvas id="actionsChart" class="chartjs-render-monitor"></canvas>
@@ -50,10 +50,7 @@
             <div class="mt-2">
                 <div class="row">
                     <div class="col-md-12">
-                        <table
-                            id="controls"
-                            class="table table-striped table-hover table-bordered"
-                            >
+                        <table data-order="[[0,&quot;asc&quot;]]" data-page-length="100" id="actions" data-title="Deming - {{ trans('cruds.action.radar') }} - {{ now()->format('d/m/Y') }}" class="table table-striped table-hover table-bordered datatable">
                             <thead>
                                 <tr>
                                     <th>{{ trans('cruds.action.fields.reference') }}</th>
@@ -62,35 +59,24 @@
                                     <th>{{ trans('cruds.action.fields.name') }}</th>
                                     <th>{{ trans('cruds.action.fields.due_date') }}</th>
                                     <th>{{ trans('cruds.action.fields.progress') }}</th>
-                        			<th></th>
                                 </tr>
                             </thead>
                             <tbody>
                         @foreach($actions as $action)
-                        <tr>
+                        <tr data-href="/action/show/{{ $action->id }}">
                             <td>
-                            <b id="{{ $action->reference }}"><a href="/action/show/{{ $action->id }}">{{ \App\Models\Action::displayReference($action->reference, $action->id) }}<a>
+                                <b id="{{ $action->reference }}">{{ \App\Models\Action::displayReference($action->reference, $action->id) }}</b>
                             </td>
-                            <td>
-                                <p id="{{ $action->type }}">
-                                    @if ($action->type==1)
-                                    <p class="text-danger fw-bold">
-                                    {{ trans('cruds.action.types.major') }}
-                                    </p>
-                                    @elseif ($action->type==2)
-                                    <p class="text-orange fw-bold">
-                                    {{ trans('cruds.action.types.minor') }}
-                                    </p>
-                                    @elseif ($action->type==3)
-                                    <p class="text-warning fw-bold">
-                                    {{ trans('cruds.action.types.observation') }}
-                                    </p>
-                                    @elseif ($action->type==4)
-                                    <p class="text-success fw-bold">
-                                    {{ trans('cruds.action.types.opportunity') }}
-                                    </p>
-                                    @endif
-                                </p>
+                            <td data-order="{{ $action->type }}">
+                                @if ($action->type==1)
+                                    <div class="text-danger fw-bold">{{ trans('cruds.action.types.major') }}</div>
+                                @elseif ($action->type==2)
+                                    <div class="text-orange fw-bold">{{ trans('cruds.action.types.minor') }}</div>
+                                @elseif ($action->type==3)
+                                    <div class="text-warning fw-bold">{{ trans('cruds.action.types.observation') }}</div>
+                                @elseif ($action->type==4)
+                                    <div class="text-success fw-bold">{{ trans('cruds.action.types.opportunity') }}</div>
+                                @endif
                             </td>
                             <td id="{{ $action->status }}">
                                 @if ($action->status==0)
@@ -115,11 +101,16 @@
                                 </b>
                             @endif
                             </td>
-                            <td width="40">
-                                <div class="progress-donut {{ $action->progress < 25 ? 'donut-red' : ($action->progress < 50 ? 'donut-orange' : 'donut-green') }}" style="--value: {{ (int) $action->progress }}">{{ (int) $action->progress }}%</div>
-                            </td>
-                            <td style="padding: 0; text-align: center; vertical-align: middle;" width=400 height=110>
-                                <canvas id="progressChart{{ $action->id }}" width="400" height="100"></canvas>
+                            <td style="min-width: 130px" data-order="{{ (int) $action->progress }}">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="progress flex-grow-1" role="progressbar"
+                                         aria-label="{{ trans('cruds.action.fields.progress') }}"
+                                         aria-valuenow="{{ (int) $action->progress }}" aria-valuemin="0" aria-valuemax="100">
+                                        <div class="progress-bar {{ $action->progress < 25 ? 'bg-danger' : ($action->progress < 50 ? 'bg-warning' : 'bg-success') }}"
+                                             style="width: {{ (int) $action->progress }}%"></div>
+                                    </div>
+                                    <small class="text-nowrap">{{ (int) $action->progress }}%</small>
+                                </div>
                             </td>
                         </tr>
                         @endforeach
@@ -199,48 +190,6 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     });
-
-
-    @foreach($actions as $action)
-    new Chart(document.getElementById("progressChart{{$action->id}}"), {
-        type: 'line',
-        data: {
-            datasets: [{
-                label: 'Progression',
-                data: [
-                    @foreach($action->history() as $history)
-                    { x: "{{ $history['date'] }}", y: {{ $history['progress'] }} },
-                    @endforeach
-                ],
-                borderColor: "#2196F3",
-                backgroundColor: "transparent",
-                borderWidth: 2,
-                pointRadius: 3
-            }]
-        },
-        options: {
-            responsive: false,
-            scales: {
-                x: {
-                    type: 'time',
-                    display: false // ⛔️ masque les dates
-                },
-
-                y: {
-                    beginAtZero: true,
-                    max: 100,
-                    display: false
-                }
-            },
-            plugins: {
-                legend: { display: false },
-               datalabels: {
-                    display: false // 👈 Désactive les labels à côté des points
-                },
-            }
-        }
-    });
-    @endforeach
 
 });
 </script>

@@ -16,6 +16,8 @@ return [
         'create' => 'Aktionsplan erzeugen',
         'edit' => 'Aktionsplan ändern',
         'title' => 'Aktionen',
+        'radar' => 'Aktionspläne nach Typ',
+        'radar_date' => 'Stand der Aktionspläne zum',
         'close' => 'Aktionsplan schließen',
         'fields' => [
             'clause' => 'Klausel',
