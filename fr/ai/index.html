@@ -585,15 +585,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#upgrade" class="md-nav__link">
-    <span class="md-ellipsis">
-      Mise à jour depuis une version antérieure
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#purge" class="md-nav__link">
     <span class="md-ellipsis">
       Supprimer toutes les analyses
@@ -1045,11 +1036,6 @@ empreinte du texte mais sans son contenu.</p>
 <p>les noms de modèles évoluent : le bouton « Charger les modèles » affiche ceux que votre clé autorise.</p>
 </li>
 </ul>
-<h3 id="upgrade">Mise à jour depuis une version antérieure<a class="headerlink" href="#upgrade" title="Permanent link">&para;</a></h3>
-<p>Les versions précédentes de Deming ne s'adressaient qu'à la passerelle IA Sourcentis. Lors de la mise à jour
-(<code>php artisan migrate</code>), l'URL et la clé déjà enregistrées sont conservées et, si une URL existe, le modèle
-<code>sourcentis-standard</code> est renseigné : l'agent continue de fonctionner sans intervention. Les analyses enregistrées,
-dans l'ancien format, sont supprimées ; elles sont recalculées à la prochaine ouverture du panneau.</p>
 <h3 id="purge">Supprimer toutes les analyses<a class="headerlink" href="#purge" title="Permanent link">&para;</a></h3>
 <p>Le bouton « Supprimer toutes les analyses IA », en bas de l'onglet, efface la dernière analyse enregistrée sur
 chaque mesure de sécurité, contrôle, plan d'action et risque, après confirmation. L'opération est tracée dans les
