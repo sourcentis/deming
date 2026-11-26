@@ -16,6 +16,8 @@ return [
          'create' => 'Crear un plan de acción',
          'edit' => 'Editar el plan de acción',
          'title' => 'Acciones',
+         'radar' => 'Planes de acción por tipo',
+         'radar_date' => 'Estado de los planes de acción a',
          'close' => 'Cerrar una acción',
          'fields' => [
             'clauses' => 'Cláusulas',

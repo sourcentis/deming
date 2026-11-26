@@ -17,6 +17,8 @@ return [
         'edit' => 'Modifier un plan d\'action',
         'close' => 'Clôturer une action',
         'title' => 'Actions',
+        'radar' => 'Plans d\'action par type',
+        'radar_date' => 'État des plans d\'action au',
         'fields' => [
             'clause' => 'Clause',
             'name' => 'Nom',

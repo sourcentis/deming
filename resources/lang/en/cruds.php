@@ -16,6 +16,8 @@ return [
          'create' => 'Create an action plan',
          'edit' => 'Edit action plan',
          'title' => 'Actions',
+         'radar' => 'Action plans by type',
+         'radar_date' => 'Status of action plans as of',
          'close' => 'Close an action',
          'fields' => [
             'clauses' => 'Clauses',
