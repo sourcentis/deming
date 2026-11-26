@@ -39,10 +39,49 @@ test('forget restores the code default', function () {
     expect(Configuration::get('ai.enabled'))->toBe('0');
 });
 
-test('the prompts and the model are no longer settings', function () {
+test('the model and the prompts have no stored default, the parameters do', function () {
     expect(Configuration::get('ai.model'))->toBeNull()
-        ->and(Configuration::get('ai.prompt_risk'))->toBeNull()
-        ->and(file_exists(resource_path('ai')))->toBeFalse();
+        ->and(Configuration::get('ai.prompt.risk'))->toBeNull()
+        ->and(Configuration::get('ai.temperature'))->toBe('0.2')
+        ->and(Configuration::get('ai.max_tokens'))->toBe('8000')
+        ->and(Configuration::get('ai.timeout'))->toBe('120')
+        ->and(Configuration::get('ai.structured_output'))->toBe('json_object')
+        ->and(Configuration::get('ai.output_language'))->toBe('auto')
+        ->and(file_exists(resource_path('ai/prompts/risk.md')))->toBeTrue()
+        ->and(file_exists(resource_path('ai/contract.json')))->toBeTrue();
+});
+
+test('the provider migration keeps the URL and the key, sets the gateway model and purges the former analyses', function () {
+    $migration = require database_path('migrations/2026_11_26_000001_configure_generic_llm_provider.php');
+    Configuration::set('ai.base_url', 'https://agent.example.com/v1');
+    Configuration::set('ai.api_key', 'sk-kept');
+    $risk = \App\Models\Risk::factory()->create();
+    DB::table('risks')->where('id', $risk->id)->update([
+        'ai_analysis' => '{"synthese":"S.","statut_evalue":"conforme"}', 'ai_analysis_hash' => str_repeat('a', 64), 'ai_analysis_version' => 'v1',
+    ]);
+
+    $migration->up();
+    Configuration::clearCache();
+
+    expect(Configuration::get('ai.base_url'))->toBe('https://agent.example.com/v1')
+        ->and(Configuration::get('ai.api_key'))->toBe('sk-kept')
+        ->and(Configuration::get('ai.model'))->toBe('sourcentis-standard')
+        ->and(DB::table('risks')->where('id', $risk->id)->first(['ai_analysis', 'ai_analysis_hash', 'ai_analysis_version']))
+        ->toEqual((object) ['ai_analysis' => null, 'ai_analysis_hash' => null, 'ai_analysis_version' => null]);
+
+    // A model already chosen is kept
+    Configuration::set('ai.model', 'mistral-large-latest');
+    $migration->up();
+    Configuration::clearCache();
+    expect(Configuration::get('ai.model'))->toBe('mistral-large-latest');
+});
+
+test('the provider migration sets no model without a configured URL', function () {
+    $migration = require database_path('migrations/2026_11_26_000001_configure_generic_llm_provider.php');
+
+    $migration->up();
+
+    expect(DB::table('configuration')->where('name', 'ai.model')->exists())->toBeFalse();
 });
 
 test('the migration removes the prompts and the model, logging custom prompt names only', function () {

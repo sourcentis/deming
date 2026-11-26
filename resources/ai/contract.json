@@ -1,0 +1,64 @@
+{
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["summary", "assessed_status", "risk_level", "confidence", "good_practices", "findings", "recommendations", "open_questions", "viewpoints"],
+    "properties": {
+        "summary": { "type": "string", "description": "Summary of the analysis in 2 to 4 sentences." },
+        "assessed_status": { "type": "string", "enum": ["compliant", "partially_compliant", "non_compliant", "not_assessable"] },
+        "risk_level": { "type": "string", "enum": ["low", "medium", "high", "critical"] },
+        "confidence": { "type": "string", "enum": ["low", "medium", "high"] },
+        "good_practices": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["practice", "coverage", "controls", "comment"],
+                "properties": {
+                    "practice": { "type": "string" },
+                    "coverage": { "type": "string", "enum": ["covered", "partial", "not_covered"] },
+                    "controls": { "type": "string", "description": "Controls that verify the practice, or an empty string." },
+                    "comment": { "type": "string" }
+                }
+            }
+        },
+        "findings": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["type", "description"],
+                "properties": {
+                    "type": { "type": "string", "enum": ["strength", "weakness", "gap", "missing_evidence", "inconsistency"] },
+                    "description": { "type": "string" }
+                }
+            }
+        },
+        "recommendations": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["priority", "action", "rationale", "suggested_due_date", "reference"],
+                "properties": {
+                    "priority": { "type": "string", "enum": ["high", "medium", "low"] },
+                    "action": { "type": "string" },
+                    "rationale": { "type": "string" },
+                    "suggested_due_date": { "type": "string" },
+                    "reference": { "type": "string", "description": "ISO reference, or an empty string." }
+                }
+            }
+        },
+        "open_questions": { "type": "array", "items": { "type": "string" } },
+        "viewpoints": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["ceo", "ciso", "dpo", "auditor"],
+            "properties": {
+                "ceo": { "type": "string" },
+                "ciso": { "type": "string" },
+                "dpo": { "type": "string" },
+                "auditor": { "type": "string" }
+            }
+        }
+    }
+}

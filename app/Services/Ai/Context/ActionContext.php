@@ -21,31 +21,31 @@ class ActionContext extends ContextBuilder
 
         return [
             'reference' => $action->reference,
-            'nom' => $action->name,
+            'name' => $action->name,
             'type' => self::ACTION_TYPES[$action->type] ?? $action->type,
-            'criticite' => $action->criticity,
-            'statut' => self::ACTION_STATUS[$action->status] ?? $action->status,
-            'perimetre' => $action->scope,
+            'criticity' => $action->criticity,
+            'status' => self::ACTION_STATUS[$action->status] ?? $action->status,
+            'scope' => $action->scope,
             'cause' => $this->text($action->cause),
             'remediation' => $this->text($action->remediation),
-            'date_creation' => $this->date($action->creation_date),
-            'date_echeance' => $this->date($action->due_date),
-            'date_cloture' => $this->date($action->close_date),
-            'avancement' => $action->progress,
+            'creation_date' => $this->date($action->creation_date),
+            'due_date' => $this->date($action->due_date),
+            'close_date' => $this->date($action->close_date),
+            'progress' => $action->progress,
             'justification' => $this->text($action->justification),
-            'en_retard' => $this->actionIsLate($action),
-            'nombre_responsables' => $action->owners()->count(),
-            'mesures_liees' => $action->controls()->orderBy('clause')->get()
+            'late' => $this->actionIsLate($action),
+            'owner_count' => $action->owners()->count(),
+            'security_measures' => $action->controls()->orderBy('clause')->get()
                 ->map(fn ($c) => [
                     'clause' => $c->clause,
-                    'nom' => $c->name,
-                    'dernier_controle' => $this->lastControl($c->id),
+                    'name' => $c->name,
+                    'last_control' => $this->lastControl($c->id),
                 ])->all(),
-            'risques_lies' => $action->risks()->get()
+            'related_risks' => $action->risks()->get()
                 ->map(fn ($r) => $this->riskSummary($r))->all(),
-            'historique_progression' => array_map(fn (array $step) => [
+            'progress_history' => array_map(fn (array $step) => [
                 'date' => $step['date'],
-                'avancement' => $step['progress'],
+                'progress' => $step['progress'],
             ], $history),
         ];
     }

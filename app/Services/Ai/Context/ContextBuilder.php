@@ -20,7 +20,8 @@ use Illuminate\Support\Str;
  * - dates in ISO format; time-dependent facts as booleans only (never a
  *   number of days), so that the context hash does not change every day.
  *
- * Keys are in French, the language of the default prompts.
+ * Keys are in English, the language of the default prompts; the values typed
+ * by the users are sent as is, in their language.
  */
 abstract class ContextBuilder
 {
@@ -31,13 +32,13 @@ abstract class ContextBuilder
     protected const SUMMARY_LIMIT = 300;
 
     // Control (Measure) status
-    protected const MEASURE_STATUS = [0 => 'a_faire', 1 => 'propose', 2 => 'realise'];
+    protected const MEASURE_STATUS = [0 => 'to_do', 1 => 'proposed', 2 => 'done'];
 
     // Control (Measure) score
-    protected const SCORES = [1 => 'rouge (objectif non atteint)', 2 => 'orange (partiellement atteint)', 3 => 'vert (atteint)'];
+    protected const SCORES = [1 => 'red (objective not met)', 2 => 'orange (partially met)', 3 => 'green (met)'];
 
-    protected const ACTION_STATUS = [0 => 'ouverte', 1 => 'cloturee', 2 => 'rejetee'];
-    protected const ACTION_TYPES = [1 => 'majeure', 2 => 'mineure', 3 => 'observation', 4 => 'opportunite'];
+    protected const ACTION_STATUS = [0 => 'open', 1 => 'closed', 2 => 'rejected'];
+    protected const ACTION_TYPES = [1 => 'major nonconformity', 2 => 'minor nonconformity', 3 => 'observation', 4 => 'opportunity for improvement'];
 
     /** @return array<string, mixed> */
     abstract public function build(Model $object): array;
@@ -64,13 +65,13 @@ abstract class ContextBuilder
     {
         return match ($months) {
             null => null,
-            0 => 'unique',
-            -1 => 'hebdomadaire',
-            1 => 'mensuelle',
-            3 => 'trimestrielle',
-            6 => 'semestrielle',
-            12 => 'annuelle',
-            default => $months . ' mois',
+            0 => 'once',
+            -1 => 'weekly',
+            1 => 'monthly',
+            3 => 'quarterly',
+            6 => 'half-yearly',
+            12 => 'yearly',
+            default => 'every ' . $months . ' months',
         };
     }
 
@@ -124,10 +125,10 @@ abstract class ContextBuilder
     protected function riskSummary(Risk $risk): array
     {
         return [
-            'nom' => $risk->name,
-            'niveau' => $risk->risk_level,
-            'niveau_libelle' => $risk->risk_level_label,
-            'statut' => $risk->status,
+            'name' => $risk->name,
+            'level' => $risk->risk_level,
+            'level_label' => $risk->risk_level_label,
+            'status' => $risk->status,
         ];
     }
 
@@ -136,13 +137,13 @@ abstract class ContextBuilder
     {
         return [
             'reference' => $action->reference,
-            'nom' => $action->name,
+            'name' => $action->name,
             'type' => self::ACTION_TYPES[$action->type] ?? $action->type,
-            'criticite' => $action->criticity,
-            'statut' => self::ACTION_STATUS[$action->status] ?? $action->status,
-            'avancement' => $action->progress,
-            'echeance' => $this->date($action->due_date),
-            'en_retard' => $this->actionIsLate($action),
+            'criticity' => $action->criticity,
+            'status' => self::ACTION_STATUS[$action->status] ?? $action->status,
+            'progress' => $action->progress,
+            'due_date' => $this->date($action->due_date),
+            'late' => $this->actionIsLate($action),
         ];
     }
 }

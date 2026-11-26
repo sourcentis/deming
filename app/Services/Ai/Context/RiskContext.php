@@ -21,51 +21,51 @@ class RiskContext extends ContextBuilder
         $config = app(RiskScoringService::class)->config();
 
         return [
-            'nom' => $risk->name,
+            'name' => $risk->name,
             'description' => $this->text($risk->description),
-            'probabilite' => $this->level($config, 'probability', $risk->probability),
-            'commentaire_probabilite' => $this->text($risk->probability_comment),
+            'probability' => $this->level($config, 'probability', $risk->probability),
+            'probability_comment' => $this->text($risk->probability_comment),
             'impact' => $this->level($config, 'impact', $risk->impact),
-            'commentaire_impact' => $this->text($risk->impact_comment),
-            'exposition' => $this->level($config, 'exposure', $risk->exposure),
-            'vulnerabilite' => $this->level($config, 'vulnerability', $risk->vulnerability),
-            'risque_residuel' => $risk->residual_risk,
-            'methode_scoring' => [
-                'nom' => $config->name,
-                'formule' => $config->formula,
-                'seuils' => array_map(fn (array $t) => [
-                    'niveau' => $t['level'] ?? null,
-                    'libelle' => $t['label'] ?? null,
+            'impact_comment' => $this->text($risk->impact_comment),
+            'exposure' => $this->level($config, 'exposure', $risk->exposure),
+            'vulnerability' => $this->level($config, 'vulnerability', $risk->vulnerability),
+            'residual_risk' => $risk->residual_risk,
+            'scoring_method' => [
+                'name' => $config->name,
+                'formula' => $config->formula,
+                'thresholds' => array_map(fn (array $t) => [
+                    'level' => $t['level'] ?? null,
+                    'label' => $t['label'] ?? null,
                     'max' => $t['max'] ?? null,
                 ], $config->risk_thresholds ?? []),
             ],
             'score' => $risk->risk_score,
-            'niveau' => $risk->risk_level,
-            'niveau_libelle' => $risk->risk_level_label,
-            'statut' => $risk->status,
-            'statut_libelle' => Risk::statusLabel((string) $risk->status),
-            'commentaire_statut' => $this->text($risk->status_comment),
-            'frequence_revue_mois' => $risk->review_frequency,
-            'prochaine_revue' => $this->date($risk->next_review_at),
-            'revue_en_retard' => $risk->is_overdue,
-            'a_un_proprietaire' => $risk->owner_id !== null,
-            'necessite_mesures' => $risk->requiresControls(),
-            'necessite_actions' => $risk->requiresActions(),
-            'mesures_liees' => $risk->controls()->orderBy('clause')->get()
+            'level' => $risk->risk_level,
+            'level_label' => $risk->risk_level_label,
+            'status' => $risk->status,
+            'status_label' => Risk::statusLabel((string) $risk->status),
+            'status_comment' => $this->text($risk->status_comment),
+            'review_frequency_months' => $risk->review_frequency,
+            'next_review' => $this->date($risk->next_review_at),
+            'review_overdue' => $risk->is_overdue,
+            'has_owner' => $risk->owner_id !== null,
+            'requires_security_measures' => $risk->requiresControls(),
+            'requires_actions' => $risk->requiresActions(),
+            'security_measures' => $risk->controls()->orderBy('clause')->get()
                 ->map(fn ($c) => [
                     'clause' => $c->clause,
-                    'nom' => $c->name,
-                    'dernier_controle' => $this->lastControl($c->id),
+                    'name' => $c->name,
+                    'last_control' => $this->lastControl($c->id),
                 ])->all(),
-            'actions_liees' => $risk->actions()->orderBy('due_date')->get()
+            'action_plans' => $risk->actions()->orderBy('due_date')->get()
                 ->map(fn (Action $a) => [
                     'reference' => $a->reference,
-                    'nom' => $a->name,
-                    'criticite' => $a->criticity,
-                    'avancement' => $a->progress,
-                    'echeance' => $this->date($a->due_date),
-                    'cloturee' => (int) $a->status !== 0,
-                    'en_retard' => $this->actionIsLate($a),
+                    'name' => $a->name,
+                    'criticity' => $a->criticity,
+                    'progress' => $a->progress,
+                    'due_date' => $this->date($a->due_date),
+                    'closed' => (int) $a->status !== 0,
+                    'late' => $this->actionIsLate($a),
                 ])->all(),
         ];
     }
@@ -77,6 +77,6 @@ class RiskContext extends ContextBuilder
             return null;
         }
 
-        return ['valeur' => $value, 'libelle' => $config->levelLabel($field, $value)];
+        return ['value' => $value, 'label' => $config->levelLabel($field, $value)];
     }
 }

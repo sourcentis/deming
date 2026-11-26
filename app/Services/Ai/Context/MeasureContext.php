@@ -33,35 +33,35 @@ class MeasureContext extends ContextBuilder
         $documents = DB::table('documents')->where('measure_id', $measure->id)->orderBy('filename')->pluck('filename');
 
         return [
-            'nom' => $measure->name,
-            'perimetre' => $measure->scope,
-            'mesures' => $measure->controls()->orderBy('clause')->get()
-                ->map(fn ($c) => ['clause' => $c->clause, 'nom' => $c->name])->all(),
-            'objectif' => $this->text($measure->objective),
-            'attributs' => $this->text($measure->getAttribute('attributes')),
-            'donnees_entree' => $this->text($measure->input),
-            'modele' => $this->text($measure->model),
-            'indicateur' => $this->text($measure->indicator),
-            'periodicite' => $this->periodicity($measure->periodicity),
-            'statut' => self::MEASURE_STATUS[$measure->status] ?? $measure->status,
-            'date_planifiee' => $this->date($measure->plan_date),
-            'date_realisation' => $this->date($measure->realisation_date),
-            'en_retard' => $this->measureIsLate($measure),
+            'name' => $measure->name,
+            'scope' => $measure->scope,
+            'security_measures' => $measure->controls()->orderBy('clause')->get()
+                ->map(fn ($c) => ['clause' => $c->clause, 'name' => $c->name])->all(),
+            'objective' => $this->text($measure->objective),
+            'attributes' => $this->text($measure->getAttribute('attributes')),
+            'input' => $this->text($measure->input),
+            'model' => $this->text($measure->model),
+            'indicator' => $this->text($measure->indicator),
+            'periodicity' => $this->periodicity($measure->periodicity),
+            'status' => self::MEASURE_STATUS[$measure->status] ?? $measure->status,
+            'planned_date' => $this->date($measure->plan_date),
+            'completion_date' => $this->date($measure->realisation_date),
+            'late' => $this->measureIsLate($measure),
             'score' => $this->score($measure->score),
             'note' => $measure->note,
             'observations' => $this->text($measure->observations),
-            'plan_action' => $this->text($measure->action_plan),
+            'action_plan' => $this->text($measure->action_plan),
             'documents' => [
-                'nombre' => $documents->count(),
-                'fichiers' => $documents->all(),
+                'count' => $documents->count(),
+                'files' => $documents->all(),
             ],
             'actions' => Action::query()->where('measure_id', $measure->id)->orderBy('due_date')->get()
                 ->map(fn (Action $a) => $this->actionSummary($a))->all(),
-            'historique' => $history->map(fn (Measure $m) => [
-                'date_realisation' => $this->date($m->realisation_date),
+            'history' => $history->map(fn (Measure $m) => [
+                'completion_date' => $this->date($m->realisation_date),
                 'score' => $this->score($m->score),
                 'observations' => $this->text($m->observations, self::SUMMARY_LIMIT),
-                'plan_action' => $this->text($m->action_plan, self::SUMMARY_LIMIT),
+                'action_plan' => $this->text($m->action_plan, self::SUMMARY_LIMIT),
             ])->all(),
         ];
     }

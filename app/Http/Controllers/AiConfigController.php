@@ -6,8 +6,9 @@ use App\Models\AuditLog;
 use App\Models\Configuration;
 use App\Models\Control;
 use App\Services\Ai\AiAgentException;
-use App\Services\Ai\AiGateway;
+use App\Services\Ai\AiPrompt;
 use App\Services\Ai\AiSubjects;
+use App\Services\Ai\LlmClient;
 use App\Services\AiAgentService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -16,6 +17,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
 
 /**
  * Configuration of the AI agent (administrators only).
@@ -26,19 +28,47 @@ class AiConfigController extends Controller
     // controls = security measures, measures = controls (UI naming is inverted)
     private const TABLES = ['controls', 'measures', 'actions', 'risks'];
 
+    public const STRUCTURED_OUTPUTS = ['none', 'json_object', 'json_schema'];
+
+    // Presets only fill the URL field
+    public const PRESETS = [
+        'sourcentis' => 'https://ai.sourcentis.lu/v1',
+        'ovh' => 'https://oai.endpoints.kepler.ai.cloud.ovh.net/v1',
+        'openai' => 'https://api.openai.com/v1',
+        'mistral' => 'https://api.mistral.ai/v1',
+        'ollama' => 'http://localhost:11434/v1',
+    ];
+
     // Data of the "AI" tab of the settings page
     public function tabData(): array
     {
         $key = Configuration::get('ai.api_key');
-        $enabled = Configuration::bool('ai.enabled');
+
+        $prompts = [];
+        foreach (AiSubjects::TYPES as $type => $subject) {
+            $custom = AiPrompt::custom($type);
+            $prompts[$type] = [
+                'label' => trans($subject['label']),
+                'value' => $custom ?? AiPrompt::default($type),
+                'custom' => $custom !== null,
+                'contract' => AiPrompt::contract($type),
+            ];
+        }
 
         return [
-            'enabled' => $enabled,
+            'enabled' => Configuration::bool('ai.enabled'),
             'base_url' => Configuration::get('ai.base_url'),
             // The key itself never reaches the view
             'has_key' => $key !== null && $key !== '',
-            // Read-only: the prompts, formats and models are managed by the gateway
-            'tasks' => $enabled ? $this->tasks() : null,
+            'model' => Configuration::get('ai.model'),
+            'temperature' => Configuration::get('ai.temperature'),
+            'max_tokens' => Configuration::get('ai.max_tokens'),
+            'timeout' => Configuration::get('ai.timeout'),
+            'structured_output' => Configuration::get('ai.structured_output'),
+            'output_language' => Configuration::get('ai.output_language'),
+            'presets' => self::PRESETS,
+            'prompts' => $prompts,
+            'prompt_max_length' => AiPrompt::MAX_LENGTH,
         ];
     }
 
@@ -46,20 +76,34 @@ class AiConfigController extends Controller
     {
         abort_if(! Auth::user()->isAdmin(), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        // While AI is off, the settings fields are disabled in the form, hence not submitted: keep them
-        $request->validate([
+        // While AI is off, the settings fields are disabled in the form, hence not submitted: keep them.
+        // Only validated values are written (an excluded field is never stored).
+        $validated = $request->validate([
             'base_url' => ['exclude_unless:enabled,1', 'required', 'url', 'max:2048', function ($attribute, $value, $fail) {
-                if (! AiGateway::isAllowedUrl($value)) {
+                if (! LlmClient::isAllowedUrl($value)) {
                     $fail(trans('ai.config.invalid_url'));
                 }
             }],
             'api_key' => 'nullable|string|max:4096',
+            'model' => 'exclude_unless:enabled,1|required|string|max:191',
+            'temperature' => 'sometimes|required|numeric|min:0|max:2',
+            'max_tokens' => 'sometimes|required|integer|min:16|max:200000',
+            'timeout' => 'sometimes|required|integer|min:5|max:600',
+            'structured_output' => ['sometimes', 'required', Rule::in(self::STRUCTURED_OUTPUTS)],
+            'output_language' => ['sometimes', 'required', Rule::in(AiAgentService::OUTPUT_LANGUAGES)],
+            'prompts' => 'sometimes|array',
+            'prompts.*' => 'nullable|string|max:' . AiPrompt::MAX_LENGTH,
         ]);
 
         // Only changed values are written, so that the audit log stays meaningful
         $this->update('ai.enabled', $request->boolean('enabled') ? '1' : '0');
-        if ($request->has('base_url')) {
-            $this->update('ai.base_url', rtrim(trim($request->input('base_url')), '/'));
+        if (isset($validated['base_url'])) {
+            $this->update('ai.base_url', rtrim(trim((string) $validated['base_url']), '/'));
+        }
+        foreach (['model', 'temperature', 'max_tokens', 'timeout', 'structured_output', 'output_language'] as $field) {
+            if (isset($validated[$field])) {
+                $this->update('ai.' . $field, trim((string) $validated[$field]));
+            }
         }
 
         // An empty key field keeps the current key
@@ -69,85 +113,84 @@ class AiConfigController extends Controller
             Configuration::set('ai.api_key', trim($request->input('api_key')));
         }
 
-        // Another gateway or key may expose other tasks
-        AiGateway::forgetTasks();
+        // A prompt left empty or equal to the default is not stored: the default applies
+        foreach (AiSubjects::types() as $type) {
+            if (! array_key_exists($type, $validated['prompts'] ?? [])) {
+                continue;
+            }
+            $value = AiPrompt::normalize((string) $validated['prompts'][$type]);
+            if ($value === '' || $value === AiPrompt::default($type)) {
+                $this->resetPrompt($type);
+            } elseif ($value !== AiPrompt::custom($type)) {
+                Configuration::set(AiPrompt::key($type), $value);
+            }
+        }
 
         return redirect('/config/parameters?tab=ai')->with('messages', [trans('ai.config.saved')]);
     }
 
-    /**
-     * Free request to the gateway (GET /tasks): checks the key and the presence
-     * of the Deming tasks. Returns the HTTP status, the latency and the number of
-     * Deming tasks found, never the key nor the response body.
-     */
-    public function test(AiGateway $gateway): JsonResponse
+    // Back to the prompt shipped with Deming
+    public function reset(string $type): RedirectResponse
     {
         abort_if(! Auth::user()->isAdmin(), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $expected = count(AiSubjects::types());
-        $start = microtime(true);
-        try {
-            $result = $gateway->fetchTasks();
-        } catch (AiAgentException $e) {
-            $latency = (int) round((microtime(true) - $start) * 1000);
-            Log::info('AI connection test', ['status' => $e->upstreamStatus ?? $e->reason, 'duration_ms' => $latency]);
+        $this->resetPrompt($type);
 
-            return response()->json([
-                'ok' => false,
-                'status' => $e->upstreamStatus,
-                'latency_ms' => $latency,
-                'tasks_found' => null,
-                'tasks_expected' => $expected,
-                'error' => $e->translatedMessage(),
-            ]);
-        }
-        $latency = (int) round((microtime(true) - $start) * 1000);
-        $found = count(AiGateway::demingTasks($result['tasks']));
-        $ok = $found === $expected;
-
-        Log::info('AI connection test', ['status' => $result['response']->status(), 'duration_ms' => $latency, 'tasks' => $found]);
-
-        return response()->json([
-            'ok' => $ok,
-            'status' => $result['response']->status(),
-            'latency_ms' => $latency,
-            'tasks_found' => $found,
-            'tasks_expected' => $expected,
-            'error' => $ok ? null : trans('ai.errors.incompatible'),
-        ]);
+        return redirect('/config/parameters?tab=ai')->with('messages', [trans('ai.config.prompt_reset_done')]);
     }
 
     /**
-     * Deming tasks of the gateway, in the order of AiSubjects, with their
-     * title in the user's language; null when the gateway cannot be reached.
-     *
-     * @return array<int, array{type: string, title: string, version: string}>|null
+     * Minimal chat completion with the URL, key and model typed in the form
+     * (saved settings otherwise). Returns the HTTP status, the latency and the
+     * model that answered, never the key nor the response body.
      */
-    private function tasks(): ?array
+    public function test(Request $request, LlmClient $client): JsonResponse
     {
+        abort_if(! Auth::user()->isAdmin(), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        $client = $this->formClient($request, $client);
+
+        $start = microtime(true);
         try {
-            AiGateway::checkUrl();
-            $tasks = AiGateway::demingTasks(app(AiGateway::class)->tasks());
-        } catch (AiAgentException) {
-            return null;
+            $answer = $client->chat([
+                ['role' => 'user', 'content' => 'Reply with the single word OK.'],
+            ], ['max_tokens' => 16]);
+            $status = $answer['status'];
+            $model = $answer['model'];
+            $error = null;
+        } catch (AiAgentException $e) {
+            // A cut answer still proves that the provider, the key and the model work
+            $status = $e->upstreamStatus;
+            $model = null;
+            $error = $e->reason === AiAgentException::TRUNCATED ? null : $e;
+        }
+        $latency = (int) round((microtime(true) - $start) * 1000);
+
+        Log::info('AI connection test', ['status' => $status ?? $error?->reason, 'duration_ms' => $latency]);
+
+        return response()->json([
+            'ok' => $error === null,
+            'status' => $status,
+            'latency_ms' => $latency,
+            'model' => $model ?? ($error === null ? Configuration::get('ai.model') : null),
+            'error' => $error?->translatedMessage(),
+        ]);
+    }
+
+    // Identifiers of the models offered by the provider (GET {base_url}/models), with the URL and key of the form
+    public function models(Request $request, LlmClient $client): JsonResponse
+    {
+        abort_if(! Auth::user()->isAdmin(), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        try {
+            $models = $this->formClient($request, $client)->models();
+        } catch (AiAgentException $e) {
+            // Generic reason only, never the response body
+            $error = $e->translatedMessage() . ' ' . trans('ai.config.models_unavailable');
+
+            return response()->json(['ok' => false, 'models' => [], 'error' => $error]);
         }
 
-        $language = AiAgentService::language();
-        $result = [];
-        foreach (AiSubjects::TYPES as $type => $subject) {
-            if (! isset($tasks[$type])) {
-                continue;
-            }
-            $titles = $tasks[$type]['title'] ?? null;
-            $title = is_array($titles) ? ($titles[$language] ?? $titles['en'] ?? $titles['fr'] ?? null) : $titles;
-            $result[] = [
-                'type' => $type,
-                'title' => is_string($title) && $title !== '' ? $title : trans($subject['label']),
-                'version' => is_string($tasks[$type]['task_version'] ?? null) ? $tasks[$type]['task_version'] : '',
-            ];
-        }
-
-        return $result;
+        return response()->json(['ok' => true, 'models' => $models, 'error' => null]);
     }
 
     // Clears the stored analyses of the four tables
@@ -173,6 +216,43 @@ class AiConfigController extends Controller
         ]);
 
         return redirect('/config/parameters?tab=ai')->with('messages', [trans('ai.config.purged', ['count' => $count])]);
+    }
+
+    /**
+     * Client using the values typed in the form, not saved yet.
+     * The saved key is only sent to the saved URL: changing the URL without
+     * typing a key sends no key, so that it never leaves for another host.
+     */
+    private function formClient(Request $request, LlmClient $client): LlmClient
+    {
+        $request->validate([
+            'base_url' => 'nullable|string|max:2048',
+            'api_key' => 'nullable|string|max:4096',
+            'model' => 'nullable|string|max:191',
+        ]);
+
+        $settings = [];
+        $baseUrl = rtrim(trim((string) $request->input('base_url')), '/');
+        if ($baseUrl !== '') {
+            $typed = trim((string) $request->input('api_key'));
+            $saved = rtrim(trim((string) Configuration::get('ai.base_url')), '/');
+            $settings['base_url'] = $baseUrl;
+            $settings['api_key'] = $typed !== '' ? $typed : ($baseUrl === $saved ? Configuration::get('ai.api_key') : null);
+        } elseif (trim((string) $request->input('api_key')) !== '') {
+            $settings['api_key'] = trim((string) $request->input('api_key'));
+        }
+        if (trim((string) $request->input('model')) !== '') {
+            $settings['model'] = trim((string) $request->input('model'));
+        }
+
+        return $client->with($settings);
+    }
+
+    private function resetPrompt(string $type): void
+    {
+        if (Configuration::isStored(AiPrompt::key($type))) {
+            Configuration::forget(AiPrompt::key($type));
+        }
     }
 
     private function update(string $name, string $value): void

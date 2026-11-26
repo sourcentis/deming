@@ -27,7 +27,7 @@ beforeEach(function () {
 function storeAnalysis(Illuminate\Database\Eloquent\Model $object): void
 {
     DB::table($object->getTable())->where('id', $object->id)->update([
-        'ai_analysis' => json_encode(aiValidAnalysis(['synthese' => 'CACHED-ANALYSIS'])),
+        'ai_analysis' => json_encode(aiValidAnalysis(['summary' => 'CACHED-ANALYSIS'])),
         'ai_analysis_at' => now(),
         'ai_analysis_model' => 'gpt-oss-120b',
         'ai_analysis_hash' => str_repeat('0', 64),
@@ -38,13 +38,14 @@ function storeAnalysis(Illuminate\Database\Eloquent\Model $object): void
 // Access control
 // -----------------------------------------------------------------------------
 
-test('AI disabled returns 404', function (string $type) {
+test('AI disabled returns 403 without any call, even for a forged request', function (string $type) {
     Configuration::set('ai.enabled', '0');
     Http::fake();
     $object = aiCreateSubject($type);
 
-    $this->actingAs($this->admin)->postJson("/ai/{$type}/{$object->id}")->assertNotFound();
-    $this->actingAs($this->admin)->postJson("/ai/{$type}/{$object->id}/preview")->assertNotFound();
+    $this->actingAs($this->admin)->postJson("/ai/{$type}/{$object->id}")->assertForbidden();
+    $this->actingAs($this->admin)->postJson("/ai/{$type}/{$object->id}", ['force' => 1])->assertForbidden();
+    $this->actingAs($this->admin)->postJson("/ai/{$type}/{$object->id}/preview")->assertForbidden();
     Http::assertNothingSent();
 })->with(AI_ENDPOINT_TYPES);
 
@@ -82,8 +83,8 @@ test('admin gets the analysis', function (string $type) {
 
     $this->actingAs($this->admin)->postJson("/ai/{$type}/{$object->id}")
         ->assertOk()
-        ->assertJson(['ok' => true, 'cached' => false, 'model' => 'sourcentis-standard', 'data' => aiValidAnalysis()])
-        ->assertJsonStructure(['ok', 'data' => ['synthese', 'points_de_vue' => ['ceo', 'rssi', 'dpo', 'auditeur']], 'cached', 'analyzed_at', 'model']);
+        ->assertJson(['ok' => true, 'cached' => false, 'model' => 'test-model', 'data' => aiValidAnalysis()])
+        ->assertJsonStructure(['ok', 'data' => ['summary', 'viewpoints' => ['ceo', 'ciso', 'dpo', 'auditor']], 'cached', 'analyzed_at', 'model']);
 })->with(AI_ENDPOINT_TYPES);
 
 test('unknown type returns 404', function () {
@@ -200,8 +201,9 @@ test('risk analysis follows RiskController@show for every role', function (strin
 // Agent answers
 // -----------------------------------------------------------------------------
 
-test('gateway failures return a generic message, never the gateway body', function (Closure $fake, int $status, string $reason) {
+test('provider failures return a generic message, never the provider body nor the key', function (Closure $fake, int $status, string $reason) {
     aiFakeGateway($fake);
+    Configuration::set('ai.api_key', 'sk-secret-key');
     $object = aiCreateSubject('risk');
 
     $response = $this->actingAs($this->admin)->postJson("/ai/risk/{$object->id}")->assertStatus($status);
@@ -209,6 +211,7 @@ test('gateway failures return a generic message, never the gateway body', functi
     $response->assertJson(['ok' => false]);
     expect($response->json('error'))->toBe(trans("ai.errors.{$reason}"))
         ->and($response->getContent())->not->toContain('secret')
+        ->not->toContain('sk-secret-key')
         ->not->toContain('agent.example.com');
 })->with([
     'invalid key' => [fn () => aiGatewayError(401, 'key_blocked'), 502, 'invalid_key'],
@@ -216,9 +219,9 @@ test('gateway failures return a generic message, never the gateway body', functi
     'rate limit' => [fn () => aiGatewayError(429, 'rate_limit_exceeded'), 429, 'rate_limited'],
     'too large' => [fn () => aiGatewayError(413, 'context_too_large'), 502, 'too_large'],
     'incompatible' => [fn () => aiGatewayError(400, 'unknown_field'), 502, 'incompatible'],
-    'invalid answer' => [fn () => aiGatewayError(502, 'invalid_model_response'), 502, 'invalid_response'],
-    'missing synthese' => [fn () => aiAgentResponse(array_diff_key(aiValidAnalysis(), ['synthese' => 1])), 502, 'invalid_response'],
-    'http error with body' => [fn () => Http::response('secret body', 500), 502, 'unreachable'],
+    'invalid JSON' => [fn () => aiAgentResponse('secret not json'), 502, 'invalid_response'],
+    'missing summary' => [fn () => aiAgentResponse(array_diff_key(aiValidAnalysis(), ['summary' => 1])), 502, 'invalid_response'],
+    'http 500 with body' => [fn () => Http::response('secret body', 500), 502, 'provider_error'],
     'redirect' => [fn () => Http::response('secret body', 302, ['Location' => 'https://elsewhere.example.com']), 502, 'unreachable'],
     'timeout' => [fn () => throw new ConnectionException('cURL error 28: Operation timed out'), 504, 'timeout'],
 ]);
@@ -243,7 +246,7 @@ test('a failure keeps the previous analysis', function (string $type) {
     $object = aiCreateSubject($type);
     storeAnalysis($object);
     $before = DB::table($object->getTable())->where('id', $object->id)->first();
-    aiFakeGateway(aiGatewayError(502, 'invalid_model_response'));
+    aiFakeGateway(aiAgentResponse('not json'));
 
     $this->actingAs($this->admin)->postJson("/ai/{$type}/{$object->id}", ['force' => 1])->assertStatus(502);
 

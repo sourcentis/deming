@@ -2,11 +2,11 @@
      Every value produced by the AI is inserted with textContent, never as HTML. --}}
 @php
     $aiPalette = [
-        'status' => ['conforme' => '#3AB87A', 'partiellement_conforme' => '#E09B1A', 'non_conforme' => '#D94F45', 'non_evaluable' => '#6C757D'],
-        'risk_level' => ['faible' => '#3AB87A', 'moyen' => '#E09B1A', 'eleve' => '#E8731A', 'critique' => '#D94F45'],
-        'priority' => ['haute' => '#D94F45', 'moyenne' => '#E09B1A', 'basse' => '#3AB87A'],
-        'coverage' => ['couvert' => '#3AB87A', 'partiel' => '#E09B1A', 'non_couvert' => '#D94F45'],
-        'roles' => ['ceo' => '#3A72C4', 'rssi' => '#D94F45', 'dpo' => '#8059C8', 'auditeur' => '#17A8C4'],
+        'status' => ['compliant' => '#3AB87A', 'partially_compliant' => '#E09B1A', 'non_compliant' => '#D94F45', 'not_assessable' => '#6C757D'],
+        'risk_level' => ['low' => '#3AB87A', 'medium' => '#E09B1A', 'high' => '#E8731A', 'critical' => '#D94F45'],
+        'priority' => ['high' => '#D94F45', 'medium' => '#E09B1A', 'low' => '#3AB87A'],
+        'coverage' => ['covered' => '#3AB87A', 'partial' => '#E09B1A', 'not_covered' => '#D94F45'],
+        'roles' => ['ceo' => '#3A72C4', 'ciso' => '#D94F45', 'dpo' => '#8059C8', 'auditor' => '#17A8C4'],
     ];
     $aiContrast = [];
     foreach ($aiPalette as $group => $colors) {
@@ -140,7 +140,7 @@
         if (color) { node.style.color = color; }
         return node;
     }
-    // A value unknown to Deming (newer format of the gateway) is shown as is, in grey
+    // A value outside the output contract is shown as is, in grey
     function badge(group, key, label) {
         const node = el('span', 'ai-badge', label);
         const palette = cfg.palette[group];
@@ -215,21 +215,21 @@
         // Absent optional fields are not displayed (types are checked by AiResponseGuard)
         // 1. Header: assessed status, risk level, confidence
         const header = el('div');
-        header.appendChild(badge('status', data.statut_evalue, label(cfg.status[current.type], data.statut_evalue)));
-        if (data.niveau_risque) {
-            header.appendChild(badge('risk_level', data.niveau_risque, L.risk_level + L.colon + label(cfg.risk_level, data.niveau_risque)));
+        header.appendChild(badge('status', data.assessed_status, label(cfg.status[current.type], data.assessed_status)));
+        if (data.risk_level) {
+            header.appendChild(badge('risk_level', data.risk_level, L.risk_level + L.colon + label(cfg.risk_level, data.risk_level)));
         }
-        if (data.confiance) {
-            header.appendChild(badge('confidence', data.confiance, L.confidence + L.colon + label(cfg.confidence, data.confiance)));
+        if (data.confidence) {
+            header.appendChild(badge('confidence', data.confidence, L.confidence + L.colon + label(cfg.confidence, data.confidence)));
         }
         body.appendChild(header);
 
         // 2. Summary
         section(L.summary);
-        body.appendChild(el('p', null, data.synthese));
+        body.appendChild(el('p', null, data.summary));
 
         // 3. Good practices expected for a security measure and their coverage by the controls
-        if (data.referentiel && data.referentiel.length) {
+        if (data.good_practices && data.good_practices.length) {
             section(L.practices);
             const table = el('table', 'ai-practices');
             const head = el('tr');
@@ -237,15 +237,15 @@
             head.appendChild(el('th', null, L.coverage));
             table.appendChild(el('thead')).appendChild(head);
             const rows = el('tbody');
-            data.referentiel.forEach(function (practice) {
+            data.good_practices.forEach(function (practice) {
                 const row = el('tr');
                 const cell = el('td');
-                cell.appendChild(el('strong', 'd-block', practice.element));
-                if (practice.controles) { cell.appendChild(el('span', 'ai-reco-meta', L.controls + L.colon + practice.controles)); }
-                if (practice.commentaire) { cell.appendChild(el('span', 'ai-reco-meta', practice.commentaire)); }
+                cell.appendChild(el('strong', 'd-block', practice.practice));
+                if (practice.controls) { cell.appendChild(el('span', 'ai-reco-meta', L.controls + L.colon + practice.controls)); }
+                if (practice.comment) { cell.appendChild(el('span', 'ai-reco-meta', practice.comment)); }
                 row.appendChild(cell);
                 const coverage = el('td');
-                coverage.appendChild(badge('coverage', practice.couverture, label(cfg.coverage, practice.couverture)));
+                coverage.appendChild(badge('coverage', practice.coverage, label(cfg.coverage, practice.coverage)));
                 row.appendChild(coverage);
                 rows.appendChild(row);
             });
@@ -255,16 +255,16 @@
 
         // 4. Findings
         const findingIcons = {
-            force: ['bi-check-circle', '#3AB87A'],
-            faiblesse: ['bi-exclamation-triangle', '#E8731A'],
-            lacune: ['bi-puzzle', '#E09B1A'],
-            manque_preuve: ['bi-file-earmark-x', '#D94F45'],
-            incoherence: ['bi-question-diamond', '#8059C8'],
+            strength: ['bi-check-circle', '#3AB87A'],
+            weakness: ['bi-exclamation-triangle', '#E8731A'],
+            gap: ['bi-puzzle', '#E09B1A'],
+            missing_evidence: ['bi-file-earmark-x', '#D94F45'],
+            inconsistency: ['bi-question-diamond', '#8059C8'],
         };
-        if (data.constats && data.constats.length) {
+        if (data.findings && data.findings.length) {
             section(L.findings);
             const list = el('ul');
-            data.constats.forEach(function (finding) {
+            data.findings.forEach(function (finding) {
                 const item = el('li', 'ai-finding');
                 const def = findingIcons[finding.type] || ['bi-dot', null];
                 const i = icon(def[0], def[1]);
@@ -282,22 +282,22 @@
         }
 
         // 5. Recommendations
-        if (data.recommandations && data.recommandations.length) {
+        if (data.recommendations && data.recommendations.length) {
             section(L.recommendations);
             const list = el('ol');
-            data.recommandations.forEach(function (reco) {
+            data.recommendations.forEach(function (reco) {
                 const item = el('li', 'ai-reco');
                 const head = el('div');
-                if (reco.priorite) {
-                    head.appendChild(badge('priority', reco.priorite, label(cfg.priority, reco.priorite)));
+                if (reco.priority) {
+                    head.appendChild(badge('priority', reco.priority, label(cfg.priority, reco.priority)));
                 }
                 head.appendChild(el('strong', null, reco.action));
                 item.appendChild(head);
-                if (reco.justification) {
-                    item.appendChild(el('div', null, L.justification + L.colon + reco.justification));
+                if (reco.rationale) {
+                    item.appendChild(el('div', null, L.justification + L.colon + reco.rationale));
                 }
                 const details = [];
-                if (reco.echeance_suggeree) { details.push(L.due + L.colon + reco.echeance_suggeree); }
+                if (reco.suggested_due_date) { details.push(L.due + L.colon + reco.suggested_due_date); }
                 if (reco.reference) { details.push(L.reference + L.colon + reco.reference); }
                 if (details.length) { item.appendChild(el('div', 'ai-reco-meta', details.join(' · '))); }
                 list.appendChild(item);
@@ -306,10 +306,10 @@
         }
 
         // 6. Open questions
-        if (data.questions_ouvertes && data.questions_ouvertes.length) {
+        if (data.open_questions && data.open_questions.length) {
             section(L.questions);
             const list = el('ul');
-            data.questions_ouvertes.forEach(function (question) {
+            data.open_questions.forEach(function (question) {
                 const item = el('li', 'ai-finding');
                 item.appendChild(icon('bi-question-circle'));
                 item.appendChild(el('span', null, question));
@@ -319,8 +319,8 @@
         }
 
         // 7. Points of view
-        const viewpoints = data.points_de_vue || {};
-        const roles = ['ceo', 'rssi', 'dpo', 'auditeur'].filter(function (role) { return viewpoints[role]; });
+        const viewpoints = data.viewpoints || {};
+        const roles = ['ceo', 'ciso', 'dpo', 'auditor'].filter(function (role) { return viewpoints[role]; });
         if (roles.length) { section(L.viewpoints); }
         roles.forEach(function (role) {
             const block = el('div', 'ai-viewpoint');

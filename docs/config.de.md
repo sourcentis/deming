@@ -198,9 +198,9 @@ Beispiel:
 ## KI {#ai}
 
 Die Registerkarte „KI“ der Seite [Einstellungen](#parameters), die Administratoren vorbehalten ist, dient zum Aktivieren und Konfigurieren des [KI-Agenten](ai.de.md),
-der Sicherheitsmaßnahmen, Kontrollen, Aktionspläne und Risiken analysiert: Aktivierung, URL des Agenten,
-API-Schlüssel, Liste der verfügbaren Aufgaben, Verbindungstest und Löschen aller Analysen. Prompts und Modelle werden
-vom Anbieter des Agenten, dem Sourcentis-KI-Gateway, verwaltet. Die KI ist standardmäßig deaktiviert.
+der Sicherheitsmaßnahmen, Kontrollen, Aktionspläne und Risiken analysiert: Aktivierung, OpenAI-kompatibler Anbieter
+(URL, API-Schlüssel, Modell und Parameter), änderbare Prompts, Verbindungstest und Löschen aller Analysen. Die KI ist
+standardmäßig deaktiviert.
 
 [![Screenshot](images/ai-config.de.png)](images/ai-config.de.png)
 
