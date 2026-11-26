@@ -133,14 +133,14 @@ est conservée. Les principaux messages sont :
 
 ## Qui peut lancer une analyse {#access}
 
-On peut analyser un objet si l'on peut l'afficher, sauf avec le rôle auditeur ou API. Les droits sont vérifiés par
+On peut analyser un objet si l'on peut l'afficher, sauf avec le rôle audité, auditeur ou API. Les droits sont vérifiés par
 le serveur à chaque demande.
 
 | Rôle | Mesure de sécurité | Contrôle | Plan d'action | Risque |
 |---|---|---|---|---|
 | Administrateur | ✓ | ✓ | ✓ | ✓ |
 | Utilisateur | ✓ (selon affectation et vue groupe) | ✓ (idem) | ✓ | ✓ |
-| Audité | ✓ si assigné | ✓ si assigné | — | — |
+| Audité | — | — | — | — |
 | Auditeur | — | — | — | — |
 | API | — | — | — | — |
 
@@ -150,18 +150,15 @@ Précisions :
   contrôles ; un contrôle est accessible si l'utilisateur y est assigné directement ou par l'un de ses
   [groupes](config.fr.md#groups) ;
 
-* l'audité n'a pas accès aux plans d'action et aux risques, ni à leur analyse ; les risques liés ne sont pas envoyés
-  lorsqu'il analyse une mesure de sécurité ;
-
-* l'auditeur n'a accès ni à l'icône, ni au panneau, ni aux analyses enregistrées, même pour un objet qu'il peut
-  afficher.
+* l'audité et l'auditeur n'ont accès ni à l'icône, ni au panneau, ni aux analyses enregistrées, même pour un objet
+  qu'ils peuvent afficher.
 
 ## Protection des données {#privacy}
 
 Cette section décrit précisément ce qui sort de Deming lors d'une analyse. Elle s'adresse en particulier au RSSI et
 au DPO.
 
-### Données envoyées à l'agent
+### Données envoyées à l'agent {#data-sent}
 
 Chaque analyse envoie à la passerelle, sur la tâche du type d'objet :
 
@@ -182,8 +179,8 @@ indicateur, plan d'action, périodicité, jusqu'à 15 contrôles rattachés, un 
 objectif, données d'entrée, modèle et indicateur résumés, périodicité, dernier résultat avec sa date, son score et ses
 observations résumées, les 3 derniers scores, prochaine date planifiée, en retard ou non), les 5 prochains contrôles
 planifiés (date planifiée, statut, en retard ou non), les plans d'action ouverts liés (référence, nom, type,
-criticité, statut, avancement, échéance, en retard ou non), les risques liés (nom, niveau, statut de traitement ; non envoyés si l'analyse est
-lancée par un audité), les exceptions (nom, statut, dates de début et de fin, expirée ou non, justification et mesures compensatoires résumées)
+criticité, statut, avancement, échéance, en retard ou non), les risques liés (nom, niveau, statut de traitement), les
+exceptions (nom, statut, dates de début et de fin, expirée ou non, justification et mesures compensatoires résumées)
 et jusqu'à 10 correspondances avec d'autres référentiels (référentiel, clause, nom, type et couverture).
 
 **Contrôle** : nom, périmètre, mesures de sécurité couvertes (clause et nom), objectif, attributs, données d'entrée,
@@ -280,7 +277,7 @@ conservation des données chez OVHcloud relève de ses conditions et de son acco
 
 ### Sécurité de la fonction
 
-* L'analyse est soumise aux mêmes droits que l'affichage de l'objet ; l'auditeur et le rôle API en sont exclus
+* L'analyse est soumise aux mêmes droits que l'affichage de l'objet ; l'audité, l'auditeur et le rôle API en sont exclus
   (voir [Qui peut lancer une analyse](#access)).
 
 * Les requêtes sont protégées contre le CSRF et limitées à 10 par minute.

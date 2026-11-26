@@ -598,7 +598,7 @@ return [
             'likelihood_x_impact'  => 'Likelihood × Impact (BSI 200-3)',
             'additive'             => 'Probability + Impact',
             'max_pi'               => 'max(Probability, Impact)',
-            'monarc'               => 'MONARC (Impact × Threat × Vulnerability)',
+            'monarc'               => 'Impact × Threat × Vulnerability',
         ],
 
 

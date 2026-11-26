@@ -41,7 +41,7 @@ Es gibt sechs verschiedene Rollen:
 * User: Benutzer können die Anwendung verwenden, ohne die Maßnahmen, die Attribute und die bereits durchgeführten Kontrollen ändern zu können.
 
 * Auditierte: Auditierte können nur die Kontrollen durchführen und sehen, die ihnen zugewiesen sind oder die sie
-  zuvor durchgeführt haben (siehe [Delegation](delegation.de.md)).
+  zuvor durchgeführt haben (siehe [Delegation](delegation.de.md)). Der Auditierte kann den [KI-Agenten](ai.de.md#access) nicht verwenden.
 
 * Auditor: Der Auditor hat Lesezugriff auf alle Informationen der Anwendung. Der Auditor kann den [KI-Agenten](ai.de.md#access) nicht verwenden.
 

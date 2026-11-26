@@ -41,7 +41,7 @@ Il existe six rôles différents :
 * Utilisateurs : les utilisateurs peuvent utiliser l’application sans pouvoir modifier les mesures, les attributs et les contrôles déjà réalisés.
 
 * Audité : les audités ne peuvent réaliser et voir que les contrôles qui leur sont assignés ou qu'ils ont réalisés
-  précédemment (voir [Délégation](delegation.fr.md)).
+  précédemment (voir [Délégation](delegation.fr.md)). L'audité ne peut pas utiliser l'[agent IA](ai.fr.md#access).
 
 * Auditeur : l’auditeur a un accès en lecture à l’ensemble des informations de l’application. L'auditeur ne peut pas utiliser l'[agent IA](ai.fr.md#access).
 

@@ -127,14 +127,14 @@ main messages are:
 
 ## Who can run an analysis {#access}
 
-An object can be analysed by anyone who can display it, except for the auditor and API roles. Rights are checked by
+An object can be analysed by anyone who can display it, except for the auditee, auditor and API roles. Rights are checked by
 the server on every request.
 
 | Role | Control | Measurement | Action plan | Risk |
 |---|---|---|---|---|
 | Administrator | ✓ | ✓ | ✓ | ✓ |
 | User | ✓ (depending on assignment and group view) | ✓ (same) | ✓ | ✓ |
-| Auditee | ✓ if assigned | ✓ if assigned | — | — |
+| Auditee | — | — | — | — |
 | Auditor | — | — | — | — |
 | API | — | — | — | — |
 
@@ -143,18 +143,15 @@ Details:
 * in group view, a control is only available if the user is directly assigned to one of its measurements; a
   measurement is available if the user is assigned to it directly or through one of their [groups](config.md#groups);
 
-* the auditee has no access to action plans and risks, nor to their analysis; the related risks are not sent when
-  they analyse a control;
-
-* the auditor has access neither to the icon, nor to the panel, nor to the saved analyses, even for an object they
-  can display.
+* the auditee and the auditor have access neither to the icon, nor to the panel, nor to the saved analyses, even for
+  an object they can display.
 
 ## Data protection {#privacy}
 
 This section describes precisely what leaves Deming during an analysis. It is intended in particular for the CISO
 and the DPO.
 
-### Data sent to the agent
+### Data sent to the agent {#data-sent}
 
 Every analysis sends the gateway, on the task of the object type:
 
@@ -175,7 +172,7 @@ plan, periodicity, up to 15 related measurements, one per distinct measurement (
 input data, model and indicator, periodicity, last result with its date, score and summarized observations, the last 3
 scores, next planned date, late or not), the next 5 planned measurements (planned date, status, late or not), related
 open action plans (reference, name, type, criticality, status, progress, due date, late or not), related risks (name,
-level, treatment status; not sent when the analysis is run by an auditee), exceptions (name, status, start and end dates, expired or not, summarized justification and
+level, treatment status), exceptions (name, status, start and end dates, expired or not, summarized justification and
 compensating controls) and up to 10 mappings to other frameworks (framework, clause, name, type and coverage).
 
 **Measurement**: name, scope, covered controls (clause and name), objective, attributes, input data, model,
@@ -270,7 +267,7 @@ is governed by its terms and its data processing agreement (DPA).
 
 ### Security of the feature
 
-* The analysis is subject to the same rights as the display of the object; the auditor and API roles are excluded
+* The analysis is subject to the same rights as the display of the object; the auditee, auditor and API roles are excluded
   (see [Who can run an analysis](#access)).
 
 * Requests are protected against CSRF and limited to 10 per minute.

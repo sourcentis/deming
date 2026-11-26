@@ -136,14 +136,14 @@ bleibt erhalten. Die wichtigsten Meldungen sind:
 
 ## Wer eine Analyse starten kann {#access}
 
-Ein Objekt kann analysieren, wer es anzeigen darf, außer mit der Rolle Auditor oder API. Die Rechte werden bei jeder
+Ein Objekt kann analysieren, wer es anzeigen darf, außer mit der Rolle Auditierter, Auditor oder API. Die Rechte werden bei jeder
 Anfrage vom Server geprüft.
 
 | Rolle | Sicherheitsmaßnahme | Kontrolle | Aktionsplan | Risiko |
 |---|---|---|---|---|
 | Administrator | ✓ | ✓ | ✓ | ✓ |
 | Benutzer | ✓ (je nach Zuweisung und Gruppenansicht) | ✓ (ebenso) | ✓ | ✓ |
-| Auditierter | ✓ wenn zugewiesen | ✓ wenn zugewiesen | — | — |
+| Auditierter | — | — | — | — |
 | Auditor | — | — | — | — |
 | API | — | — | — | — |
 
@@ -153,18 +153,15 @@ Einzelheiten:
   zugewiesen ist; eine Kontrolle ist zugänglich, wenn der Benutzer ihr direkt oder über eine seiner
   [Gruppen](config.de.md#groups) zugewiesen ist;
 
-* der Auditierte hat weder Zugriff auf Aktionspläne und Risiken noch auf deren Analyse; die verknüpften Risiken werden
-  nicht gesendet, wenn er eine Sicherheitsmaßnahme analysiert;
-
-* der Auditor hat weder Zugriff auf das Symbol noch auf das Fenster noch auf gespeicherte Analysen, auch nicht für ein
-  Objekt, das er anzeigen kann.
+* der Auditierte und der Auditor haben weder Zugriff auf das Symbol noch auf das Fenster noch auf gespeicherte
+  Analysen, auch nicht für ein Objekt, das sie anzeigen können.
 
 ## Datenschutz {#privacy}
 
 Dieser Abschnitt beschreibt genau, was Deming bei einer Analyse verlässt. Er richtet sich insbesondere an den CISO und
 den Datenschutzbeauftragten.
 
-### An den Agenten gesendete Daten
+### An den Agenten gesendete Daten {#data-sent}
 
 Jede Analyse sendet dem Gateway, an die Aufgabe des Objekttyps:
 
@@ -186,7 +183,7 @@ Indikator, Aktionsplan, Periodizität, bis zu 15 verknüpfte Kontrollen, eine je
 Bewertung und zusammengefassten Beobachtungen, die letzten 3 Bewertungen, nächstes geplantes Datum, verspätet oder
 nicht), die nächsten 5 geplanten Kontrollen (geplantes Datum, Status, verspätet oder nicht), verknüpfte offene
 Aktionspläne (Referenz, Name, Typ, Kritikalität, Status, Fortschritt, Frist, verspätet oder nicht), verknüpfte Risiken
-(Name, Niveau, Behandlungsstatus; nicht gesendet, wenn die Analyse von einem Auditierten gestartet wird), Ausnahmen (Name, Status, Beginn- und Enddatum, abgelaufen oder nicht,
+(Name, Niveau, Behandlungsstatus), Ausnahmen (Name, Status, Beginn- und Enddatum, abgelaufen oder nicht,
 zusammengefasste Begründung und kompensierende Maßnahmen) und bis zu 10 Zuordnungen zu anderen Rahmenwerken
 (Rahmenwerk, Klausel, Name, Typ und Abdeckung).
 
@@ -287,7 +284,7 @@ Speicherung der Daten bei OVHcloud richtet sich nach dessen Bedingungen und Auft
 
 ### Sicherheit der Funktion
 
-* Die Analyse unterliegt denselben Rechten wie die Anzeige des Objekts; die Rollen Auditor und API sind ausgeschlossen
+* Die Analyse unterliegt denselben Rechten wie die Anzeige des Objekts; die Rollen Auditierter, Auditor und API sind ausgeschlossen
   (siehe [Wer eine Analyse starten kann](#access)).
 
 * Die Anfragen sind gegen CSRF geschützt und auf 10 pro Minute begrenzt.
