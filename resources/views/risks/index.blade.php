@@ -69,16 +69,16 @@
                 <th>{{ trans("cruds.risk.fields.owner") }}</th>
 
                 @if ($scoringConfig->usesMonarc())
-                    <th>{{ trans("cruds.risk.fields.impact") }}</th>
-                    <th>{{ trans("cruds.risk.fields.threat") }}</th>
+                    <th class="dt-center">{{ trans("cruds.risk.fields.impact") }}</th>
+                    <th class="dt-center">{{ trans("cruds.risk.fields.threat") }}</th>
                     <th>{{ trans("cruds.risk.fields.vulnerability") }}</th>
                 @elseif ($scoringConfig->usesLikelihood())
                     <th>{{ trans("cruds.risk.fields.likelihood") }}</th>
                     <th>{{ trans("cruds.risk.fields.vulnerability") }}</th>
-                    <th>{{ trans("cruds.risk.fields.impact") }}</th>
+                    <th class="dt-center">{{ trans("cruds.risk.fields.impact") }}</th>
                 @else
                     <th>{{ trans("cruds.risk.fields.probability") }}</th>
-                    <th>{{ trans("cruds.risk.fields.impact") }}</th>
+                    <th class="dt-center">{{ trans("cruds.risk.fields.impact") }}</th>
                 @endif
 
                 <th data-priority="2">{{ trans("cruds.risk.fields.score") }}</th>
@@ -100,16 +100,16 @@
             <td>{{ $risk->owner?->name ?? '—' }}</td>
 
             @if ($scoringConfig->usesMonarc())
-                <td>{{ $risk->impact }}</td>
-                <td>{{ $risk->probability }}</td>
+                <td class="dt-center">{{ $risk->impact }}</td>
+                <td class="dt-center">{{ $risk->probability }}</td>
                 <td>{{ $risk->vulnerability }}</td>
             @elseif ($scoringConfig->usesLikelihood())
                 <td>{{ $risk->risk_likelihood }}</td>
                 <td>{{ $risk->vulnerability }}</td>
-                <td>{{ $risk->impact }}</td>
+                <td class="dt-center">{{ $risk->impact }}</td>
             @else
                 <td>{{ $risk->probability }}</td>
-                <td>{{ $risk->impact }}</td>
+                <td class="dt-center">{{ $risk->impact }}</td>
             @endif
 
             {{-- Score délégué au modèle Risk --}}
