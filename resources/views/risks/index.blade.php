@@ -72,13 +72,13 @@
                 @if ($scoringConfig->usesMonarc())
                     <th class="dt-center">{{ trans("cruds.risk.fields.impact") }}</th>
                     <th class="dt-center">{{ trans("cruds.risk.fields.threat") }}</th>
-                    <th>{{ trans("cruds.risk.fields.vulnerability") }}</th>
+                    <th class="dt-center">{{ trans("cruds.risk.fields.vulnerability") }}</th>
                 @elseif ($scoringConfig->usesLikelihood())
-                    <th>{{ trans("cruds.risk.fields.likelihood") }}</th>
-                    <th>{{ trans("cruds.risk.fields.vulnerability") }}</th>
+                    <th class="dt-center">{{ trans("cruds.risk.fields.likelihood") }}</th>
+                    <th class="dt-center">{{ trans("cruds.risk.fields.vulnerability") }}</th>
                     <th class="dt-center">{{ trans("cruds.risk.fields.impact") }}</th>
                 @else
-                    <th>{{ trans("cruds.risk.fields.probability") }}</th>
+                    <th class="dt-center">{{ trans("cruds.risk.fields.probability") }}</th>
                     <th class="dt-center">{{ trans("cruds.risk.fields.impact") }}</th>
                 @endif
 
@@ -103,13 +103,13 @@
             @if ($scoringConfig->usesMonarc())
                 <td class="dt-center">{{ $risk->impact }}</td>
                 <td class="dt-center">{{ $risk->probability }}</td>
-                <td>{{ $risk->vulnerability }}</td>
+                <td class="dt-center">{{ $risk->vulnerability }}</td>
             @elseif ($scoringConfig->usesLikelihood())
-                <td>{{ $risk->risk_likelihood }}</td>
-                <td>{{ $risk->vulnerability }}</td>
+                <td class="dt-center">{{ $risk->risk_likelihood }}</td>
+                <td class="dt-center">{{ $risk->vulnerability }}</td>
                 <td class="dt-center">{{ $risk->impact }}</td>
             @else
-                <td>{{ $risk->probability }}</td>
+                <td class="dt-center">{{ $risk->probability }}</td>
                 <td class="dt-center">{{ $risk->impact }}</td>
             @endif
 
@@ -194,6 +194,12 @@
 #risks-table th:nth-child(9),
 #risks-table th:nth-child(10)
 {
+    text-align: center !important;
+}
+
+/* Colonnes centrées, que DataTables soit initialisé ou non */
+#risks-table td.dt-center,
+#risks-table th.dt-center {
     text-align: center !important;
 }
 
