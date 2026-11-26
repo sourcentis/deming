@@ -69,7 +69,7 @@
                         @foreach($actions as $action)
                         <tr>
                             <td>
-                            <b id="{{ $action->reference }}"><a href="/action/show/{{ $action->id }}">{{ $action->reference==null ? ("ACT-".$action->id) : $action->reference }}<a>
+                            <b id="{{ $action->reference }}"><a href="/action/show/{{ $action->id }}">{{ \App\Models\Action::displayReference($action->reference, $action->id) }}<a>
                             </td>
                             <td>
                                 <p id="{{ $action->type }}">

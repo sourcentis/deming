@@ -95,7 +95,7 @@
         <tr data-href="/action/show/{{ $action->id }}">
             <td>
                 <b id="{{ $action->reference }}" style="font-size: 0.8em;">
-                    {{ $action->reference==null ? ("ACT-".$action->id) : $action->reference }}
+                    {{ \App\Models\Action::displayReference($action->reference, $action->id) }}
                 </b>
             </td>
             <td>
