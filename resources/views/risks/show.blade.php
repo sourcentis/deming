@@ -68,13 +68,16 @@
         <div class="col-lg-1 col-md-2">
             <strong>{{ trans("cruds.risk.fields.impact") }}</strong>
         </div>
-        <div class="col-lg-1 col-md-3">
+        <div class="col-lg-5 col-md-4">
             <span class="badge" style="font-size:1.1rem;background:#7f8c8d;color:#fff">{{ $risk->impact }}</span>
             &nbsp;
             {{ $scoringConfig->levelLabel('impact', $risk->impact) }}
+            @if ($scoringConfig->levelDescription('impact', $risk->impact))
+            <span class="text-muted">— {{ $scoringConfig->levelDescription('impact', $risk->impact) }}</span>
+            @endif
         </div>
         @if ($risk->impact_comment)
-        <div class="col-lg-10 col-md-7">
+        <div class="col-lg-6 col-md-6">
             <small class="text-muted">{{ $risk->impact_comment }}</small>
         </div>
         @endif
@@ -93,13 +96,16 @@
                 @endif
             </strong>
         </div>
-        <div class="col-lg-1 col-md-3">
+        <div class="col-lg-5 col-md-4">
             <span class="badge" style="font-size:1.1rem;background:#7f8c8d;color:#fff">{{ $risk->probability }}</span>
             &nbsp;
             {{ $scoringConfig->levelLabel('probability', $risk->probability) }}
+            @if ($scoringConfig->levelDescription('probability', $risk->probability))
+            <span class="text-muted">— {{ $scoringConfig->levelDescription('probability', $risk->probability) }}</span>
+            @endif
         </div>
         @if ($risk->probability_comment)
-        <div class="col-lg-10 col-md-7">
+        <div class="col-lg-6 col-md-6">
             <small class="text-muted">{{ $risk->probability_comment }}</small>
         </div>
         @endif
@@ -112,9 +118,12 @@
         <div class="col-lg-1 col-md-2">
             <strong>{{ trans("cruds.risk.fields.exposure") }}</strong>
         </div>
-        <div class="col-lg-1 col-md-2">
+        <div class="col-lg-5 col-md-4">
             <span class="badge" style="font-size:1.1rem;background:#7f8c8d;color:#fff">{{ $risk->exposure ?? '—' }}</span>
             &nbsp;{{ $scoringConfig->levelLabel('exposure', $risk->exposure ?? 0) }}
+            @if ($scoringConfig->levelDescription('exposure', $risk->exposure ?? 0))
+            <span class="text-muted">— {{ $scoringConfig->levelDescription('exposure', $risk->exposure ?? 0) }}</span>
+            @endif
         </div>
     </div>
     @endif
@@ -125,9 +134,12 @@
         <div class="col-lg-1 col-md-2">
             <strong>{{ trans("cruds.risk.fields.vulnerability") }}</strong>
         </div>
-        <div class="col-lg-2 col-md-3">
+        <div class="col-lg-5 col-md-4">
             <span class="badge" style="font-size:1.1rem;background:#7f8c8d;color:#fff">{{ $risk->vulnerability ?? '—' }}</span>
             &nbsp;{{ $scoringConfig->levelLabel('vulnerability', $risk->vulnerability ?? 0) }}
+            @if ($scoringConfig->levelDescription('vulnerability', $risk->vulnerability ?? 0))
+            <span class="text-muted">— {{ $scoringConfig->levelDescription('vulnerability', $risk->vulnerability ?? 0) }}</span>
+            @endif
         </div>
     </div>
     @endif
@@ -150,13 +162,16 @@
         <div class="col-lg-1 col-md-2">
             <strong>{{ trans("cruds.risk.fields.impact") }}</strong>
         </div>
-        <div class="col-lg-1 col-md-3">
+        <div class="col-lg-5 col-md-4">
             <span class="badge" style="font-size:1.1rem;background:#7f8c8d;color:#fff">{{ $risk->impact }}</span>
             &nbsp;
             {{ $scoringConfig->levelLabel('impact', $risk->impact) }}
+            @if ($scoringConfig->levelDescription('impact', $risk->impact))
+            <span class="text-muted">— {{ $scoringConfig->levelDescription('impact', $risk->impact) }}</span>
+            @endif
         </div>
         @if ($risk->impact_comment)
-        <div class="col-lg-10 col-md-7">
+        <div class="col-lg-6 col-md-6">
             <small class="text-muted">{{ $risk->impact_comment }}</small>
         </div>
         @endif
