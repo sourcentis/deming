@@ -14,7 +14,7 @@ due date. Clicking on a risk opens it.
 Overdue due dates are displayed in red.
 
 The "Column visibility" button lets you show additional columns (associated clauses, remediation),
-and the "Copy" and "Export" buttons copy the displayed list or export it to Excel.
+and the "Copy" and "Export" buttons copy the displayed list or export it to a spreadsheet.
 
 Clicking on the reference of an action plan [opens it](#show). The "New" button [creates a new action plan](#create).
 

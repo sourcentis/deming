@@ -13,7 +13,7 @@ Elle affiche pour chaque plan d’action sa référence, son type, les risques a
 son nom, son périmètre, ses responsables et sa date d’échéance. Un clic sur un risque permet de l’afficher. Les dates d’échéance dépassées sont affichées en rouge.
 
 Le bouton « Colonnes » permet d’afficher des colonnes supplémentaires (clauses associées, remédiation),
-et les boutons « Copier » et « Exporter » permettent de copier la liste affichée ou de l’exporter vers Excel.
+et les boutons « Copier » et « Exporter » permettent de copier la liste affichée ou de l’exporter dans une feuille de calcul.
 
 En cliquant sur la référence d’un plan d’action, vous arrivez sur [ce plan d’action](#show). Le bouton « Nouveau » permet de [créer un nouveau plan d’action](#create).
 

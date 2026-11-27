@@ -15,7 +15,7 @@ Cet écran permet d'afficher la liste des contrôles et de les filtrer par :
 * état du contrôle : tous, fait et à faire.
 
 Le bouton « Colonnes » permet de choisir les colonnes affichées, et les boutons « Copier » et « Exporter »
-permettent de copier la liste affichée ou de l'exporter vers Excel.
+permettent de copier la liste affichée ou de l'exporter dans une feuille de calcul.
 
 [![Screenshot](images/c1.fr.png)](images/c1.fr.png)
 

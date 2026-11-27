@@ -92,11 +92,11 @@ Here is the ISMS pilot report:
 
 [![Screenshot](images/report2.png)](images/report2.png)
 
-**Statement of Applicability (SoA)**: generates an Excel file listing, for each domain and clause, the security
+**Statement of Applicability (SoA)**: generates a spreadsheet listing, for each domain and clause, the security
 measures and the planning date of their controls for each scope.
 
 **Data export**: exports users, domains, attributes, security measures, controls, action plans and the risk
-register to Excel files.
+register to spreadsheets.
 
 ## Import {#import}
 

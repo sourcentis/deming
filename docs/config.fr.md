@@ -92,10 +92,10 @@ Voici le rapport de pilotage du SMSI :
 
 [![Screenshot](images/report2.png){: style="width:600px"}](images/report2.png)
 
-**Déclaration d'applicabilité** : génère un fichier Excel listant, pour chaque domaine et chaque clause, les mesures
+**Déclaration d'applicabilité** : génère une feuille de calcul listant, pour chaque domaine et chaque clause, les mesures
 de sécurité et la date de planification de leurs contrôles pour chaque périmètre.
 
-**Exporter des données** : exporte dans des fichiers Excel les utilisateurs, les domaines, les attributs, les mesures
+**Exporter des données** : exporte dans des feuilles de calcul les utilisateurs, les domaines, les attributs, les mesures
 de sécurité, les contrôles, les plans d'action et le registre des risques.
 
 ## Importation {#import}
