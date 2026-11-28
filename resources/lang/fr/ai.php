@@ -48,6 +48,7 @@ return [
         'models_loading' => 'Chargement…',
         'models_found' => ':count modèle(s) trouvé(s)',
         'models_choose' => 'Choisir un modèle…',
+        'models_other' => 'Autre modèle…',
         'models_unavailable' => 'Liste des modèles indisponible : saisissez le nom du modèle.',
         'parameters' => 'Paramètres',
         'temperature' => 'Température',

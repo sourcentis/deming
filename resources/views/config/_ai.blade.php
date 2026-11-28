@@ -96,9 +96,10 @@
                     <label for="model"><strong>{{ trans('ai.config.model') }}</strong></label>
                 </div>
                 <div class="col-md-9 col-lg-4">
+                    {{-- Filled by "Load models", it then replaces the field below, which stays the submitted value;
+                         "Other model" shows the field again to type a name by hand --}}
+                    <select class="form-select d-none" id="ai-models" aria-label="{{ trans('ai.config.models_choose') }}"></select>
                     <input class="form-control" type="text" name="model" id="model" value="{{ old('model', $model) }}" required maxlength="191" autocomplete="off">
-                    {{-- Filled and shown by "Load models"; choosing an entry fills the field above --}}
-                    <select class="form-select mt-1 d-none" id="ai-models" aria-label="{{ trans('ai.config.models_choose') }}"></select>
                     <small class="text-muted">{{ trans('ai.config.model_help') }}</small>
                 </div>
                 <div class="col-md-12 col-lg-4">
@@ -216,6 +217,7 @@
         'models_loading' => trans('ai.config.models_loading'),
         'models_found' => trans('ai.config.models_found'),
         'models_choose' => trans('ai.config.models_choose'),
+        'models_other' => trans('ai.config.models_other'),
     ];
 @endphp
 <script @nonce>
@@ -287,9 +289,23 @@ function aiFormSettings() {
     const list = document.getElementById('ai-models');
     const labels = @json($testLabels);
     const model = document.getElementById('model');
+    const OTHER = '';
+
+    // Only one field is shown: the list of the loaded models, or the text field for another model
+    function show(listShown, fieldShown) {
+        list.classList.toggle('d-none', !listShown);
+        model.classList.toggle('d-none', !fieldShown);
+        model.classList.toggle('mt-1', listShown && fieldShown);
+    }
 
     list.addEventListener('change', function () {
-        if (list.value) { model.value = list.value; }
+        if (list.value === OTHER) {
+            show(true, true);
+            model.focus();
+        } else {
+            model.value = list.value;
+            show(true, false);
+        }
     });
 
     button.addEventListener('click', function () {
@@ -309,11 +325,19 @@ function aiFormSettings() {
             .then(function (response) { return response.json(); })
             .then(function (data) {
                 const models = data.models || [];
-                list.replaceChildren(new Option(labels.models_choose, ''));
-                models.forEach(function (id) {
-                    list.appendChild(new Option(id, id, false, id === model.value));
-                });
-                list.classList.toggle('d-none', models.length === 0);
+                if (models.length === 0) {
+                    show(false, true);
+                } else {
+                    // Keeps the current model when the provider offers it, otherwise "Other model" with the field
+                    if (model.value.trim() === '') { model.value = models[0]; }
+                    const known = models.includes(model.value);
+                    list.replaceChildren();
+                    models.forEach(function (id) {
+                        list.appendChild(new Option(id, id, false, id === model.value));
+                    });
+                    list.appendChild(new Option(labels.models_other, OTHER, false, !known));
+                    show(true, !known);
+                }
                 result.className = 'ms-2 small ' + (data.ok ? 'text-success' : 'text-danger');
                 result.textContent = data.ok ? labels.models_found.replace(':count', data.models.length) : data.error;
             })

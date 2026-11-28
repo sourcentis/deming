@@ -20,9 +20,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   then add `CSP_REPORT_ONLY=false` to enforce it.
 - Risks: the risk page shows the calculation formula of the active scoring
   configuration under the score.
-- AI settings: the "Load the models" button shows the available models in a
-  drop-down list under the model field; choosing one fills the field, which can
-  still be typed by hand.
+- AI settings: the "Load the models" button replaces the model field with a
+  drop-down list of the available models; "Other model…" shows the field again
+  to type a name by hand.
 
 ### Changed
 

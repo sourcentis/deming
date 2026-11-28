@@ -76,7 +76,7 @@ test('the page has a hidden, unsubmitted drop-down list for the loaded models', 
         ->getContent();
 
     // Hidden until the models are loaded, and without a name: only the model field is saved
-    expect($html)->toMatch('/<select class="form-select mt-1 d-none" id="ai-models" aria-label="[^"]+"><\/select>/');
+    expect($html)->toMatch('/<select class="form-select d-none" id="ai-models" aria-label="[^"]+"><\/select>/');
     // The model field stays a free text field, no longer tied to a datalist
     expect(preg_match('/<input[^>]*name="model"[^>]*>/', $html, $field))->toBe(1)
         ->and($field[0])->not->toContain('list=');
