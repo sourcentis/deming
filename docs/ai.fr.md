@@ -54,7 +54,7 @@ Les champs sont les suivants :
   (`APP_KEY`) : si l'`APP_KEY` change, il faut la ressaisir ;
 
 * **Modèle** : l'identifiant du modèle chez le fournisseur. Le bouton « Charger les modèles » interroge
-  `GET /models` avec l'URL et la clé saisies, même avant l'enregistrement, et propose la liste obtenue ; si le
+  `GET /models` avec l'URL et la clé saisies, même avant l'enregistrement, et affiche la liste obtenue dans une liste déroulante sous le champ : choisir un modèle remplit le champ ; si le
   fournisseur ne l'offre pas, saisissez le nom à la main ;
 
 * **Paramètres** :

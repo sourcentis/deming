@@ -49,7 +49,7 @@ The fields are:
   entered again;
 
 * **Model**: the identifier of the model at the provider. The "Load the models" button queries `GET /models` with the
-  URL and key typed in the form, even before saving, and offers the list obtained; if the provider does not offer it,
+  URL and key typed in the form, even before saving, and shows the list obtained in a drop-down list under the field: choosing a model fills the field; if the provider does not offer it,
   type the name by hand;
 
 * **Parameters**:

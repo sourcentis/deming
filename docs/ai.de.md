@@ -52,7 +52,7 @@ Die Felder sind:
   dem Anwendungsschlüssel (`APP_KEY`) verschlüsselt: Ändert sich der `APP_KEY`, muss er erneut eingegeben werden;
 
 * **Modell**: die Kennung des Modells beim Anbieter. Die Schaltfläche „Modelle laden“ fragt mit der eingegebenen
-  URL und dem eingegebenen Schlüssel `GET /models` ab, auch vor dem Speichern, und schlägt die erhaltene Liste vor;
+  URL und dem eingegebenen Schlüssel `GET /models` ab, auch vor dem Speichern, und zeigt die erhaltene Liste in einer Auswahlliste unter dem Feld an: die Auswahl eines Modells füllt das Feld aus;
   bietet der Anbieter dies nicht an, geben Sie den Namen von Hand ein;
 
 * **Parameter**:

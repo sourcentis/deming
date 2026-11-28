@@ -47,6 +47,7 @@ return [
         'load_models' => 'Cargar los modelos',
         'models_loading' => 'Cargando…',
         'models_found' => ':count modelo(s) encontrado(s)',
+        'models_choose' => 'Elegir un modelo…',
         'models_unavailable' => 'Lista de modelos no disponible: escribe el nombre del modelo.',
         'parameters' => 'Parámetros',
         'temperature' => 'Temperatura',

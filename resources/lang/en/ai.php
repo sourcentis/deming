@@ -47,6 +47,7 @@ return [
         'load_models' => 'Load the models',
         'models_loading' => 'Loading…',
         'models_found' => ':count model(s) found',
+        'models_choose' => 'Choose a model…',
         'models_unavailable' => 'Model list unavailable: type the model name.',
         'parameters' => 'Parameters',
         'temperature' => 'Temperature',
