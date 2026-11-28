@@ -5,7 +5,7 @@ This part allows you to define, modify and plan new controls.
 ## List of controls <a name="list"></a>
 
 The list of controls allows you to display the list of controls, to filter them by domain or to search for a control based on part of its name.
-The "Column visibility", "Copy" and "Export" buttons let you choose the displayed columns, copy the list or export it to Excel.
+The "Column visibility", "Copy" and "Export" buttons let you choose the displayed columns, copy the list or export it to a spreadsheet.
 
 [![Screenshot](images/m1.png)](images/m1.png)
 

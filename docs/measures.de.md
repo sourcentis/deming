@@ -5,7 +5,7 @@ In diesem Bereich können neue Sicherheitsmaßnahmen definiert, geändert und ge
 ## Liste der Sicherheitsmaßnahmen <a name="list"></a>
 
 Die Liste der Sicherheitsmaßnahmen zeigt alle Maßnahmen an, ermöglicht es, sie nach Domäne zu filtern oder eine Maßnahme anhand eines Teils ihres Namens zu suchen.
-Mit den Schaltflächen „Spalten“, „Kopieren“ und „Exportieren“ können die angezeigten Spalten ausgewählt und die Liste kopiert oder nach Excel exportiert werden.
+Mit den Schaltflächen „Spalten“, „Kopieren“ und „Exportieren“ können die angezeigten Spalten ausgewählt und die Liste kopiert oder in eine Tabellenkalkulation exportiert werden.
 
 [![Screenshot](images/m1.de.png)](images/m1.de.png)
 

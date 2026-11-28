@@ -64,6 +64,27 @@ test('the page shows the provider settings, the four prompts and their locked co
     Http::assertNothingSent();
 });
 
+test('the page has a hidden, unsubmitted drop-down list for the loaded models', function () {
+    aiEnable();
+    Http::fake();
+
+    $html = $this->actingAs($this->admin)->get('/config/parameters?tab=ai')
+        ->assertOk()
+        ->assertSee('id="ai-load-models"', false)
+        ->assertSee(trans('ai.config.models_choose'))
+        ->assertDontSee('<datalist', false)
+        ->getContent();
+
+    // Hidden until the models are loaded, and without a name: only the model field is saved
+    expect($html)->toMatch('/<select class="form-select d-none" id="ai-models" aria-label="[^"]+"><\/select>/');
+    // The model field stays a free text field, no longer tied to a datalist
+    expect(preg_match('/<input[^>]*name="model"[^>]*>/', $html, $field))->toBe(1)
+        ->and($field[0])->not->toContain('list=');
+    // Inside the fieldset disabled when AI is off
+    expect(strpos($html, 'id="ai-settings"'))->toBeLessThan(strpos($html, 'id="ai-models"'));
+    Http::assertNothingSent();
+});
+
 test('a customised prompt is shown escaped and flagged', function () {
     Configuration::set('ai.prompt.measure', '<script>alert(1)</script> {{ $x }}');
 

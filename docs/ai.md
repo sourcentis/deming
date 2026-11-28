@@ -49,8 +49,11 @@ The fields are:
   entered again;
 
 * **Model**: the identifier of the model at the provider. The "Load the models" button queries `GET /models` with the
-  URL and key typed in the form, even before saving, and offers the list obtained; if the provider does not offer it,
-  type the name by hand;
+  URL and key typed in the form, even before saving. The models obtained then replace the field with a drop-down
+  list, which keeps the current model when the provider offers it. "Other model…" shows the field again to type a
+  name by hand, which is also needed when the provider does not offer the list;
+
+    [![Screenshot](images/ai-models.png)](images/ai-models.png)
 
 * **Parameters**:
     * **Temperature** (0 to 2, 0.2 by default): a low value gives more stable answers;

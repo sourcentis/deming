@@ -114,12 +114,11 @@
             @endif
 
             {{-- Score délégué au modèle Risk --}}
-            <td>
-                @php
-                    $score     = $risk->computedScore($scoringConfig);
-                    $threshold = $scoringConfig->thresholdFor($score);
-                @endphp
-                <span style="display:none">{{ str_pad($score, 4, '0', STR_PAD_LEFT) }}</span>
+            @php
+                $score     = $risk->computedScore($scoringConfig);
+                $threshold = $scoringConfig->thresholdFor($score);
+            @endphp
+            <td data-order="{{ (int) $score }}">
                 <span class="badge"
                       style="background:{{ $threshold['color'] }};
                             color:{{ contrast_color($threshold['color']) }};
@@ -137,8 +136,7 @@
             </td>
             @if ($scoringConfig->usesMonarc())
             {{-- Résiduel --}}
-            <td>
-                <span style="display:none">{{ str_pad((string) ($risk->residual_risk ?? 0), 4, '0', STR_PAD_LEFT) }}</span>
+            <td data-order="{{ (int) ($risk->residual_risk ?? -1) }}">
                 @if ($risk->residual_risk !== null)
                     @php
                         $residualThreshold = $scoringConfig->thresholdFor($risk->residual_risk);

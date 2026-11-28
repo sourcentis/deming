@@ -67,6 +67,8 @@ ID_control=18 ID_measure_done=1231 npm run docs:screenshots
       and/or a `fill` (field whose displayed value is replaced by `value`, without saving anything), e.g. to show the
       documented AI agent URL instead of the real one
       and/or a `text` (element whose text is replaced by `value`), e.g. to hide the host of the AI agent in the panel
+      and/or an `expand` (drop-down list shown open with all its options, after the `waitFor`), e.g. the models
+      loaded on the AI settings page
 
 The AI analysis is written in the language of the administrator account, not in the language of the capture: change
 the language of the account before capturing `ai-panel` in each language.

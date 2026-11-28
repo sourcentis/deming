@@ -52,8 +52,12 @@ Die Felder sind:
   dem Anwendungsschlüssel (`APP_KEY`) verschlüsselt: Ändert sich der `APP_KEY`, muss er erneut eingegeben werden;
 
 * **Modell**: die Kennung des Modells beim Anbieter. Die Schaltfläche „Modelle laden“ fragt mit der eingegebenen
-  URL und dem eingegebenen Schlüssel `GET /models` ab, auch vor dem Speichern, und schlägt die erhaltene Liste vor;
-  bietet der Anbieter dies nicht an, geben Sie den Namen von Hand ein;
+  URL und dem eingegebenen Schlüssel `GET /models` ab, auch vor dem Speichern. Die erhaltenen Modelle ersetzen dann
+  das Feld durch eine Auswahlliste, die das aktuelle Modell beibehält, wenn der Anbieter es anbietet. „Anderes
+  Modell…“ zeigt das Feld wieder an, um einen Namen von Hand einzugeben; das ist auch nötig, wenn der Anbieter die
+  Liste nicht anbietet;
+
+    [![Screenshot](images/ai-models.de.png)](images/ai-models.de.png)
 
 * **Parameter**:
     * **Temperatur** (0 bis 2, Standard 0,2): ein niedriger Wert ergibt stabilere Antworten;

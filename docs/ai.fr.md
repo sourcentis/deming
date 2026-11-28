@@ -54,8 +54,12 @@ Les champs sont les suivants :
   (`APP_KEY`) : si l'`APP_KEY` change, il faut la ressaisir ;
 
 * **Modèle** : l'identifiant du modèle chez le fournisseur. Le bouton « Charger les modèles » interroge
-  `GET /models` avec l'URL et la clé saisies, même avant l'enregistrement, et propose la liste obtenue ; si le
-  fournisseur ne l'offre pas, saisissez le nom à la main ;
+  `GET /models` avec l'URL et la clé saisies, même avant l'enregistrement. Les modèles obtenus remplacent alors le
+  champ par une liste déroulante, qui conserve le modèle actuel si le fournisseur le propose. « Autre modèle… »
+  réaffiche le champ pour saisir un nom à la main, ce qui est aussi nécessaire si le fournisseur n'offre pas la
+  liste ;
+
+    [![Screenshot](images/ai-models.fr.png)](images/ai-models.fr.png)
 
 * **Paramètres** :
     * **Température** (de 0 à 2, 0,2 par défaut) : une valeur basse donne des réponses plus stables ;

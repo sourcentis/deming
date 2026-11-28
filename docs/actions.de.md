@@ -14,7 +14,7 @@ seinen Status, seinen Fortschritt, seinen Namen, seinen Geltungsbereich, seine V
 Überschrittene Fälligkeitsdaten werden rot angezeigt. Durch Klicken auf ein Risiko wird es geöffnet.
 
 Mit der Schaltfläche „Spalten“ können zusätzliche Spalten (zugehörige Klauseln, Behebung) angezeigt werden,
-und mit den Schaltflächen „Kopieren“ und „Exportieren“ kann die angezeigte Liste kopiert oder nach Excel exportiert
+und mit den Schaltflächen „Kopieren“ und „Exportieren“ kann die angezeigte Liste kopiert oder in eine Tabellenkalkulation exportiert
 werden.
 
 Durch Klicken auf die Referenz eines Aktionsplans [öffnen Sie ihn](#show). Mit der Schaltfläche „Neu“ können Sie

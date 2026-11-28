@@ -47,6 +47,8 @@ return [
         'load_models' => 'Modelle laden',
         'models_loading' => 'Wird geladen…',
         'models_found' => ':count Modell(e) gefunden',
+        'models_choose' => 'Modell auswählen…',
+        'models_other' => 'Anderes Modell…',
         'models_unavailable' => 'Modellliste nicht verfügbar: Geben Sie den Modellnamen ein.',
         'parameters' => 'Parameter',
         'temperature' => 'Temperatur',

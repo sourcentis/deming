@@ -73,13 +73,10 @@
                     –
                 @endif
             </td>
-            <td>
-                {{-- Tri caché sur date ISO --}}
-                <span style="display:none;">{{ $exception->start_date?->format('Y-m-d') ?? '0000-00-00' }}</span>
+            <td data-order="{{ $exception->start_date?->format('Y-m-d') ?? '0000-00-00' }}">
                 {{ $exception->start_date?->format('Y-m-d') ?? '–' }}
             </td>
-            <td>
-                <span style="display:none;">{{ $exception->end_date?->format('Y-m-d') ?? '9999-99-99' }}</span>
+            <td data-order="{{ $exception->end_date?->format('Y-m-d') ?? '9999-99-99' }}">
                 @if($exception->end_date)
                     @if($exception->end_date->isPast())
                         <font color="#D94F45"><strong>{{ $exception->end_date->format('Y-m-d') }}</strong></font>

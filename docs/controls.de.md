@@ -15,7 +15,7 @@ Diese Ansicht zeigt die Liste der Kontrollen an und ermöglicht es, sie zu filte
 * Status der Kontrolle: alle, erledigt und zu erledigen.
 
 Mit der Schaltfläche „Spalten“ können die angezeigten Spalten ausgewählt werden, und mit den Schaltflächen „Kopieren“
-und „Exportieren“ kann die angezeigte Liste kopiert oder nach Excel exportiert werden.
+und „Exportieren“ kann die angezeigte Liste kopiert oder in eine Tabellenkalkulation exportiert werden.
 
 [![Screenshot](images/c1.de.png)](images/c1.de.png)
 

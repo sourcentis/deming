@@ -5,7 +5,7 @@ Cette partie permet de définir, de modifier et de planifier de nouvelles mesure
 ## Liste des mesures de sécurité <a name="list"></a>
 
 La liste des mesures de sécurité permet d’afficher la liste des mesures, de les filtrer par domaine ou de rechercher une mesure sur base d’une partie de son nom.
-Les boutons « Colonnes », « Copier » et « Exporter » permettent de choisir les colonnes affichées, de copier la liste ou de l'exporter vers Excel.
+Les boutons « Colonnes », « Copier » et « Exporter » permettent de choisir les colonnes affichées, de copier la liste ou de l'exporter dans une feuille de calcul.
 
 [![Screenshot](images/m1.fr.png)](images/m1.fr.png)
 

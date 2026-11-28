@@ -105,6 +105,23 @@ class RiskScoringConfig extends Model
     }
 
     /**
+     * Retourne la description d'un niveau pour un champ donné (chaîne vide si absente).
+     *
+     * @param string $field   'probability'|'impact'|'exposure'|'vulnerability'
+     * @param int    $value   Valeur numérique du niveau
+     */
+    public function levelDescription(string $field, int $value): string
+    {
+        foreach ($this->{$field . '_levels'} ?? [] as $level) {
+            if ((int) $level['value'] === $value) {
+                return (string) ($level['description'] ?? '');
+            }
+        }
+
+        return '';
+    }
+
+    /**
      * Retourne toutes les valeurs possibles pour un champ de niveau.
      *
      * @return int[]

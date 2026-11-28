@@ -92,11 +92,11 @@ Hier ist der ISMS-Steuerungsbericht:
 
 [![Screenshot](images/report2.png){: style="width:600px"}](images/report2.png)
 
-**Erklärung der Anwendbarkeit (SoA)**: erzeugt eine Excel-Datei, die für jede Domäne und jede Klausel die
+**Erklärung der Anwendbarkeit (SoA)**: erzeugt eine Tabellenkalkulationsdatei, die für jede Domäne und jede Klausel die
 Sicherheitsmaßnahmen und das Planungsdatum ihrer Kontrollen für jeden Geltungsbereich auflistet.
 
 **Daten exportieren**: exportiert die Benutzer, die Domänen, die Attribute, die Sicherheitsmaßnahmen, die Kontrollen,
-die Aktionspläne und die Risikoliste in Excel-Dateien.
+die Aktionspläne und die Risikoliste in Tabellenkalkulationsdateien.
 
 ## Import {#import}
 

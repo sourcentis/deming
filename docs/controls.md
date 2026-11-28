@@ -15,7 +15,7 @@ This screen is used to display the list of measurements and to filter them by:
 * measurement status: all, done and to do.
 
 The "Column visibility" button lets you choose the displayed columns, and the "Copy" and "Export"
-buttons copy the displayed list or export it to Excel.
+buttons copy the displayed list or export it to a spreadsheet.
 
 [![Screenshot](images/c1.png)](images/c1.png)
 

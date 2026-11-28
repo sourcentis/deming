@@ -84,7 +84,7 @@
                 <div class="col-lg-11 col-md-10">
                     @foreach ($scoringConfig->impact_levels ?? [] as $level)
                     <div class="form-check"><input id="impact_{{ $level['value'] }}" class="form-check-input" type="radio" name="impact" value="{{ $level['value'] }}"
-                           {{ old('impact', $risk->impact) == $level['value'] ? 'checked' : '' }}/><label class="form-check-label" for="impact_{{ $level['value'] }}"><b>{{ $level['value'] }}</b> — {{ $level['label'] }}@if (!empty($level['description'])) <small class="text-muted">({{ $level['description'] }})</small>@endif</label></div>
+                           {{ old('impact', $risk->impact) == $level['value'] ? 'checked' : '' }}/><label class="form-check-label" for="impact_{{ $level['value'] }}"><b>{{ $level['value'] }}</b> — {{ $level['label'] }}@if (!empty($level['description'])) <span class="text-muted">— {{ $level['description'] }}</span>@endif</label></div>
                     @endforeach
                 </div>
             </div>
@@ -113,7 +113,7 @@
                     <div class="col-lg-11 col-md-10">
                         @foreach ($scoringConfig->probability_levels ?? [] as $level)
                         <div class="form-check"><input id="probability_{{ $level['value'] }}" class="form-check-input" type="radio" name="probability" value="{{ $level['value'] }}"
-                               {{ old('probability', $risk->probability) == $level['value'] ? 'checked' : '' }}/><label class="form-check-label" for="probability_{{ $level['value'] }}"><b>{{ $level['value'] }}</b> — {{ $level['label'] }}@if (!empty($level['description'])) <small class="text-muted">({{ $level['description'] }})</small>@endif</label></div>
+                               {{ old('probability', $risk->probability) == $level['value'] ? 'checked' : '' }}/><label class="form-check-label" for="probability_{{ $level['value'] }}"><b>{{ $level['value'] }}</b> — {{ $level['label'] }}@if (!empty($level['description'])) <span class="text-muted">— {{ $level['description'] }}</span>@endif</label></div>
                         @endforeach
                     </div>
                 </div>
@@ -138,7 +138,7 @@
                 <div class="col-lg-11 col-md-10">
                     @foreach ($scoringConfig->exposure_levels ?? [] as $level)
                     <div class="form-check"><input id="exposure_{{ $level['value'] }}" class="form-check-input" type="radio" name="exposure" value="{{ $level['value'] }}"
-                           {{ old('exposure', $risk->exposure ?? 0) == $level['value'] ? 'checked' : '' }}/><label class="form-check-label" for="exposure_{{ $level['value'] }}"><b>{{ $level['value'] }}</b> — {{ $level['label'] }}</label></div>
+                           {{ old('exposure', $risk->exposure ?? 0) == $level['value'] ? 'checked' : '' }}/><label class="form-check-label" for="exposure_{{ $level['value'] }}"><b>{{ $level['value'] }}</b> — {{ $level['label'] }}@if (!empty($level['description'])) <span class="text-muted">— {{ $level['description'] }}</span>@endif</label></div>
                     @endforeach
                 </div>
             </div>
@@ -153,7 +153,7 @@
                 <div class="col-lg-11 col-md-10">
                     @foreach ($scoringConfig->vulnerability_levels ?? [] as $level)
                     <div class="form-check"><input id="vulnerability_{{ $level['value'] }}" class="form-check-input" type="radio" name="vulnerability" value="{{ $level['value'] }}"
-                           {{ old('vulnerability', $risk->vulnerability ?? 0) == $level['value'] ? 'checked' : '' }}/><label class="form-check-label" for="vulnerability_{{ $level['value'] }}"><b>{{ $level['value'] }}</b> — {{ $level['label'] }}</label></div>
+                           {{ old('vulnerability', $risk->vulnerability ?? 0) == $level['value'] ? 'checked' : '' }}/><label class="form-check-label" for="vulnerability_{{ $level['value'] }}"><b>{{ $level['value'] }}</b> — {{ $level['label'] }}@if (!empty($level['description'])) <span class="text-muted">— {{ $level['description'] }}</span>@endif</label></div>
                     @endforeach
                 </div>
             </div>
@@ -171,7 +171,7 @@
                 <div class="col-lg-11 col-md-10">
                     @foreach ($scoringConfig->impact_levels ?? [] as $level)
                     <div class="form-check"><input id="impact_{{ $level['value'] }}" class="form-check-input" type="radio" name="impact" value="{{ $level['value'] }}"
-                           {{ old('impact', $risk->impact) == $level['value'] ? 'checked' : '' }}/><label class="form-check-label" for="impact_{{ $level['value'] }}"><b>{{ $level['value'] }}</b> — {{ $level['label'] }}@if (!empty($level['description'])) <small class="text-muted">({{ $level['description'] }})</small>@endif</label></div>
+                           {{ old('impact', $risk->impact) == $level['value'] ? 'checked' : '' }}/><label class="form-check-label" for="impact_{{ $level['value'] }}"><b>{{ $level['value'] }}</b> — {{ $level['label'] }}@if (!empty($level['description'])) <span class="text-muted">— {{ $level['description'] }}</span>@endif</label></div>
                     @endforeach
                 </div>
             </div>
