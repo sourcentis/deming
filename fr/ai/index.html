@@ -918,8 +918,11 @@ est envoyé ; lisez la section <a href="#privacy">Protection des données</a> av
 </li>
 <li>
 <p><strong>Modèle</strong> : l'identifiant du modèle chez le fournisseur. Le bouton « Charger les modèles » interroge
-  <code>GET /models</code> avec l'URL et la clé saisies, même avant l'enregistrement, et propose la liste obtenue ; si le
-  fournisseur ne l'offre pas, saisissez le nom à la main ;</p>
+  <code>GET /models</code> avec l'URL et la clé saisies, même avant l'enregistrement. Les modèles obtenus remplacent alors le
+  champ par une liste déroulante, qui conserve le modèle actuel si le fournisseur le propose. « Autre modèle… »
+  réaffiche le champ pour saisir un nom à la main, ce qui est aussi nécessaire si le fournisseur n'offre pas la
+  liste ;</p>
+<p><a href="../images/ai-models.png"><img alt="Screenshot" src="../images/ai-models.png" /></a></p>
 </li>
 <li>
 <p><strong>Paramètres</strong> :</p>
