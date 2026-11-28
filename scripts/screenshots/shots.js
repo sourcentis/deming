@@ -105,9 +105,11 @@ async function capture(page, screen, lang, values) {
             await field.blur();
         }
         if (step.click) await page.locator(step.click).first().click();
+        if (step.waitFor) await page.locator(step.waitFor).first().waitFor({ timeout: 180000 });
+        // Shows a drop-down list open, with all its options: a screenshot cannot capture the browser's own popup
+        if (step.expand) await page.locator(step.expand).first().evaluate(e => { e.size = Math.max(e.options.length, 2); });
         // Replaces the text of an element on the page only, e.g. to hide the host of the AI agent
         if (step.text) await page.locator(step.text).first().evaluate((e, v) => { e.textContent = v; }, step.value);
-        if (step.waitFor) await page.locator(step.waitFor).first().waitFor({ timeout: 180000 });
     }
     await page.waitForTimeout(screen.wait || 1200);
 
